@@ -1,8 +1,6 @@
 package frc.robot.modules;
 
 import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.LimelightHelpers;
@@ -42,14 +40,9 @@ public class VisionModule extends SubsystemBase {
 
     @Override
     public void periodic() {
-        // FIXME: Test PositionModule before starting auto.
         SmartDashboard.putNumber(
-            "Limelight-TargetCount",
+            "Vision Target Count",
             LimelightHelpers.getTargetCount(ModuleConstants.kLimelightName)
         );
-        Field2d field = new Field2d();
-        Pose3d position = getVisionPose();
-        field.setRobotPose(position.getX(), position.getY(), new Rotation2d(0, 0));
-        SmartDashboard.putData("Limelight-EstimatedPose", field);
     }
 }

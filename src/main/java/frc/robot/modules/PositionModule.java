@@ -26,6 +26,7 @@ public class PositionModule extends SubsystemBase {
     private Pose3d robotPosition;
     private DriveSubsystem driveModule;
     private VisionModule visionModule;
+    private Field2d dashboardField;
 
     // PositionModule Initialization
     public PositionModule(DriveSubsystem driveModule, VisionModule visionModule) {
@@ -36,6 +37,9 @@ public class PositionModule extends SubsystemBase {
         pigeon = new PigeonIMU(ModuleConstants.kPigeonIMUDeviceNumber);
         pigeon.setYaw(0); // zeros initial gyrometer yaw reading
         System.out.println("INFO: PositionModule: Initialization Complete");
+        
+        dashboardField = new Field2d();
+        SmartDashboard.putData("Estimated Robot Position", dashboardField);
     }
 
     /**
@@ -120,8 +124,6 @@ public class PositionModule extends SubsystemBase {
             );
         }
 
-        Field2d field = new Field2d();
-        field.setRobotPose(robotPosition.getX(), robotPosition.getY(), new Rotation2d(robotPosition.getRotation().getZ()));
-        SmartDashboard.putData("Position-EstimatedPose", field);
+        dashboardField.setRobotPose(robotPosition.getX(), robotPosition.getY(), new Rotation2d(robotPosition.getRotation().getZ()));
     }
 }
