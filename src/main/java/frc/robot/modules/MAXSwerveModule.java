@@ -25,9 +25,9 @@ public class MAXSwerveModule {
 	private final RelativeEncoder m_drivingEncoder;
 	private final RelativeEncoder m_turningEncoder;
 
-	private final PIDController m_drivingClosedLoopController;
-	private final PIDController m_turningClosedLoopController;
-	private final PIDController m_feedForwardController;
+	private final PIDController m_drivingPIDController;
+	private final PIDController m_turningPIDController;
+	private final PIDController m_feedForwardPIDController;
 
 	private final CANcoder m_absoluteEncoder;
 
@@ -48,9 +48,11 @@ public class MAXSwerveModule {
 		m_turningEncoder = m_turningSpark.getEncoder();
 		m_absoluteEncoder = new CANcoder(absoluteEncoderCANId);
 
-		m_drivingClosedLoopController = new PIDController(0.1, 0, 0);
-		m_turningClosedLoopController = new PIDController(0.4, 0, 0);
-		m_feedForwardController = new PIDController(1.0, 0, 0);
+		m_drivingPIDController = new PIDController(0.25, 0, 0);
+		m_turningPIDController = new PIDController(0.6, 0, 0);
+		m_turningPIDController.enableContinuousInput(-Math.PI, Math.PI);
+		m_feedForwardPIDController = new PIDController(1, 0, 0);
+
 
 		// Apply the respective configurations to the SPARKS. Reset parameters before
 		// applying the configuration to bring the SPARK to a known good state. Persist
@@ -91,7 +93,7 @@ public class MAXSwerveModule {
 	}
 
 	public double getAbsoluteEncoderRad() {
-		return m_absoluteEncoder.getAbsolutePosition().getValueAsDouble();
+		return (m_absoluteEncoder.getAbsolutePosition().getValueAsDouble()) * (2 * Math.PI);
 	}
 
 	/**
@@ -109,12 +111,14 @@ public class MAXSwerveModule {
 		correctedDesiredState.optimize(new Rotation2d(getAbsoluteEncoderRad()));
 
 		// Command driving and turning SPARKS towards their respective setpoints.
-        final double driveOutput = m_drivingClosedLoopController.calculate(m_drivingEncoder.getVelocity(), correctedDesiredState.speedMetersPerSecond);		
-        final double turnOutput = m_turningClosedLoopController.calculate(getAbsoluteEncoderRad(), correctedDesiredState.angle.getRadians());
+        final double driveOutput = m_drivingPIDController.calculate(m_drivingEncoder.getVelocity(), correctedDesiredState.speedMetersPerSecond);		
+        final double turnOutput = m_turningPIDController.calculate(getAbsoluteEncoderRad(), correctedDesiredState.angle.getRadians());
 
-        final double driveFeedforward = m_feedForwardController.calculate(correctedDesiredState.speedMetersPerSecond);
+        final double driveFeedforward = m_feedForwardPIDController.calculate(correctedDesiredState.speedMetersPerSecond);
+		m_feedForwardPIDController.reset();
 
         m_drivingSpark.set(driveOutput + driveFeedforward / 3);
+		//m_drivingSpark.set(driveOutput);
         m_turningSpark.set(turnOutput / 3);
 
 		m_desiredState = desiredState;
