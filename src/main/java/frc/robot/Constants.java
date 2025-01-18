@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
@@ -28,15 +29,22 @@ import edu.wpi.first.math.util.Units;
  */
 public final class Constants {
     public static final class DriveConstants {
+        public static boolean shuffleManager_enable = true;
         // Driving Parameters - Note that these are not the maximum capable speeds of
         // the robot, rather the allowed maximum speeds
-        public static final double kMaxSpeedMetersPerSecond = 4.8;
-        public static final double kMaxAngularSpeed = 2 * Math.PI; // radians per second
+        public static double kMaxSpeedMetersPerSecond = 15;
+
+        public static double maxRotRps = 1;
+        public static double kMaxAngularSpeed = 2 * Math.PI * maxRotRps; // radians per second
+
+        public static double slewRateBase = 15;
+        public static SlewRateLimiter filterx = new SlewRateLimiter(slewRateBase);
+        public static SlewRateLimiter filtery = new SlewRateLimiter(slewRateBase);
 
         // Chassis configuration
-        public static final double kTrackWidth = Units.inchesToMeters(18);
+        public static final double kTrackWidth = Units.inchesToMeters(22.5);
         // Distance between centers of right and left wheels on robot
-        public static final double kWheelBase = Units.inchesToMeters(24);
+        public static final double kWheelBase = Units.inchesToMeters(22.5);
         // Distance between front and back wheels on robot
         public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKinematics(
             new Translation2d(kWheelBase / 2, kTrackWidth / 2),
@@ -46,10 +54,10 @@ public final class Constants {
         );
 
         // Angular offsets of the modules relative to the chassis in radians
-        public static final double kFrontLeftChassisAngularOffset = -Math.PI / 2;
+        public static final double kFrontLeftChassisAngularOffset = 0;
         public static final double kFrontRightChassisAngularOffset = 0;
-        public static final double kBackLeftChassisAngularOffset = Math.PI;
-        public static final double kBackRightChassisAngularOffset = Math.PI / 2;
+        public static final double kBackLeftChassisAngularOffset = 0;
+        public static final double kBackRightChassisAngularOffset = Math.PI;
 
         // SPARK MAX CAN IDs
         public static final int kFrontLeftDrivingCanId = 1;
@@ -75,22 +83,24 @@ public final class Constants {
          * The MAXSwerve module can be configured with one of three pinion gears: 12T,
          * 13T, or 14T. This changes the drive speed of the module (a pinion gear with
          * more teeth will result in a robot that drives faster).
-         */
+         */        
         public static final int kDrivingMotorPinionTeeth = 14;
 
         // Calculations required for driving motor conversion factors and feed forward
         public static final double kDrivingMotorFreeSpeedRps = NeoMotorConstants.kFreeSpeedRpm / 60;
         public static final double kWheelDiameterMeters = 0.0762;
         public static final double kWheelCircumferenceMeters = kWheelDiameterMeters * Math.PI;
-        // 45 teeth on the wheel's bevel gear, 22 teeth on the first-stage spur gear, 15 teeth on the bevel pinion
+        // 45 teeth on the wheel's bevel gear, 22 teeth on the first-stage spur gear, 15
+        // teeth on the bevel pinion
         public static final double kDrivingMotorReduction = (45.0 * 22) / (kDrivingMotorPinionTeeth * 15);
-        public static final double kDriveWheelFreeSpeedRps = (kDrivingMotorFreeSpeedRps * kWheelCircumferenceMeters) / kDrivingMotorReduction;
+        public static final double kDriveWheelFreeSpeedRps = (kDrivingMotorFreeSpeedRps * kWheelCircumferenceMeters)
+                / kDrivingMotorReduction;
 
         // PositionModule System Bus Constants
         public static final int kPigeonIMUDeviceNumber = 30;
 
         // VisionModule Constants
-        public static final String kLimelightName = "limelight-raven"; // FIXME: check, this could be just the hostname
+        public static final String kLimelightName = "limelight-raven";
     }
 
     public static final class OIConstants {
@@ -110,7 +120,7 @@ public final class Constants {
 
         // Constraint for the motion profiled robot angle controller
         public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(
-            kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
+                kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
     }
 
     public static final class NeoMotorConstants {

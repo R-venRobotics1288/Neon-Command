@@ -2,22 +2,18 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.subsystems;
+package frc.robot.modules;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 
-import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkMax;
-import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.hardware.CANcoder;
-import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.RelativeEncoder;
 
 import frc.robot.Configs;
@@ -31,6 +27,7 @@ public class MAXSwerveModule {
 
 	private final PIDController m_drivingClosedLoopController;
 	private final PIDController m_turningClosedLoopController;
+	private final PIDController m_feedForwardController;
 
 	private final CANcoder m_absoluteEncoder;
 
@@ -53,6 +50,7 @@ public class MAXSwerveModule {
 
 		m_drivingClosedLoopController = new PIDController(0.1, 0, 0);
 		m_turningClosedLoopController = new PIDController(0.4, 0, 0);
+		m_feedForwardController = new PIDController(1.0, 0, 0);
 
 		// Apply the respective configurations to the SPARKS. Reset parameters before
 		// applying the configuration to bring the SPARK to a known good state. Persist
@@ -114,7 +112,7 @@ public class MAXSwerveModule {
         final double driveOutput = m_drivingClosedLoopController.calculate(m_drivingEncoder.getVelocity(), correctedDesiredState.speedMetersPerSecond);		
         final double turnOutput = m_turningClosedLoopController.calculate(getAbsoluteEncoderRad(), correctedDesiredState.angle.getRadians());
 
-        final double driveFeedforward = new PIDController(1, 0, 0).calculate(correctedDesiredState.speedMetersPerSecond);
+        final double driveFeedforward = m_feedForwardController.calculate(correctedDesiredState.speedMetersPerSecond);
 
         m_drivingSpark.set(driveOutput + driveFeedforward / 3);
         m_turningSpark.set(turnOutput / 3);
