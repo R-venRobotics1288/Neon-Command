@@ -1,6 +1,8 @@
 package frc.robot.modules;
 
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.LimelightHelpers;
@@ -28,12 +30,26 @@ public class VisionModule extends SubsystemBase {
         return LimelightHelpers.getBotPose3d(ModuleConstants.kLimelightName);
     }
 
+    /**
+     * Gets the confidence of the vision position estimate. If this function returns 0,
+     * do not trust or use vision position estimates. If this function returns 2 or above,
+     * it has a higher confidence than gyro or odometer.
+     * @return Current confidence level of vision estimates as an int.
+     */
+    public int getVisionConfidence() {
+        return LimelightHelpers.getTargetCount(ModuleConstants.kLimelightName);
+    }
+
     @Override
     public void periodic() {
-        // FIXME: Test, and integrate into PositionModule before starting auto. First step: creating a test .fmap "fieldmap" file and uploading it to limelight with webui
+        // FIXME: Test PositionModule before starting auto.
         SmartDashboard.putNumber(
             "Limelight-TargetCount",
             LimelightHelpers.getTargetCount(ModuleConstants.kLimelightName)
         );
+        Field2d field = new Field2d();
+        Pose3d position = getVisionPose();
+        field.setRobotPose(position.getX(), position.getY(), new Rotation2d(0, 0));
+        SmartDashboard.putData("Limelight-EstimatedPose", field);
     }
 }
