@@ -4,7 +4,8 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.LimelightHelpers;
-import frc.robot.Constants.ModuleConstants;
+
+import static frc.robot.Constants.ModuleConstants.LIMELIGHT_HOSTNAME;
 
 /**
  * Implements Limelight to detect AprilTags and map them to field layout.
@@ -25,7 +26,7 @@ public class VisionModule extends SubsystemBase {
      * @return Current visual robot position as a {@link Pose3d}.
      */
     public Pose3d getVisionPose() {
-        return LimelightHelpers.getBotPose3d(ModuleConstants.kLimelightName);
+        return LimelightHelpers.getBotPose3d(LIMELIGHT_HOSTNAME);
     }
 
     /**
@@ -35,14 +36,14 @@ public class VisionModule extends SubsystemBase {
      * @return Current confidence level of vision estimates as an int.
      */
     public int getVisionConfidence() {
-        return LimelightHelpers.getTargetCount(ModuleConstants.kLimelightName);
+        return LimelightHelpers.getTargetCount(LIMELIGHT_HOSTNAME);
     }
 
     @Override
     public void periodic() {
         SmartDashboard.putNumber(
             "Vision Target Count",
-            LimelightHelpers.getTargetCount(ModuleConstants.kLimelightName)
+            LimelightHelpers.getTargetCount(LIMELIGHT_HOSTNAME)
         );
     }
 }

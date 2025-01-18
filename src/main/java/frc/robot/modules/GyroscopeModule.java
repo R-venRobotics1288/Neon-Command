@@ -5,7 +5,8 @@ import com.ctre.phoenix.sensors.PigeonIMU;
 import com.ctre.phoenix.sensors.PigeonIMU.PigeonState;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.ModuleConstants;
+
+import static frc.robot.Constants.ModuleConstants.PIGEON_IMU_CAN_ID;;
 
 /**
  * Implements the Pigeon IMU.
@@ -17,7 +18,7 @@ public class GyroscopeModule extends SubsystemBase {
     private PigeonIMU pigeon;
 
     public GyroscopeModule() {
-        pigeon = new PigeonIMU(ModuleConstants.kPigeonIMUDeviceNumber);
+        pigeon = new PigeonIMU(PIGEON_IMU_CAN_ID);
         pigeon.setYaw(0); // zeros initial gyrometer yaw reading
         System.out.println("INFO: PositionModule: Initialization Complete");
     }
