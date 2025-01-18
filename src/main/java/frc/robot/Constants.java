@@ -87,7 +87,7 @@ public final class Constants {
         public static final double kDriveWheelFreeSpeedRps = (kDrivingMotorFreeSpeedRps * kWheelCircumferenceMeters) / kDrivingMotorReduction;
 
         // PositionModule System Bus Constants
-        public static final int kPigeonIMUDeviceNumber = 0; // FIXME: Find correct ID on bot!
+        public static final int kPigeonIMUDeviceNumber = 30;
 
         // VisionModule Constants
         public static final String kLimelightName = "limelight-raven"; // FIXME: check, this could be just the hostname
