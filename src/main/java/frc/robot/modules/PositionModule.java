@@ -1,110 +1,81 @@
 package frc.robot.modules;
 
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
+import static frc.robot.Constants.DriveConstants.*;
+
 /**
  * Utilises AprilTag pose estimation, Odometry, and the Pigeon IMU to report a best-guess robot pose.
- * @author Team 1288
- * @version 0.1.1
+ * @author Joel Machens and Sean Ryan
+ * @version 0.2.0
  * @since 17-JAN-2025
  */
 public class PositionModule extends SubsystemBase {
-    private Pose3d robotPosition;
     private DriveModule driveModule;
     private VisionModule visionModule;
     private GyroscopeModule gyroscopeModule;
-    private Field2d dashboardField;
+
+    private Pose2d robotPose; // pose of the robot relative to its origin
+    
+    private final Field2d dashboardField;
+    private final SwerveDrivePoseEstimator estimator;
+    
 
     // PositionModule Initialization
     public PositionModule(DriveModule driveModule, VisionModule visionModule, GyroscopeModule gyroscopeModule) {
         this.driveModule = driveModule;
         this.visionModule = visionModule;
         this.gyroscopeModule = gyroscopeModule;
-        this.robotPosition = new Pose3d();
-        
+        this.robotPose = new Pose2d();
+
+        this.estimator = new SwerveDrivePoseEstimator(
+            DRIVE_KINEMATICS,
+            new Rotation2d(gyroscopeModule.getGyroscopeYawRadians()),
+            driveModule.getModulePositions(),
+            new Pose2d()
+        ); 
         dashboardField = new Field2d();
         SmartDashboard.putData("Estimated Robot Position", dashboardField);
     }
 
     /**
-     * Gets the current best-estimate position of the robot, relative to the robot's origin.
-     * @return Current robot position as a {@link Pose3d}.
+     * Gets the current best-estimate position of the robot, relative to the robot's origin point.
+     * @return Current robot position as a {@link Pose2d}.
      */
-    public Pose3d getRobotPosition() {
-        return robotPosition;
+    public Pose2d getRobotPose() {
+        return robotPose;
     }
 
     /**
      * Sets current position and rotation to (0, 0, 0), with rotational heading of 0 degrees.
      */
-    public void setPositionOriginToCurrentPosition() {
-        gyroscopeModule.resetGyroscope();
-        robotPosition = new Pose3d();
-        System.out.println("INFO: PositionModule: Reset Gyroscope and Position Estimate! Current position is now the origin!");
+    public void resetPosition() {
+        estimator.resetPose(Pose2d.kZero);
+        robotPose = new Pose2d();
+        System.out.println("INFO: PositionModule: Reset relative position, current position is now the origin!");
     }
     
     @Override
     public void periodic() {
-        double gyroYaw = gyroscopeModule.getGyroscopeYawRadians();
-        Pose2d odometryPoseEstimate = driveModule.getPose();
-        Pose3d visionPoseEstimate = visionModule.getVisionPose();
+        // update odometry and gyro
+        estimator.update(new Rotation2d(gyroscopeModule.getGyroscopeYawRadians()), driveModule.getModulePositions());
 
-        int visionConfidence = visionModule.getVisionConfidence();
-        if (visionConfidence == 1) { // Moderate Vision Accuracy - blend it with other sensors and report if any disagreements arise
-            double degreeError = Math.toDegrees(Math.abs(gyroYaw - visionPoseEstimate.getRotation().getZ()));
-            if (degreeError > 10) {
-                System.out.println("WARNING: PositionModule: " + degreeError + " degrees of heading error! Gyroscope reported heading: "
-                                   + gyroscopeModule.getGyroscopeYawDegrees() + " while Vision reported heading: " + visionPoseEstimate.getRotation().getZ());
-            }
-
-            Pose2d positionErrorPose = odometryPoseEstimate.relativeTo(visionPoseEstimate.toPose2d());
-            double positionError = Math.sqrt(Math.pow(positionErrorPose.getX(), 2) + Math.pow(positionErrorPose.getY(), 2));
-            if (positionError > 0.5) {
-                System.out.println("WARNING: PositionModule: " + positionError + " metres of position error! Odometry reported field position  ("
-                                   + odometryPoseEstimate.getX() + ", " + odometryPoseEstimate.getY() + "), while Vision reported field position ("
-                                   + visionPoseEstimate.getX() + ", " + visionPoseEstimate.getY() + ")");
-            }
-
-            /**
-             * Current Fusion Weights
-             * 40% Vision 60% Gyroscope
-             * 60% Vision 40% Odometry
-             */
-            double weightedYaw = ((gyroYaw * 6) + (visionPoseEstimate.getRotation().getZ() * 4)) / 10;
-            double weightedX = ((odometryPoseEstimate.getX() * 4) + (visionPoseEstimate.getX() * 6)) / 10;
-            double weightedY = ((odometryPoseEstimate.getY() * 4) + (visionPoseEstimate.getY() * 6)) / 10;
-            robotPosition = new Pose3d(
-                weightedX,
-                weightedY,
-                visionPoseEstimate.getZ(),
-                new Rotation3d(
-                    visionPoseEstimate.getRotation().getX(),
-                    visionPoseEstimate.getRotation().getY(),
-                    weightedYaw
-                )
-            );
-        } else if (visionConfidence > 1) { // High Vision Accuracy - use it as a source of truth for other sensors position detection
-            gyroscopeModule.resetGyroscope(Math.toDegrees(visionPoseEstimate.getRotation().getZ()));
-            driveModule.resetOdometry(
-                new Pose2d(visionPoseEstimate.getX(),
-                visionPoseEstimate.getY(),
-                visionPoseEstimate.getRotation().toRotation2d())
-            );
-            robotPosition = visionPoseEstimate;
-        } else { // Vision Unavailable - use exculsively odometry and gyro until we get more apriltags available
-            robotPosition = new Pose3d(
-                odometryPoseEstimate.getX(),
-                odometryPoseEstimate.getY(),
-                0, new Rotation3d(0, 0, gyroYaw)
-            );
+        // apply vision if, and only if, we're sure its constructive
+        boolean rotationConfidence = driveModule.getTurnRate() < 540;
+        int targetConfidence = visionModule.getVisionConfidence();
+        double ta = visionModule.getVisionTargetArea();
+        if (rotationConfidence && ((targetConfidence >= 2 && ta > 0.04) || (targetConfidence == 1 && ta > 0.08))) { // slow enough rotation, multiple targets, or solid target definition
+            estimator.addVisionMeasurement(visionModule.getVisionPose(), Timer.getFPGATimestamp());
         }
 
-        dashboardField.setRobotPose(robotPosition.getX(), robotPosition.getY(), new Rotation2d(robotPosition.getRotation().getZ()));
+        // grab the estimated position and put it on the map
+        robotPose = estimator.getEstimatedPosition();
+        dashboardField.setRobotPose(robotPose.getX(), robotPose.getY(), robotPose.getRotation());
     }
 }
