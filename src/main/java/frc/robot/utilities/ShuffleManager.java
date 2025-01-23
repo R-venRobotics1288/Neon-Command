@@ -12,7 +12,7 @@ import static frc.robot.Constants.DriveConstants.*;
 
 /**
  * Implements runtime-editable constants using the WPILib Shuffleboard
- * @author Team 1288
+ * @author Aidan Fiedler
  * @version 0.1.0
  * @since 17-JAN-25
  */

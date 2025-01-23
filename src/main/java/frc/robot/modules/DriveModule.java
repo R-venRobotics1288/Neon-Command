@@ -4,11 +4,9 @@
 
 package frc.robot.modules;
 
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -18,6 +16,7 @@ import static frc.robot.Constants.DriveConstants.*;
 
 public class DriveModule extends SubsystemBase {
     private GyroscopeModule m_gyro;
+    private double driveCoefficient = 1;
     // Create MAXSwerveModules
     private final MAXSwerveModule m_frontLeft = new MAXSwerveModule(
         FRONT_LEFT_DRIVE_MOTOR_CAN_ID,
@@ -47,65 +46,20 @@ public class DriveModule extends SubsystemBase {
         REAR_RIGHT_CHASSIS_ANGULAR_OFFSET
     );
 
-    // Odometry class for tracking robot pose
-    private SwerveDriveOdometry m_odometry;
-
     /** Creates a new DriveSubsystem. */
-    public DriveModule(GyroscopeModule m_gyro) {
-        this.m_gyro = m_gyro;
-        this.m_odometry = new SwerveDriveOdometry(
-            DRIVE_KINEMATICS,
-            Rotation2d.fromDegrees(m_gyro.getGyroscopeYawDegrees()),
-            new SwerveModulePosition[] {
-                m_frontLeft.getPosition(),
-                m_frontRight.getPosition(),
-                m_rearLeft.getPosition(),
-                m_rearRight.getPosition()
-            }
-        );
-    }
-
-    public static double driveCoefficient = 1;
-
-    @Override
-    public void periodic() {
-        // Update the odometry in the periodic block
-        m_odometry.update(
-            Rotation2d.fromDegrees(m_gyro.getGyroscopeYawDegrees()),
-            new SwerveModulePosition[] {
-                    m_frontLeft.getPosition(),
-                    m_frontRight.getPosition(),
-                    m_rearLeft.getPosition(),
-                    m_rearRight.getPosition()
-            }
-        );
-    }
+    public DriveModule(GyroscopeModule m_gyro) { this.m_gyro = m_gyro; }
 
     /**
-     * Returns the currently-estimated pose of the robot.
-     *
-     * @return The pose.
+     * Gets the current module positions as an array.
+     * @return Array of {@link SwerveModulePosition}
      */
-    public Pose2d getPose() {
-        return m_odometry.getPoseMeters();
-    }
-
-    /**
-     * Resets the odometry to the specified pose.
-     *
-     * @param pose The pose to which to set the odometry.
-     */
-    public void resetOdometry(Pose2d pose) {
-        m_odometry.resetPosition(
-            Rotation2d.fromDegrees(m_gyro.getGyroscopeYawDegrees()),
-            new SwerveModulePosition[] {
-                m_frontLeft.getPosition(),
-                m_frontRight.getPosition(),
-                m_rearLeft.getPosition(),
-                m_rearRight.getPosition()
-            },
-            pose
-        );
+    public SwerveModulePosition[] getModulePositions() {
+        return new SwerveModulePosition[] {
+            m_frontLeft.getPosition(),
+            m_frontRight.getPosition(),
+            m_rearLeft.getPosition(),
+            m_rearRight.getPosition()
+        };
     }
 
     /**
