@@ -1,6 +1,6 @@
 package frc.robot.modules;
 
-import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.utilities.LimelightHelpers;
@@ -10,8 +10,8 @@ import static frc.robot.Constants.ModuleConstants.LIMELIGHT_HOSTNAME;
 /**
  * Implements Limelight to detect AprilTags and map them to field layout.
  * Currently only used for dead reckoning.
- * @author Team 1288
- * @version 0.1.0
+ * @author Joel Machens
+ * @version 0.1.2
  * @since 17-JAN-2025
  */
 public class VisionModule extends SubsystemBase {
@@ -21,12 +21,13 @@ public class VisionModule extends SubsystemBase {
     /**
      * Gets the current pose of the robot, as estimated by vision alone.
      * May be very accurate, if multiple AprilTag targets are visible,
-     * or garbage, if none are visible. Prefer {@link PositionModule}'s estimated
-     * position.
-     * @return Current visual robot position as a {@link Pose3d}.
+     * or garbage, if none are visible. Prefer {@link PositionModule}'s
+     * estimated position. NOTE: Relative to the Blue Alliance side of
+     * the field!
+     * @return Current visual robot position as a {@link Pose2d}.
      */
-    public Pose3d getVisionPose() {
-        return LimelightHelpers.getBotPose3d(LIMELIGHT_HOSTNAME);
+    public Pose2d getVisionPose() {
+        return LimelightHelpers.getBotPose2d_wpiBlue(LIMELIGHT_HOSTNAME);
     }
 
     /**
@@ -37,6 +38,14 @@ public class VisionModule extends SubsystemBase {
      */
     public int getVisionConfidence() {
         return LimelightHelpers.getTargetCount(LIMELIGHT_HOSTNAME);
+    }
+
+    /**
+     * Gets the current target area reported by the Limelight.
+     * @return Target Area as a Double
+     */
+    public double getVisionTargetArea() {
+        return LimelightHelpers.getTA(LIMELIGHT_HOSTNAME);
     }
 
     @Override
