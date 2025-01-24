@@ -10,7 +10,7 @@ import static frc.robot.Constants.ModuleConstants.PIGEON_IMU_CAN_ID;;
 
 /**
  * Implements the Pigeon IMU.
- * @author Joel Machens
+ * @author Team 1288
  * @version 0.1.0
  * @since 18-JAN-2025
  */

@@ -11,7 +11,9 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 import static frc.robot.Constants.DriveConstants.*;
 
@@ -63,6 +65,8 @@ public class DriveModule extends SubsystemBase {
             }
         );
     }
+
+    public static double driveCoefficient = 1;
 
     @Override
     public void periodic() {
@@ -116,9 +120,9 @@ public class DriveModule extends SubsystemBase {
      */
     public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative) {
         // Convert the commanded speeds into the correct units for the drivetrain
-        double xSpeedDelivered = SLEW_FILTER_X.calculate(xSpeed * MAX_ROBOT_SPEED);
-        double ySpeedDelivered = SLEW_FILTER_Y.calculate(ySpeed * MAX_ROBOT_SPEED);
-        double rotDelivered = rot * MAX_ANGULAR_SPEED;
+        double xSpeedDelivered = SLEW_FILTER_X.calculate(xSpeed * MAX_ROBOT_SPEED * driveCoefficient);
+        double ySpeedDelivered = SLEW_FILTER_Y.calculate(ySpeed * MAX_ROBOT_SPEED * driveCoefficient);
+        double rotDelivered = ROTATION_FILTER.calculate(rot * MAX_ANGULAR_SPEED * driveCoefficient);
 
         SwerveModuleState[] swerveModuleStates = DRIVE_KINEMATICS.toSwerveModuleStates(
                 fieldRelative
@@ -136,11 +140,14 @@ public class DriveModule extends SubsystemBase {
     /**
      * Sets the wheels into an X formation to prevent movement.
      */
-    public void setX() {
-        m_frontLeft.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)));
-        m_frontRight.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)));
-        m_rearLeft.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)));
-        m_rearRight.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)));
+    public Command cutSpeed(boolean action) {
+        return this.runOnce(() -> {
+            if (action) {
+                driveCoefficient = 0.5;
+            } else {
+                driveCoefficient = 1;
+            }
+        });
     }
 
     /** Resets the drive encoders to currently read a position of 0. */

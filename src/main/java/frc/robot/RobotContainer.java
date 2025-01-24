@@ -5,8 +5,6 @@
 package frc.robot;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.PS4Controller.Button;
 import frc.robot.Constants.OIConstants;
 import frc.robot.modules.DriveModule;
 import frc.robot.modules.GyroscopeModule;
@@ -14,7 +12,7 @@ import frc.robot.modules.PositionModule;
 import frc.robot.modules.VisionModule;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 /*
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -30,7 +28,7 @@ public class RobotContainer {
   @SuppressWarnings("unused") private final PositionModule m_position;
 
   // The driver's controller
-  XboxController m_driverController = new XboxController(OIConstants.DRIVER_CONTROLLER_PORT);
+  CommandXboxController m_driverController = new CommandXboxController(OIConstants.DRIVER_CONTROLLER_PORT);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -67,10 +65,8 @@ public class RobotContainer {
      * {@link JoystickButton}.
      */
     private void configureButtonBindings() {
-      new JoystickButton(m_driverController, Button.kR1.value)
-          .whileTrue(new RunCommand(
-              () -> m_drive.setX(),
-              m_drive));
+      m_driverController.rightBumper().onTrue(m_drive.cutSpeed(true))
+        .onFalse(m_drive.cutSpeed(false));
     }
 
     /**
