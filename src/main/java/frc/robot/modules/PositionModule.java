@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 /**
  * Utilises AprilTag pose estimation, Odometry, and the Pigeon IMU to report a best-guess robot pose.
- * @author Joel Machens
+ * @author Team 1288
  * @version 0.1.1
  * @since 17-JAN-2025
  */

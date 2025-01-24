@@ -23,7 +23,7 @@ import edu.wpi.first.math.util.Units;
  * constants are needed, to reduce verbosity.
  * </p>
  * 
- * @author WPILib, Aidan Fiedler, Joel Machens
+ * @author WPILib and Team 1288
  * @version 1.0.1
  * @since 14-JAN-2025
  */
@@ -40,6 +40,9 @@ public final class Constants {
         public static double BASE_SLEW_RATE = 15;
         public static SlewRateLimiter SLEW_FILTER_X = new SlewRateLimiter(BASE_SLEW_RATE);
         public static SlewRateLimiter SLEW_FILTER_Y = new SlewRateLimiter(BASE_SLEW_RATE);
+
+        public static double ROT_SLEW_RATE = 15;
+        public static SlewRateLimiter ROTATION_FILTER = new SlewRateLimiter(ROT_SLEW_RATE);
 
         // Chassis configuration
         public static final double TRACK_WIDTH = Units.inchesToMeters(22.5);

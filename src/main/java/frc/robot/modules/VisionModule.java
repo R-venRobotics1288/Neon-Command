@@ -10,7 +10,7 @@ import static frc.robot.Constants.ModuleConstants.LIMELIGHT_HOSTNAME;
 /**
  * Implements Limelight to detect AprilTags and map them to field layout.
  * Currently only used for dead reckoning.
- * @author Joel Machens
+ * @author Team 1288
  * @version 0.1.0
  * @since 17-JAN-2025
  */
