@@ -44,6 +44,8 @@ public final class Constants {
         public static double ROT_SLEW_RATE = 15;
         public static SlewRateLimiter ROTATION_FILTER = new SlewRateLimiter(ROT_SLEW_RATE);
 
+        public static boolean FIELDRELATIVEDRIVING = false;
+
         // Chassis configuration
         public static final double TRACK_WIDTH = Units.inchesToMeters(22.5);
         // Distance between centers of right and left wheels on robot
