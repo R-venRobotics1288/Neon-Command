@@ -13,7 +13,6 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 import static frc.robot.Constants.DriveConstants.*;
 
@@ -150,6 +149,13 @@ public class DriveModule extends SubsystemBase {
         });
     }
 
+    public Command toggleFieldRelative() {
+        return this.runOnce(() -> {
+            resetOdometry(new Pose2d());
+            FIELDRELATIVEDRIVING = !FIELDRELATIVEDRIVING;
+        });
+    }
+
     /** Resets the drive encoders to currently read a position of 0. */
     public void resetEncoders() {
         m_frontLeft.resetEncoders();
@@ -157,6 +163,7 @@ public class DriveModule extends SubsystemBase {
         m_frontRight.resetEncoders();
         m_rearRight.resetEncoders();
     }
+    
 
     /**
      * Returns the turn rate of the robot.

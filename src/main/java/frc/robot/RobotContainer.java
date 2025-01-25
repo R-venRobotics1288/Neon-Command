@@ -30,6 +30,8 @@ public class RobotContainer {
   // The driver's controller
   CommandXboxController m_driverController = new CommandXboxController(OIConstants.DRIVER_CONTROLLER_PORT);
 
+  private boolean fieldRelative;
+
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
@@ -51,7 +53,7 @@ public class RobotContainer {
                 -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.DRIVE_DEADBAND),
                 -MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.DRIVE_DEADBAND),
                 -MathUtil.applyDeadband(m_driverController.getRightX(), OIConstants.DRIVE_DEADBAND),
-                false),
+                true),
             m_drive));
   }
 
@@ -67,6 +69,7 @@ public class RobotContainer {
     private void configureButtonBindings() {
       m_driverController.rightBumper().onTrue(m_drive.cutSpeed(true))
         .onFalse(m_drive.cutSpeed(false));
+      m_driverController.y().onTrue(m_drive.toggleFieldRelative());
     }
 
     /**
