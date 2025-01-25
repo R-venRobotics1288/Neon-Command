@@ -24,7 +24,7 @@ public class RobotContainer {
   // The robot's subsystems
   private final GyroscopeModule m_gyroscope;
   private final VisionModule m_vision;
-  private final DriveModule m_drive;
+  public final DriveModule m_drive;
   @SuppressWarnings("unused") private final PositionModule m_position;
 
   // The driver's controller

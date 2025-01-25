@@ -163,7 +163,12 @@ public class DriveModule extends SubsystemBase {
      *
      * @return The turn rate of the robot, in degrees per second
      */
-    public double getTurnRate() {
-        return m_gyro.getGyroscopeYawDegrees() * (GYROSCOPE_REVERSED ? -1.0 : 1.0);
+
+    /**
+     * Gets the current yaw reported by the Pigeon IMU.
+     * @return Current yaw as a double.
+     */
+    public double getGyroscopeYawRadians() {
+        return m_gyro.getGyroscopeYawRadians();
     }
 }
