@@ -1,8 +1,6 @@
 package frc.robot.modules;
 
-import com.ctre.phoenix.ErrorCode;
-import com.ctre.phoenix.sensors.PigeonIMU;
-import com.ctre.phoenix.sensors.PigeonIMU.PigeonState;
+import com.ctre.phoenix6.hardware.Pigeon2;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -15,17 +13,17 @@ import static frc.robot.Constants.ModuleConstants.PIGEON_IMU_CAN_ID;;
  * @since 18-JAN-2025
  */
 public class GyroscopeModule extends SubsystemBase {
-    private PigeonIMU pigeon;
+    private Pigeon2 pigeon;
 
     public GyroscopeModule() {
-        pigeon = new PigeonIMU(PIGEON_IMU_CAN_ID);
+        pigeon = new Pigeon2(PIGEON_IMU_CAN_ID);
         pigeon.setYaw(0); // zeros initial gyrometer yaw reading
         System.out.println("INFO: PositionModule: Initialization Complete");
     }
 
-    @Override
+    /* @Override
     public void periodic() {
-        PigeonIMU.GeneralStatus generalStatus = new PigeonIMU.GeneralStatus();
+        Pigeon2.GeneralStatus generalStatus = new Pigeon2.GeneralStatus();
         pigeon.getGeneralStatus(generalStatus);
         if (generalStatus.state != PigeonState.Ready) {
             System.out.println("ERROR: PositionModule: Pigeon IMU: State is NOT Ready, instead reported " + generalStatus.state.name());
@@ -33,14 +31,14 @@ public class GyroscopeModule extends SubsystemBase {
         if (generalStatus.lastError != ErrorCode.OK) {
             System.out.println("ERROR: PositionModule: Pigeon IMU: " + generalStatus.lastError.name());
         }
-    } 
+    } */
 
     /**
      * Gets the current yaw reported by the Pigeon IMU.
      * @return Current yaw as a double.
      */
     public double getGyroscopeYawDegrees() {
-        return pigeon.getYaw();
+        return pigeon.getYaw().getValueAsDouble();
     }
 
     /**
@@ -48,7 +46,7 @@ public class GyroscopeModule extends SubsystemBase {
      * @return Current yaw as a double.
      */
     public double getGyroscopeYawRadians() {
-        return Math.toRadians(pigeon.getYaw());
+        return Math.toRadians(pigeon.getYaw().getValueAsDouble());
     }
 
     /**
@@ -56,15 +54,15 @@ public class GyroscopeModule extends SubsystemBase {
      * @return Current uptime as an int (backed uint8_t).
      */
     public double getGyroscopeUptime() {
-        return pigeon.getUpTime();
+        return pigeon.getUpTime().getValueAsDouble();
     }
 
     /**
      * Gets the direct IMU interface.
      * WARNING: Do not use this unless you know what you're doing!
-     * @return The {@link PigeonIMU} device interface.
+     * @return The {@link Pigeon2} device interface.
      */
-    public PigeonIMU getDirectIMU() {
+    public Pigeon2 getDirectIMU() {
         return pigeon;
     }
 
