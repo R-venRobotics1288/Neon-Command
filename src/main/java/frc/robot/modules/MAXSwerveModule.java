@@ -18,6 +18,8 @@ import com.revrobotics.RelativeEncoder;
 
 import frc.robot.Configs;
 
+import static frc.robot.Constants.DriveConstants.*;
+
 public class MAXSwerveModule {
 	private final SparkMax m_drivingSpark;
 	private final SparkMax m_turningSpark;
@@ -48,11 +50,10 @@ public class MAXSwerveModule {
 		m_turningEncoder = m_turningSpark.getEncoder();
 		m_absoluteEncoder = new CANcoder(absoluteEncoderCANId);
 
-		m_drivingPIDController = new PIDController(0.25, 0, 0);
-		m_turningPIDController = new PIDController(0.6, 0, 0);
+		m_drivingPIDController = new PIDController(TRANSLATION_COEFFICIENT_P, TRANSLATION_COEFFICIENT_I, TRANSLATION_COEFFICIENT_D);
+		m_turningPIDController = new PIDController(ROTATION_COEFFICIENT_P, ROTATION_COEFFICIENT_I, ROTATION_COEFFICIENT_D);
 		m_turningPIDController.enableContinuousInput(-Math.PI, Math.PI);
 		m_feedForwardPIDController = new PIDController(1, 0, 0);
-
 
 		// Apply the respective configurations to the SPARKS. Reset parameters before
 		// applying the configuration to bring the SPARK to a known good state. Persist

@@ -9,6 +9,7 @@ import static frc.robot.Constants.DriveConstants.FIELDRELATIVEDRIVING;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.Constants.OIConstants;
+import frc.robot.modules.AutonomousModule;
 import frc.robot.modules.DriveModule;
 import frc.robot.modules.GyroscopeModule;
 import frc.robot.modules.PositionModule;
@@ -30,8 +31,8 @@ public class RobotContainer {
   private final GyroscopeModule m_gyroscope;
   private final VisionModule m_vision;
   private final DriveModule m_drive;
-  @SuppressWarnings("unused")
   private final PositionModule m_position;
+  private final AutonomousModule m_auto;
 
   // The driver's controller
   CommandXboxController m_driverController = new CommandXboxController(OIConstants.DRIVER_CONTROLLER_PORT);
@@ -44,7 +45,7 @@ public class RobotContainer {
     m_vision = new VisionModule();
     m_drive = new DriveModule(m_gyroscope);
     m_position = new PositionModule(m_drive, m_vision, m_gyroscope);
-
+    m_auto = new AutonomousModule(m_position, m_drive);
     // Configure the button bindings
     configureButtonBindings();
 
@@ -85,15 +86,13 @@ public class RobotContainer {
     m_driverController.rightBumper().onTrue(m_drive.cutSpeed(true))
         .onFalse(m_drive.cutSpeed(false));
     m_driverController.y().onTrue(m_drive.toggleFieldRelative());
+    m_driverController.button(7).and(m_driverController.button(8).onTrue(new RunCommand(() -> { m_gyroscope.resetGyroscope(); }, m_gyroscope)));
   }
 
-  /**
-   * Use this to pass the autonomous command to the main {@link Robot} class.
-   *
-   * @return the command to run in autonomous
-   */
-  public Command getAutonomousCommand() {
-    return new RunCommand(() -> {
-    });
-  }
+    /**
+     * Use this to pass the autonomous command to the main {@link Robot} class.
+     *
+     * @return the command to run in autonomous
+     */
+    public Command getAutonomousCommand() { return m_auto.getAutonomousCommand(); }
 }

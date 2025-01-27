@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.config.RobotConfig;
+
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -64,6 +66,14 @@ public final class Constants {
         public static final double REAR_LEFT_CHASSIS_ANGULAR_OFFSET = 0;
         public static final double REAR_RIGHT_CHASSIS_ANGULAR_OFFSET = Math.PI;
 
+        // P, I, D coefficients
+        public static final double TRANSLATION_COEFFICIENT_P = 0.25;
+        public static final double TRANSLATION_COEFFICIENT_I = 0;
+        public static final double TRANSLATION_COEFFICIENT_D = 0;
+        public static final double ROTATION_COEFFICIENT_P = 0.6;
+        public static final double ROTATION_COEFFICIENT_I = 0;
+        public static final double ROTATION_COEFFICIENT_D = 0;
+
         // SPARK MAX CAN IDs
         public static final int  FRONT_LEFT_DRIVE_MOTOR_CAN_ID = 1;
         public static final int   REAR_LEFT_DRIVE_MOTOR_CAN_ID = 7;
@@ -114,10 +124,10 @@ public final class Constants {
     }
 
     public static final class AutoConstants {
-        public static final double AUTO_MAX_SPEED = 3; // in metres per second
-        public static final double AUTO_MAX_ACCELERATION = 3; // in metres per second squared
-        public static final double AUTO_MAX_ANGULAR_SPEED = Math.PI; // in radians per second
-        public static final double AUTO_MAX_ANGULAR_ACCELERATION = Math.PI; // in radians per second squared
+        public static final double AUTO_MAX_SPEED = 10; // in metres per second
+        public static final double AUTO_MAX_ACCELERATION = 5; // in metres per second squared
+        public static final double AUTO_MAX_ANGULAR_SPEED = 4 * Math.PI; // in radians per second
+        public static final double AUTO_MAX_ANGULAR_ACCELERATION = 2 * Math.PI; // in radians per second squared
 
         public static final double PX_CONTROLLER = 1;
         public static final double PY_CONTROLLER = 1;
@@ -126,6 +136,16 @@ public final class Constants {
         // Constraint for the motion profiled robot angle controller
         public static final TrapezoidProfile.Constraints THETA_CONTROLLER_CONSTRAINTS = new TrapezoidProfile.Constraints(
                 AUTO_MAX_ANGULAR_SPEED, AUTO_MAX_ANGULAR_ACCELERATION);
+
+        private static final RobotConfig GET_PATHPLANNER_ROBOT_CONFIG() {
+            try {
+                return RobotConfig.fromGUISettings();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+        public static final RobotConfig PATHPLANNER_ROBOT_CONFIG = GET_PATHPLANNER_ROBOT_CONFIG();
     }
 
     public static final class NeoMotorConstants {

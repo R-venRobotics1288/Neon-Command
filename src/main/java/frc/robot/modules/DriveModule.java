@@ -63,7 +63,20 @@ public class DriveModule extends SubsystemBase {
     }
 
     /**
-     * Method to drive the robot using joystick info.
+     * Gets the current chassis speed of the robot.
+     * @return {@link ChassisSpeeds} chassis speed.
+     */
+    public ChassisSpeeds getChassisSpeeds() {
+        return DRIVE_KINEMATICS.toChassisSpeeds(
+            m_frontLeft.getState(),
+            m_frontRight.getState(),
+            m_rearLeft.getState(),
+            m_rearRight.getState()
+        );
+    }
+
+    /**
+     * Method to drive the robot.
      *
      * @param xSpeed                Speed of the robot in the x direction (forward).
      * @param ySpeed                Speed of the robot in the y direction (sideways).
@@ -82,12 +95,20 @@ public class DriveModule extends SubsystemBase {
                         ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered,
                                 Rotation2d.fromDegrees(m_gyro.getGyroscopeYawDegrees()))
                         : new ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered));
-        SwerveDriveKinematics.desaturateWheelSpeeds(
-                swerveModuleStates, MAX_ROBOT_SPEED);
-        m_frontLeft.setDesiredState(swerveModuleStates[0]);
-        m_frontRight.setDesiredState(swerveModuleStates[1]);
-        m_rearLeft.setDesiredState(swerveModuleStates[2]);
-        m_rearRight.setDesiredState(swerveModuleStates[3]);
+        setModuleStates(DRIVE_KINEMATICS.toChassisSpeeds(swerveModuleStates));
+    }
+
+    /**
+     * Method that sets states of swervemodule from chassis speeds object.
+     * @param desiredState Desired {@link ChassisSpeeds}
+     */
+    public void setModuleStates(ChassisSpeeds desiredState) {
+        SwerveModuleState[] desiredModuleStates = DRIVE_KINEMATICS.toSwerveModuleStates(desiredState.unaryMinus());
+        SwerveDriveKinematics.desaturateWheelSpeeds(desiredModuleStates, MAX_ROBOT_SPEED);
+        m_frontLeft.setDesiredState(desiredModuleStates[0]);
+        m_frontRight.setDesiredState(desiredModuleStates[1]);
+        m_rearLeft.setDesiredState(desiredModuleStates[2]);
+        m_rearRight.setDesiredState(desiredModuleStates[3]);
     }
 
     /**

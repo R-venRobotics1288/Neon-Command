@@ -17,9 +17,9 @@ import static frc.robot.Constants.DriveConstants.*;
  * @since 17-JAN-2025
  */
 public class PositionModule extends SubsystemBase {
-    private DriveModule driveModule;
-    private VisionModule visionModule;
-    private GyroscopeModule gyroscopeModule;
+    private final DriveModule driveModule;
+    private final VisionModule visionModule;
+    private final GyroscopeModule gyroscopeModule;
 
     private Pose2d robotPose; // pose of the robot relative to its origin
     
@@ -59,6 +59,15 @@ public class PositionModule extends SubsystemBase {
         estimator.resetPose(Pose2d.kZero);
         robotPose = new Pose2d();
         System.out.println("INFO: PositionModule: Reset relative position, current position is now the origin!");
+    }
+
+    public void resetPosition(Pose2d to) {
+        estimator.resetPose(to);
+        robotPose = to;
+        System.out.println(
+            "INFO: PostitionModule: Reset relative position, current position is now ("
+            + to.getX() + ", " + to.getY() + ") yaw: " + to.getRotation().getDegrees()
+        );
     }
     
     @Override
