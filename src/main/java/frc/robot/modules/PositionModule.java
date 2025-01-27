@@ -17,15 +17,14 @@ import static frc.robot.Constants.DriveConstants.*;
  * @since 17-JAN-2025
  */
 public class PositionModule extends SubsystemBase {
-    private DriveModule driveModule;
-    private VisionModule visionModule;
-    private GyroscopeModule gyroscopeModule;
+    private final DriveModule driveModule;
+    private final VisionModule visionModule;
+    private final GyroscopeModule gyroscopeModule;
 
     private Pose2d robotPose; // pose of the robot relative to its origin
     
     private final Field2d dashboardField;
     private final SwerveDrivePoseEstimator estimator;
-    
 
     // PositionModule Initialization
     public PositionModule(DriveModule driveModule, VisionModule visionModule, GyroscopeModule gyroscopeModule) {
@@ -60,22 +59,39 @@ public class PositionModule extends SubsystemBase {
         robotPose = new Pose2d();
         System.out.println("INFO: PositionModule: Reset relative position, current position is now the origin!");
     }
+
+    public void resetPosition(Pose2d to) {
+        estimator.resetPose(to);
+        robotPose = to;
+        System.out.println(
+            "INFO: PostitionModule: Reset relative position, current position is now ("
+            + to.getX() + ", " + to.getY() + ") yaw: " + to.getRotation().getDegrees()
+        );
+    }
     
     @Override
     public void periodic() {
-        // update odometry and gyro
-        estimator.update(new Rotation2d(gyroscopeModule.getGyroscopeYawRadians()), driveModule.getModulePositions());
+        // Update odometry and gyro
+        estimator.updateWithTime(Timer.getFPGATimestamp(), new Rotation2d(gyroscopeModule.getGyroscopeYawRadians()), driveModule.getModulePositions())
+            .times(2); // For some reason estimator is returning half of actual travel, multiplied by 2 to adjust to correct position
 
         // apply vision if, and only if, we're sure its constructive
-        boolean rotationConfidence = driveModule.getTurnRate() < 540;
+        boolean rotationConfidence = Math.abs(driveModule.getTurnRate()) < 540;
         int targetConfidence = visionModule.getVisionConfidence();
         double ta = visionModule.getVisionTargetArea();
         if (rotationConfidence && ((targetConfidence >= 2 && ta > 0.04) || (targetConfidence == 1 && ta > 0.08))) { // slow enough rotation, multiple targets, or solid target definition
-            estimator.addVisionMeasurement(visionModule.getVisionPose(), Timer.getFPGATimestamp());
+            estimator.addVisionMeasurement(visionModule.getVisionPose(), Timer.getTimestamp());
         }
 
-        // grab the estimated position and put it on the map
+        // Grab the estimated position and put it on the map
         robotPose = estimator.getEstimatedPosition();
+        SmartDashboard.putNumber("Robot Pose X", robotPose.getX());
+        SmartDashboard.putNumber("Turn Rate", Math.abs(driveModule.getTurnRate()));
+        SmartDashboard.putNumber("Gyro Yaw Degrees", gyroscopeModule.getGyroscopeYawDegrees());
+        SmartDashboard.putNumber("Front Left Wheel", driveModule.getModulePositions()[0].distanceMeters);
+        SmartDashboard.putNumber("Front Right Wheel", driveModule.getModulePositions()[1].distanceMeters);
+        SmartDashboard.putNumber("Rear Left Wheel", driveModule.getModulePositions()[2].distanceMeters);
+        SmartDashboard.putNumber("Rear Right Wheel", driveModule.getModulePositions()[3].distanceMeters);
         dashboardField.setRobotPose(robotPose.getX(), robotPose.getY(), robotPose.getRotation());
     }
 }

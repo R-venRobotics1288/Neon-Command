@@ -9,7 +9,6 @@ import static frc.robot.Constants.DriveConstants.*;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.Constants.IntakeConstants;
-import frc.robot.Constants.ModuleConstants;
 import frc.robot.Constants.LegConstants;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.OIConstants;
@@ -19,6 +18,7 @@ import frc.robot.commands.intake.OpenIntakeCommand;
 import frc.robot.commands.intake.PivotIntakeCommand;
 import frc.robot.commands.leg.MoveFootCommand;
 import frc.robot.commands.leg.MoveLegCommand;
+import frc.robot.modules.AutonomousModule;
 import frc.robot.modules.DriveModule;
 import frc.robot.modules.ElevatorModule;
 import frc.robot.modules.GyroscopeModule;
@@ -39,32 +39,38 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
  * (including subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-  // The robot's subsystems
-  // private final GyroscopeModule m_gyroscope;
-  // private final VisionModule m_vision;
-  // private final DriveModule m_drive;
-  private final ElevatorModule m_elevator;
-  private final IntakeModule m_intake;
-  private final LegModule m_leg;
+  	// The robot's subsystems
+  	private final GyroscopeModule m_gyroscope;
+  	private final VisionModule m_vision;
+  	private final DriveModule m_drive;
+	private final ElevatorModule m_elevator;
+	private final IntakeModule m_intake;
+	private final LegModule m_leg;
+  	private final PositionModule m_position;
+  	private final AutonomousModule m_auto;
+	
+	private boolean m_manualControlEnabled = true;
 
-  private Command elevatorToLevelFourCommand;
-  private Command elevatorToSafeHeightCommand;
-  private Command elevatorToZeroCommand;
-  private Command moveLegToPosOne;
-  private Command moveLegToPosTwo;
-  private Command moveLegToPosThree;
-  private Command moveLegToPosFour;
-
-  private Command moveFootIntake;
-  private Command moveFootOutTake;
-
-  // @SuppressWarnings("unused") private final PositionModule m_position;
-
-	// The driver's controller
-	CommandXboxController m_driverController = new CommandXboxController(OIConstants.DRIVER_CONTROLLER_PORT);
+  	// The driver's controller
+  	CommandXboxController m_driverController = new CommandXboxController(OIConstants.DRIVER_CONTROLLER_PORT);
 	CommandXboxController m_operatorController = new CommandXboxController(OIConstants.OPERATOR_CONTROLLER_PORT);
 
-	// Intake commands
+	// Elevator Commands
+	private Command elevatorToLevelFourCommand;
+	private Command elevatorToSafeHeightCommand;
+	private Command elevatorToZeroCommand;
+
+	// Leg Commands
+	private Command moveLegToPosOne;
+	private Command moveLegToPosTwo;
+	private Command moveLegToPosThree;
+	private Command moveLegToPosFour;
+
+	// Foot Commands
+	private Command moveFootIntake;
+	private Command moveFootOutTake;
+
+	// Intake Commands
 	private Command m_intakePivotUpCommand;
 	private Command m_intakePivotDownCommand;
 	private Command m_intakeOpenCommand;
@@ -73,18 +79,19 @@ public class RobotContainer {
 	private Command m_intakeAlgaeCommand;
 	private Command m_intakeReverseCommand;
 
-	/**
-	 * The container for the robot. Contains subsystems, OI devices, and commands.
-	 */
-	public RobotContainer() {
-		// // m_gyroscope = new GyroscopeModule();
-		// // m_vision = new VisionModule();
-		// // m_drive = new DriveModule(m_gyroscope);
-		// // m_position = new PositionModule(m_drive, m_vision, m_gyroscope);
+  	/**
+  	 * The container for the robot. Contains subsystems, OI devices, and commands.
+  	 */
+  	public RobotContainer() {
+		m_gyroscope = new GyroscopeModule();
+		m_vision = new VisionModule();
+		m_drive = new DriveModule(m_gyroscope);
+		m_position = new PositionModule(m_drive, m_vision, m_gyroscope);
+		m_elevator = new ElevatorModule();
+		m_leg = new LegModule();
 		m_intake = new IntakeModule();
-    m_elevator = new ElevatorModule();
-    m_leg = new LegModule();
-    	
+		m_auto = new AutonomousModule(m_position, m_drive);
+			
 		m_intakePivotUpCommand = new PivotIntakeCommand(Math.toRadians(IntakeConstants.PIVOT_DEGREE_UP), m_intake);
 		m_intakePivotDownCommand = new PivotIntakeCommand(Math.toRadians(IntakeConstants.PIVOT_DEGREE_DOWN), m_intake);
 		m_intakeOpenCommand = new OpenIntakeCommand(Math.toRadians(IntakeConstants.OPENER_DEGREE_OPEN), m_intake);
@@ -93,46 +100,47 @@ public class RobotContainer {
 		m_intakeAlgaeCommand = new IntakeCommand(false, false, m_intake);
 		m_intakeReverseCommand = new IntakeCommand(true, true, m_intake);
 
-    // Configures elevator commands
-    elevatorToLevelFourCommand = new MoveElevatorCommand(ElevatorConstants.LEVEL_FOUR_POS, m_elevator);
-    elevatorToSafeHeightCommand = new MoveElevatorCommand(ElevatorConstants.ELEVATOR_SAFE_HEIGHT, m_elevator);
-    elevatorToZeroCommand = new MoveElevatorCommand(ElevatorConstants.ELEVATOR_ZERO_POS, m_elevator);
+		// Configures elevator commands
+		elevatorToLevelFourCommand = new MoveElevatorCommand(ElevatorConstants.LEVEL_FOUR_POS, m_elevator);
+		elevatorToSafeHeightCommand = new MoveElevatorCommand(ElevatorConstants.ELEVATOR_SAFE_HEIGHT, m_elevator);
+		elevatorToZeroCommand = new MoveElevatorCommand(ElevatorConstants.ELEVATOR_ZERO_POS, m_elevator);
 
-    // Initializes leg commands.
-    moveLegToPosOne = new MoveLegCommand(LegConstants.LEG_POS_ONE, m_leg);
-    moveLegToPosTwo = new MoveLegCommand(LegConstants.LEG_POS_TWO, m_leg);
-    moveLegToPosThree = new MoveLegCommand(LegConstants.LEG_POS_THREE, m_leg);
-    moveLegToPosFour = new MoveLegCommand(LegConstants.LEG_POS_FOUR, m_leg);
+		// Initializes leg commands.
+		moveLegToPosOne = new MoveLegCommand(LegConstants.LEG_POS_ONE, m_leg);
+		moveLegToPosTwo = new MoveLegCommand(LegConstants.LEG_POS_TWO, m_leg);
+		moveLegToPosThree = new MoveLegCommand(LegConstants.LEG_POS_THREE, m_leg);
+		moveLegToPosFour = new MoveLegCommand(LegConstants.LEG_POS_FOUR, m_leg);
 
-    // Initializes foot commands.
-    moveFootIntake = new MoveFootCommand(true, m_leg);
-    moveFootOutTake = new MoveFootCommand(false, m_leg);
+		// Initializes foot commands.
+		moveFootIntake = new MoveFootCommand(true, m_leg);
+		moveFootOutTake = new MoveFootCommand(false, m_leg);
 
 		// Configure the button bindings
 		configureButtonBindings();
 
 		// Configure default commands
-		// m_drive.setDefaultCommand(
-		//   // The left stick controls translation of the robot.
-		//   // Turning is controlled by the X axis of the right stick.
-		//   new RunCommand(
-		//     () -> {
-		//       double xInput = m_driverController.getLeftX();
-		//       double yInput = m_driverController.getLeftY();
-		//       double thetaInput = m_driverController.getRightX();
-		//       double distanceFromZero = Math.sqrt(Math.pow(xInput, 2) + Math.pow(yInput, 2));
-		//       if (distanceFromZero < OIConstants.DRIVE_DEADBAND) {
-		//         xInput = 0;
-		//         yInput = 0;
-		//       }
-		//       m_drive.drive(
-		//         Math.pow(yInput, 3) * Math.abs(yInput),
-		//               Math.pow(xInput, 3) * Math.abs(xInput),
-		//               Math.pow(MathUtil.applyDeadband(-thetaInput, OIConstants.DRIVE_DEADBAND), 3)
-		//               * Math.abs(thetaInput),
-		//         FIELDRELATIVEDRIVING);
-		//     }, m_drive
-		//   ));
+		// The left stick controls translation of the robot.
+		// Turning is controlled by the X axis of the right stick.
+		m_drive.setDefaultCommand(
+			new RunCommand(
+				() -> {
+					double xInput = m_driverController.getLeftX();
+					double yInput = m_driverController.getLeftY();
+					double thetaInput = m_driverController.getRightX();
+					double distanceFromZero = Math.sqrt(Math.pow(xInput, 2) + Math.pow(yInput, 2));
+					if (distanceFromZero < OIConstants.DRIVE_DEADBAND) {
+						xInput = 0;
+						yInput = 0;
+					}
+					m_drive.drive(
+						Math.pow(yInput, 3) * Math.abs(yInput),
+							Math.pow(xInput, 3) * Math.abs(xInput),
+							Math.pow(MathUtil.applyDeadband(-thetaInput, OIConstants.DRIVE_DEADBAND), 3)
+							* Math.abs(thetaInput),
+						FIELDRELATIVEDRIVING);
+				}, m_drive
+			)
+		);
 	}
 
 	/**
@@ -145,34 +153,33 @@ public class RobotContainer {
 	 * {@link JoystickButton}.
 	 */
 	private void configureButtonBindings() {
-		// m_driverController.leftBumper().onTrue(m_drive.cutSpeed(true))
-		// .onFalse(m_drive.cutSpeed(false));
-		// m_driverController.y().onTrue(m_drive.toggleFieldRelative());
-    
-    m_operatorController.x().onChange(new RunCommand(() -> {
-      if (m_operatorController.x().getAsBoolean()) {
-        if (!moveFootIntake.isScheduled())
-          moveFootIntake.schedule();
-      } else {
-        if (moveFootIntake.isScheduled())
-          moveFootIntake.cancel();
-      }
-    }, m_leg));
+		m_driverController.leftBumper().onTrue(m_drive.cutSpeed(true)).onFalse(m_drive.cutSpeed(false));
+		m_driverController.y().onTrue(m_drive.toggleFieldRelative());
+		
+		m_operatorController.x().onChange(new RunCommand(() -> {
+			if (m_operatorController.x().getAsBoolean()) {
+				if (!moveFootIntake.isScheduled())
+					moveFootIntake.schedule();
+			} else {
+				if (moveFootIntake.isScheduled())
+					moveFootIntake.cancel();
+			}
+		}, m_leg));
 
-    m_operatorController.b().onChange(new RunCommand(() -> {
-      if (m_operatorController.b().getAsBoolean()) {
-        if (!moveFootOutTake.isScheduled())
-          moveFootOutTake.schedule();
-      } else {
-        if (moveFootOutTake.isScheduled())
-          moveFootOutTake.cancel();
-      }
-    }, m_leg));
-    
-    m_operatorController.x().onTrue(moveLegToPosOne);
-    m_operatorController.a().onTrue(moveLegToPosTwo);
-    m_operatorController.b().onTrue(moveLegToPosThree);
-    m_operatorController.y().onTrue(moveLegToPosFour);
+		m_operatorController.b().onChange(new RunCommand(() -> {
+			if (m_operatorController.b().getAsBoolean()) {
+				if (!moveFootOutTake.isScheduled())
+					moveFootOutTake.schedule();
+			} else {
+				if (moveFootOutTake.isScheduled())
+					moveFootOutTake.cancel();
+			}
+		}, m_leg));
+		
+		m_operatorController.x().onTrue(moveLegToPosOne);
+		m_operatorController.a().onTrue(moveLegToPosTwo);
+		m_operatorController.b().onTrue(moveLegToPosThree);
+		m_operatorController.y().onTrue(moveLegToPosFour);
 
 		// TODO: ensure leg is moved away BEFORE we schedule pivot up
 		m_driverController.a().onTrue(new RunCommand(() -> {
@@ -245,7 +252,6 @@ public class RobotContainer {
 	 * @return the command to run in autonomous
 	 */
 	public Command getAutonomousCommand() {
-		return new RunCommand(() -> {
-		});
+		return m_auto.getAutonomousCommand();
 	}
 }
