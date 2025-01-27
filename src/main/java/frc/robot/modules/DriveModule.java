@@ -63,7 +63,20 @@ public class DriveModule extends SubsystemBase {
     }
 
     /**
-     * Method to drive the robot using joystick info.
+     * Gets the current chassis speed of the robot.
+     * @return {@link ChassisSpeeds} chassis speed.
+     */
+    public ChassisSpeeds getChassisSpeeds() {
+        return DRIVE_KINEMATICS.toChassisSpeeds(
+            m_frontLeft.getState(),
+            m_frontRight.getState(),
+            m_rearLeft.getState(),
+            m_rearRight.getState()
+        );
+    }
+
+    /**
+     * Method to drive the robot.
      *
      * @param xSpeed                Speed of the robot in the x direction (forward).
      * @param ySpeed                Speed of the robot in the y direction (sideways).
@@ -77,17 +90,30 @@ public class DriveModule extends SubsystemBase {
         double ySpeedDelivered = SLEW_FILTER_Y.calculate(ySpeed * MAX_ROBOT_SPEED * driveCoefficient);
         double rotDelivered = ROTATION_FILTER.calculate(rot * MAX_ANGULAR_SPEED * driveCoefficient);
 
-        SwerveModuleState[] swerveModuleStates = DRIVE_KINEMATICS.toSwerveModuleStates(
-                fieldRelative
-                        ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered,
-                                Rotation2d.fromDegrees(m_gyro.getGyroscopeYawDegrees()))
-                        : new ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered));
-        SwerveDriveKinematics.desaturateWheelSpeeds(
-                swerveModuleStates, MAX_ROBOT_SPEED);
-        m_frontLeft.setDesiredState(swerveModuleStates[0]);
-        m_frontRight.setDesiredState(swerveModuleStates[1]);
-        m_rearLeft.setDesiredState(swerveModuleStates[2]);
-        m_rearRight.setDesiredState(swerveModuleStates[3]);
+        ChassisSpeeds swerveChassisSpeed =
+            fieldRelative
+            ? ChassisSpeeds.fromFieldRelativeSpeeds(
+                xSpeedDelivered,
+                ySpeedDelivered,
+                rotDelivered, 
+                Rotation2d.fromDegrees(m_gyro.getGyroscopeYawDegrees())
+              )
+            : new ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered);
+                        
+        setModuleStates(swerveChassisSpeed.unaryMinus());
+    }
+
+    /**
+     * Method that sets states of swervemodule from chassis speeds object.
+     * @param desiredState Desired {@link ChassisSpeeds}
+     */
+    public void setModuleStates(ChassisSpeeds desiredState) {
+        SwerveModuleState[] desiredModuleStates = DRIVE_KINEMATICS.toSwerveModuleStates(desiredState.unaryMinus());
+        SwerveDriveKinematics.desaturateWheelSpeeds(desiredModuleStates, MAX_ROBOT_SPEED);
+        m_frontLeft.setDesiredState(desiredModuleStates[0]);
+        m_frontRight.setDesiredState(desiredModuleStates[1]);
+        m_rearLeft.setDesiredState(desiredModuleStates[2]);
+        m_rearRight.setDesiredState(desiredModuleStates[3]);
     }
 
     /**
@@ -119,6 +145,13 @@ public class DriveModule extends SubsystemBase {
         m_rearRight.resetEncoders();
     }
     
+    @Override
+    public void periodic() {
+        m_frontLeft.periodic();
+        m_frontRight.periodic();
+        m_rearLeft.periodic();
+        m_rearRight.periodic();
+    }
 
     /**
      * Returns the turn rate of the robot.
@@ -126,6 +159,6 @@ public class DriveModule extends SubsystemBase {
      * @return The turn rate of the robot, in degrees per second
      */
     public double getTurnRate() {
-        return m_gyro.getGyroscopeYawDegrees() * (GYROSCOPE_REVERSED ? -1.0 : 1.0);
+        return m_gyro.getTurnRate() * (GYROSCOPE_REVERSED ? -1.0 : 1.0);
     }
 }

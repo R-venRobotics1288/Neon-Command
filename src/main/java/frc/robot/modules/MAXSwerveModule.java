@@ -8,6 +8,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkBase.PersistMode;
@@ -17,6 +18,8 @@ import com.ctre.phoenix6.hardware.CANcoder;
 import com.revrobotics.RelativeEncoder;
 
 import frc.robot.Configs;
+
+import static frc.robot.Constants.DriveConstants.*;
 
 public class MAXSwerveModule {
 	private final SparkMax m_drivingSpark;
@@ -45,14 +48,15 @@ public class MAXSwerveModule {
 		m_turningSpark = new SparkMax(turningCANId, MotorType.kBrushless);
 
 		m_drivingEncoder = m_drivingSpark.getEncoder();
+		m_drivingEncoder.setPosition(0);
 		m_turningEncoder = m_turningSpark.getEncoder();
+		m_turningEncoder.setPosition(0);
 		m_absoluteEncoder = new CANcoder(absoluteEncoderCANId);
 
-		m_drivingPIDController = new PIDController(0.25, 0, 0);
-		m_turningPIDController = new PIDController(0.6, 0, 0);
+		m_drivingPIDController = new PIDController(TRANSLATION_COEFFICIENT_P, TRANSLATION_COEFFICIENT_I, TRANSLATION_COEFFICIENT_D);
+		m_turningPIDController = new PIDController(ROTATION_COEFFICIENT_P, ROTATION_COEFFICIENT_I, ROTATION_COEFFICIENT_D);
 		m_turningPIDController.enableContinuousInput(-Math.PI, Math.PI);
 		m_feedForwardPIDController = new PIDController(1, 0, 0);
-
 
 		// Apply the respective configurations to the SPARKS. Reset parameters before
 		// applying the configuration to bring the SPARK to a known good state. Persist
@@ -75,8 +79,14 @@ public class MAXSwerveModule {
 	public SwerveModuleState getState() {
 		// Apply chassis angular offset to the encoder position to get the position
 		// relative to the chassis.
-		return new SwerveModuleState(m_turningEncoder.getVelocity(),
-				new Rotation2d(m_turningEncoder.getPosition() - m_chassisAngularOffset));
+		return new SwerveModuleState(m_drivingEncoder.getVelocity(),
+				new Rotation2d(getAbsoluteEncoderRad() + m_chassisAngularOffset));
+	}
+
+	public void periodic() {
+		// SmartDashboard.putNumber("Swerve" + this.m_drivingSpark.getDeviceId(), m_drivingEncoder.getPosition());
+		// SmartDashboard.putNumber("AbsoluteEncoder" + this.m_drivingSpark.getDeviceId(), Math.toDegrees(getAbsoluteEncoderRad()));
+		// SmartDashboard.putNumber("Swerve" + this.m_drivingSpark.getDeviceId() + "Angles", getPosition().angle.getDegrees());
 	}
 
 	/**
@@ -89,7 +99,7 @@ public class MAXSwerveModule {
 		// relative to the chassis.
 		return new SwerveModulePosition(
 				m_drivingEncoder.getPosition(),
-				new Rotation2d(m_turningEncoder.getPosition() - m_chassisAngularOffset));
+				new Rotation2d(getAbsoluteEncoderRad() + m_chassisAngularOffset)); // TODO: Investagate if offset should be applied
 	}
 
 	public double getAbsoluteEncoderRad() {

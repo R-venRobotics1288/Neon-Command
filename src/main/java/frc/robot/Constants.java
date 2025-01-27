@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.config.RobotConfig;
+
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -32,7 +34,7 @@ public final class Constants {
         public static boolean SHUFFLE_MANAGER_ENABLED = true;
         // Driving Parameters - Note that these are not the maximum capable speeds of
         // the robot, rather the allowed maximum speeds, in metres per second.
-        public static double MAX_ROBOT_SPEED = 15;
+        public static double MAX_ROBOT_SPEED = 4; // 15
 
         public static double MAX_ROBOT_ROTATIONS_PER_SECOND = 1;
         public static double MAX_ANGULAR_SPEED = 2 * Math.PI * MAX_ROBOT_ROTATIONS_PER_SECOND; // radians per second
@@ -47,10 +49,12 @@ public final class Constants {
         public static boolean FIELDRELATIVEDRIVING = false;
 
         // Chassis configuration
-        public static final double TRACK_WIDTH = Units.inchesToMeters(22.5);
+        // TODO: 2025 Bot Change to 22.5 inches to both Track Width and Wheel Base (please verify these numbers)
         // Distance between centers of right and left wheels on robot
-        public static final double WHEEL_BASE = Units.inchesToMeters(22.5);
+        public static final double TRACK_WIDTH = Units.inchesToMeters(18);
         // Distance between front and back wheels on robot
+        public static final double WHEEL_BASE = Units.inchesToMeters(24);
+
         public static final SwerveDriveKinematics DRIVE_KINEMATICS = new SwerveDriveKinematics(
             new Translation2d(WHEEL_BASE / 2, TRACK_WIDTH / 2),
             new Translation2d(WHEEL_BASE / 2, -TRACK_WIDTH / 2),
@@ -63,6 +67,14 @@ public final class Constants {
         public static final double FRONT_RIGHT_CHASSIS_ANGULAR_OFFSET = 0;
         public static final double REAR_LEFT_CHASSIS_ANGULAR_OFFSET = 0;
         public static final double REAR_RIGHT_CHASSIS_ANGULAR_OFFSET = Math.PI;
+
+        // P, I, D coefficients
+        public static final double TRANSLATION_COEFFICIENT_P = 0.25;
+        public static final double TRANSLATION_COEFFICIENT_I = 0;
+        public static final double TRANSLATION_COEFFICIENT_D = 0;
+        public static final double ROTATION_COEFFICIENT_P = 0.6;
+        public static final double ROTATION_COEFFICIENT_I = 0;
+        public static final double ROTATION_COEFFICIENT_D = 0;
 
         // SPARK MAX CAN IDs
         public static final int  FRONT_LEFT_DRIVE_MOTOR_CAN_ID = 1;
@@ -80,6 +92,7 @@ public final class Constants {
         public static final int   REAR_LEFT_TURN_ENCODER_CAN_ID = 22;
         public static final int  REAR_RIGHT_TURN_ENCODER_CAN_ID = 23;
 
+        // Don't set this to true without making it work first
         public static final boolean GYROSCOPE_REVERSED = false;
     }
 
@@ -93,11 +106,11 @@ public final class Constants {
 
         // Calculations required for driving motor conversion factors and feed forward
         public static final double DRIVING_MOTOR_FREE_SPEED_RPS = NeoMotorConstants.FREE_SPEED_RPM / 60;
-        public static final double WHEEL_DIAMETER_METRES = 0.0762;
+        public static final double WHEEL_DIAMETER_METRES = 0.09;
         public static final double WHEEL_CIRCUMFERENCE_METRES = WHEEL_DIAMETER_METRES * Math.PI;
         // 45 teeth on the wheel's bevel gear, 22 teeth on the first-stage spur gear, 15
         // teeth on the bevel pinion
-        public static final double DRIVING_MOTOR_REDUCTION = (45.0 * 22) / (DRIVING_MOTOR_PINION_TEETH * 15);
+        public static final double DRIVING_MOTOR_REDUCTION = 8.14;
         public static final double DRIVE_WHEEL_FREE_SPEED_RPS = (DRIVING_MOTOR_FREE_SPEED_RPS * WHEEL_CIRCUMFERENCE_METRES)
                 / DRIVING_MOTOR_REDUCTION;
 
@@ -116,18 +129,36 @@ public final class Constants {
     }
 
     public static final class AutoConstants {
-        public static final double AUTO_MAX_SPEED = 3; // in metres per second
-        public static final double AUTO_MAX_ACCELERATION = 3; // in metres per second squared
-        public static final double AUTO_MAX_ANGULAR_SPEED = Math.PI; // in radians per second
-        public static final double AUTO_MAX_ANGULAR_ACCELERATION = Math.PI; // in radians per second squared
+        public static final double AUTO_MAX_SPEED = 2; // 10 // in metres per second
+        public static final double AUTO_MAX_ACCELERATION = 5; // in metres per second squared
+        public static final double AUTO_MAX_ANGULAR_SPEED = 4 * Math.PI; // in radians per second
+        public static final double AUTO_MAX_ANGULAR_ACCELERATION = 2 * Math.PI; // in radians per second squared
 
         public static final double PX_CONTROLLER = 1;
         public static final double PY_CONTROLLER = 1;
         public static final double P_THETA_CONTROLLER = 1;
 
+        // P, I, D coefficients
+        public static final double TRANSLATION_COEFFICIENT_P = 4.0;
+        public static final double TRANSLATION_COEFFICIENT_I = 0;
+        public static final double TRANSLATION_COEFFICIENT_D = 0;
+        public static final double ROTATION_COEFFICIENT_P = 6.0;
+        public static final double ROTATION_COEFFICIENT_I = 0;
+        public static final double ROTATION_COEFFICIENT_D = 0;
+
         // Constraint for the motion profiled robot angle controller
         public static final TrapezoidProfile.Constraints THETA_CONTROLLER_CONSTRAINTS = new TrapezoidProfile.Constraints(
                 AUTO_MAX_ANGULAR_SPEED, AUTO_MAX_ANGULAR_ACCELERATION);
+
+        private static final RobotConfig GET_PATHPLANNER_ROBOT_CONFIG() {
+            try {
+                return RobotConfig.fromGUISettings();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+        public static final RobotConfig PATHPLANNER_ROBOT_CONFIG = GET_PATHPLANNER_ROBOT_CONFIG();
     }
 
     public static final class NeoMotorConstants {
