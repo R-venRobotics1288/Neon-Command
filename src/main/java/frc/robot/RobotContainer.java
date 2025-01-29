@@ -4,23 +4,26 @@
 
 package frc.robot;
 
-import static frc.robot.Constants.DriveConstants.FIELDRELATIVEDRIVING;
-import static frc.robot.Constants.IntakeConstants.*;
+import static frc.robot.Constants.DriveConstants.*;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.ModuleConstants;
+import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.OIConstants;
+import frc.robot.commands.elevator.MoveElevatorCommand;
 import frc.robot.commands.intake.IntakeCommand;
 import frc.robot.commands.intake.OpenIntakeCommand;
 import frc.robot.commands.intake.PivotIntakeCommand;
 import frc.robot.modules.DriveModule;
+import frc.robot.modules.ElevatorModule;
 import frc.robot.modules.GyroscopeModule;
 import frc.robot.modules.IntakeModule;
 import frc.robot.modules.PositionModule;
 import frc.robot.modules.VisionModule;
 import frc.robot.utilities.IntakeState;
+import frc.robot.modules.ElevatorModule;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -34,13 +37,18 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
  * (including subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-	// The robot's subsystems
-	// private final GyroscopeModule m_gyroscope;
-	// private final VisionModule m_vision;
-	// private final DriveModule m_drive;
-	// private final PositionModule m_position;
+  // The robot's subsystems
+  // private final GyroscopeModule m_gyroscope;
+  // private final VisionModule m_vision;
+  // private final DriveModule m_drive;
+  private final ElevatorModule m_elevator;
+  private final IntakeModule m_intake;
 
-	private final IntakeModule m_intake;
+  private Command elevatorToLevelFourCommand;
+  private Command elevatorToSafeHeightCommand;
+  private Command elevatorToZeroCommand;
+
+  //@SuppressWarnings("unused") private final PositionModule m_position;
 
 	// The driver's controller
 	CommandXboxController m_driverController = new CommandXboxController(OIConstants.DRIVER_CONTROLLER_PORT);
@@ -59,19 +67,25 @@ public class RobotContainer {
 	 * The container for the robot. Contains subsystems, OI devices, and commands.
 	 */
 	public RobotContainer() {
-		// m_gyroscope = new GyroscopeModule();
-		// m_vision = new VisionModule();
-		// m_drive = new DriveModule(m_gyroscope);
-		// m_position = new PositionModule(m_drive, m_vision, m_gyroscope);
+		// // m_gyroscope = new GyroscopeModule();
+		// // m_vision = new VisionModule();
+		// // m_drive = new DriveModule(m_gyroscope);
+		// // m_position = new PositionModule(m_drive, m_vision, m_gyroscope);
 		m_intake = new IntakeModule();
+    m_elevator = new ElevatorModule();
 	
 		m_intakePivotUpCommand = new PivotIntakeCommand(Math.toRadians(IntakeConstants.PIVOT_DEGREE_UP), m_intake);
 		m_intakePivotDownCommand = new PivotIntakeCommand(Math.toRadians(IntakeConstants.PIVOT_DEGREE_DOWN), m_intake);
-		m_intakeOpenCommand = new OpenIntakeCommand(Math.toRadians(OPENER_DEGREE_OPEN), m_intake);
-		m_intakeCloseCommand = new OpenIntakeCommand(Math.toRadians(OPENER_DEGREE_CLOSE), m_intake);
+		m_intakeOpenCommand = new OpenIntakeCommand(Math.toRadians(IntakeConstants.OPENER_DEGREE_OPEN), m_intake);
+		m_intakeCloseCommand = new OpenIntakeCommand(Math.toRadians(IntakeConstants.OPENER_DEGREE_CLOSE), m_intake);
 		m_intakeCoralCommand = new IntakeCommand(true, false, m_intake);
 		m_intakeAlgaeCommand = new IntakeCommand(false, false, m_intake);
 		m_intakeReverseCommand = new IntakeCommand(true, true, m_intake);
+
+    // Configures elevator commands
+    elevatorToLevelFourCommand = new MoveElevatorCommand(ElevatorConstants.LEVEL_FOUR_POS, m_elevator);
+    elevatorToSafeHeightCommand = new MoveElevatorCommand(ElevatorConstants.ELEVATOR_SAFE_HEIGHT, m_elevator);
+    elevatorToZeroCommand = new MoveElevatorCommand(ElevatorConstants.ELEVATOR_ZERO_POS, m_elevator);
 
 		// Configure the button bindings
 		configureButtonBindings();

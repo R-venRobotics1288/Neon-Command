@@ -84,4 +84,14 @@ public final class Configs {
                 feederConfig.encoder.velocityConversionFactor(60); // Rotations Per Second
         }
     }
+
+    public static final class ElevatorModuleConfig {
+        public static final SparkFlexConfig elevatorConfig = new SparkFlexConfig();
+
+        static {
+            elevatorConfig
+                .idleMode(IdleMode.kBrake)
+                .smartCurrentLimit(50);
+        }
+    }
 }

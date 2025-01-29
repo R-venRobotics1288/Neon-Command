@@ -112,7 +112,7 @@ public final class Constants {
         public static final int DRIVER_CONTROLLER_PORT = 0;
         public static final double DRIVE_DEADBAND = 0.05;
         public static final double OPERATOR_DEADBAND = 0.15;
-        public static final int OPERATOR_CONTROLLER_PORT = 0;
+        public static final int OPERATOR_CONTROLLER_PORT = 1;
     }
 
     public static final class AutoConstants {
@@ -172,5 +172,21 @@ public final class Constants {
         public static final double FEEDER_PID_P = 0.4;
         public static final double FEEDER_PID_I = 0.0;
         public static final double FEEDER_PID_D = 0.0;
+    }
+
+    public static final class ElevatorConstants {
+        public static final int MOTOR_CANID = 5;
+
+        public static final double LEVEL_FOUR_POS = 50.0;
+        public static final double ELEVATOR_SAFE_HEIGHT = 10.0;
+        public static final double ELEVATOR_ZERO_POS = 0.0;
+
+        public static final double MAX_MOTOR_SPEED = 0.1;
+
+        public static final double ELEVATOR_PID_P = 4.0;
+        public static final double ELEVATOR_PID_I = 0.0;
+        public static final double ELEVATOR_PID_D = 0.0;
+        public static final double ELEVATOR_TOLERANCE = 0.01;
+        
     }
 }
