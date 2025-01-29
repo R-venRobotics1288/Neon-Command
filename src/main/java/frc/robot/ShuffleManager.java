@@ -22,7 +22,8 @@ public class ShuffleManager {
     private GenericEntry maxSpeed = shuffleTab.addPersistent("max speed", MAX_ROBOT_SPEED).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 1, "max", 75)).getEntry();
     private GenericEntry maxRot = shuffleTab.addPersistent("max rot per s", MAX_ROBOT_ROTATIONS_PER_SECOND).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 1, "max", 30)).getEntry();
     private GenericEntry rotSlew = shuffleTab.addPersistent("rotation slew", MAX_ROBOT_ROTATIONS_PER_SECOND).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 1, "max", 30)).getEntry();
-
+    public GenericEntry elevator_target = shuffleTab.add("elevator target", 0).getEntry();
+    public GenericEntry elevator_real =  shuffleTab.add("elevator real", 0).getEntry();
 
     public void initShuffleboard() {
         updateShuffleboard();

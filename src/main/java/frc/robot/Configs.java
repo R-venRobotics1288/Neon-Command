@@ -1,5 +1,6 @@
 package frc.robot;
 
+import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
@@ -51,6 +52,16 @@ public final class Configs {
                     // longer route.
                     .positionWrappingEnabled(true)
                     .positionWrappingInputRange(0, turningFactor);
+        }
+    }
+
+    public static final class ElevatorModuleConfig {
+        public static final SparkFlexConfig elevatorConfig = new SparkFlexConfig();
+
+        static {
+            elevatorConfig
+                .idleMode(IdleMode.kBrake)
+                .smartCurrentLimit(50);
         }
     }
 }
