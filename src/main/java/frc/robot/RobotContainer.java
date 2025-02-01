@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import static frc.robot.Constants.DriveConstants.FIELDRELATIVEDRIVING;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.Constants.OIConstants;
@@ -61,11 +63,11 @@ public class RobotContainer {
             yInput = 0;
           }
           m_drive.drive(
-            Math.pow(-yInput, 3) * Math.abs(yInput),
-                  Math.pow(-xInput, 3) * Math.abs(xInput),
+            Math.pow(yInput, 3) * Math.abs(yInput),
+                  Math.pow(xInput, 3) * Math.abs(xInput),
                   Math.pow(MathUtil.applyDeadband(-thetaInput, OIConstants.DRIVE_DEADBAND), 3)
                   * Math.abs(thetaInput),
-            false);
+            FIELDRELATIVEDRIVING);
         }, m_drive
       ));
   }
