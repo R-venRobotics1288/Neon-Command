@@ -5,6 +5,7 @@
 package frc.robot;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.Constants.OIConstants;
 import frc.robot.modules.DriveModule;
 import frc.robot.modules.GyroscopeModule;
@@ -13,6 +14,8 @@ import frc.robot.modules.VisionModule;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+
 
 /*
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -25,12 +28,11 @@ public class RobotContainer {
   private final GyroscopeModule m_gyroscope;
   private final VisionModule m_vision;
   private final DriveModule m_drive;
-  @SuppressWarnings("unused") private final PositionModule m_position;
+  @SuppressWarnings("unused")
+  private final PositionModule m_position;
 
   // The driver's controller
   CommandXboxController m_driverController = new CommandXboxController(OIConstants.DRIVER_CONTROLLER_PORT);
-
-  private boolean fieldRelative;
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -46,36 +48,51 @@ public class RobotContainer {
 
     // Configure default commands
     m_drive.setDefaultCommand(
-        // The left stick controls translation of the robot.
-        // Turning is controlled by the X axis of the right stick.
-        new RunCommand(
-            () -> m_drive.drive(
-                -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.DRIVE_DEADBAND),
-                -MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.DRIVE_DEADBAND),
-                -MathUtil.applyDeadband(m_driverController.getRightX(), OIConstants.DRIVE_DEADBAND),
-                true),
-            m_drive));
+      // The left stick controls translation of the robot.
+      // Turning is controlled by the X axis of the right stick.
+      new RunCommand(
+        () -> {
+          double xInput = m_driverController.getLeftX();
+          double yInput = m_driverController.getLeftY();
+          double thetaInput = m_driverController.getRawAxis(4);
+          double distanceFromZero = Math.sqrt(Math.pow(xInput, 2) + Math.pow(yInput, 2));
+          if (distanceFromZero < OIConstants.DRIVE_DEADBAND) {
+            xInput = 0;
+            yInput = 0;
+          }
+          m_drive.drive(
+            Math.pow(-yInput, 3) * Math.abs(yInput),
+                  Math.pow(-xInput, 3) * Math.abs(xInput),
+                  Math.pow(MathUtil.applyDeadband(-thetaInput, OIConstants.DRIVE_DEADBAND), 3)
+                  * Math.abs(thetaInput),
+            true);
+        }
+      )
+      );
   }
 
-    /**
-     * Use this method to define your button->command mappings. Buttons can be
-     * created by
-     * instantiating a {@link edu.wpi.first.wpilibj.GenericHID} or one of its
-     * subclasses ({@link
-     * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then calling
-     * passing it to a
-     * {@link JoystickButton}.
-     */
-    private void configureButtonBindings() {
-      m_driverController.rightBumper().onTrue(m_drive.cutSpeed(true))
+  /**
+   * Use this method to define your button->command mappings. Buttons can be
+   * created by
+   * instantiating a {@link edu.wpi.first.wpilibj.GenericHID} or one of its
+   * subclasses ({@link
+   * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then calling
+   * passing it to a
+   * {@link JoystickButton}.
+   */
+  private void configureButtonBindings() {
+    m_driverController.rightBumper().onTrue(m_drive.cutSpeed(true))
         .onFalse(m_drive.cutSpeed(false));
-      m_driverController.y().onTrue(m_drive.toggleFieldRelative());
-    }
+    m_driverController.y().onTrue(m_drive.toggleFieldRelative());
+  }
 
-    /**
-     * Use this to pass the autonomous command to the main {@link Robot} class.
-     *
-     * @return the command to run in autonomous
-     */
-    public Command getAutonomousCommand() { return new RunCommand(() -> {}); }
+  /**
+   * Use this to pass the autonomous command to the main {@link Robot} class.
+   *
+   * @return the command to run in autonomous
+   */
+  public Command getAutonomousCommand() {
+    return new RunCommand(() -> {
+    });
+  }
 }
