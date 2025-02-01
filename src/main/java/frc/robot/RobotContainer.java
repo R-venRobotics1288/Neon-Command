@@ -54,7 +54,7 @@ public class RobotContainer {
         () -> {
           double xInput = m_driverController.getLeftX();
           double yInput = m_driverController.getLeftY();
-          double thetaInput = m_driverController.getRawAxis(4);
+          double thetaInput = m_driverController.getRightX();
           double distanceFromZero = Math.sqrt(Math.pow(xInput, 2) + Math.pow(yInput, 2));
           if (distanceFromZero < OIConstants.DRIVE_DEADBAND) {
             xInput = 0;
@@ -65,10 +65,9 @@ public class RobotContainer {
                   Math.pow(-xInput, 3) * Math.abs(xInput),
                   Math.pow(MathUtil.applyDeadband(-thetaInput, OIConstants.DRIVE_DEADBAND), 3)
                   * Math.abs(thetaInput),
-            true);
-        }
-      )
-      );
+            false);
+        }, m_drive
+      ));
   }
 
   /**
