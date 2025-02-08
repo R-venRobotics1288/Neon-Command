@@ -25,7 +25,6 @@ public class PositionModule extends SubsystemBase {
     
     private final Field2d dashboardField;
     private final SwerveDrivePoseEstimator estimator;
-    
 
     // PositionModule Initialization
     public PositionModule(DriveModule driveModule, VisionModule visionModule, GyroscopeModule gyroscopeModule) {
@@ -73,14 +72,14 @@ public class PositionModule extends SubsystemBase {
     @Override
     public void periodic() {
         // update odometry and gyro
-        estimator.update(new Rotation2d(gyroscopeModule.getGyroscopeYawRadians()), driveModule.getModulePositions());
+        estimator.updateWithTime(Timer.getTimestamp(), new Rotation2d(gyroscopeModule.getGyroscopeYawRadians()), driveModule.getModulePositions());
 
         // apply vision if, and only if, we're sure its constructive
         boolean rotationConfidence = driveModule.getTurnRate() < 540;
         int targetConfidence = visionModule.getVisionConfidence();
         double ta = visionModule.getVisionTargetArea();
         if (rotationConfidence && ((targetConfidence >= 2 && ta > 0.04) || (targetConfidence == 1 && ta > 0.08))) { // slow enough rotation, multiple targets, or solid target definition
-            estimator.addVisionMeasurement(visionModule.getVisionPose(), Timer.getFPGATimestamp());
+            //estimator.addVisionMeasurement(visionModule.getVisionPose(), Timer.getTimestamp());
         }
 
         // grab the estimated position and put it on the map

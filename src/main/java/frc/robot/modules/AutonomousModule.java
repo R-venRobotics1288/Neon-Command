@@ -13,13 +13,15 @@ import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.FileVersionException;
+import com.pathplanner.lib.util.PathPlannerLogging;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-import static frc.robot.Constants.DriveConstants.*;
 import static frc.robot.Constants.AutoConstants.*;
 
 /**
@@ -36,6 +38,8 @@ public class AutonomousModule extends SubsystemBase {
     @SuppressWarnings("unused")
     private final PathPlannerAuto test_auto;
     private final PathPlannerPath test_path;
+
+    private final Field2d test_field;
 
     public AutonomousModule(PositionModule positionModule, DriveModule driveModule) {
         this.positionModule = positionModule;
@@ -69,6 +73,9 @@ public class AutonomousModule extends SubsystemBase {
             this, positionModule, driveModule
         );
 
+        test_field = new Field2d();
+        SmartDashboard.putData(test_field);
+
         test_auto = new PathPlannerAuto("Test");
         try {
             test_path = PathPlannerPath.fromPathFile("StraightLine");
@@ -76,6 +83,10 @@ public class AutonomousModule extends SubsystemBase {
             e.printStackTrace();
             throw new IllegalStateException();
         }
+
+        PathPlannerLogging.setLogTargetPoseCallback((pose) -> {
+            test_field.setRobotPose(pose);
+        });
     }
 
     /**

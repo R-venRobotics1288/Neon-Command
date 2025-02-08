@@ -103,11 +103,11 @@ public final class Constants {
 
         // Calculations required for driving motor conversion factors and feed forward
         public static final double DRIVING_MOTOR_FREE_SPEED_RPS = NeoMotorConstants.FREE_SPEED_RPM / 60;
-        public static final double WHEEL_DIAMETER_METRES = 0.0762;
+        public static final double WHEEL_DIAMETER_METRES = 0.095;
         public static final double WHEEL_CIRCUMFERENCE_METRES = WHEEL_DIAMETER_METRES * Math.PI;
         // 45 teeth on the wheel's bevel gear, 22 teeth on the first-stage spur gear, 15
         // teeth on the bevel pinion
-        public static final double DRIVING_MOTOR_REDUCTION = (45.0 * 22) / (DRIVING_MOTOR_PINION_TEETH * 15);
+        public static final double DRIVING_MOTOR_REDUCTION = 6.75; //(45.0 * 22) / (DRIVING_MOTOR_PINION_TEETH * 15);
         public static final double DRIVE_WHEEL_FREE_SPEED_RPS = (DRIVING_MOTOR_FREE_SPEED_RPS * WHEEL_CIRCUMFERENCE_METRES)
                 / DRIVING_MOTOR_REDUCTION;
 
@@ -132,6 +132,14 @@ public final class Constants {
         public static final double PX_CONTROLLER = 1;
         public static final double PY_CONTROLLER = 1;
         public static final double P_THETA_CONTROLLER = 1;
+
+        // P, I, D coefficients
+        public static final double TRANSLATION_COEFFICIENT_P = 4.0;
+        public static final double TRANSLATION_COEFFICIENT_I = 0;
+        public static final double TRANSLATION_COEFFICIENT_D = 0;
+        public static final double ROTATION_COEFFICIENT_P = 2.0;
+        public static final double ROTATION_COEFFICIENT_I = 0;
+        public static final double ROTATION_COEFFICIENT_D = 0;
 
         // Constraint for the motion profiled robot angle controller
         public static final TrapezoidProfile.Constraints THETA_CONTROLLER_CONSTRAINTS = new TrapezoidProfile.Constraints(

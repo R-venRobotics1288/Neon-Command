@@ -8,6 +8,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkBase.PersistMode;
@@ -47,7 +48,9 @@ public class MAXSwerveModule {
 		m_turningSpark = new SparkMax(turningCANId, MotorType.kBrushless);
 
 		m_drivingEncoder = m_drivingSpark.getEncoder();
+		m_drivingEncoder.setPosition(0);
 		m_turningEncoder = m_turningSpark.getEncoder();
+		m_turningEncoder.setPosition(0);
 		m_absoluteEncoder = new CANcoder(absoluteEncoderCANId);
 
 		m_drivingPIDController = new PIDController(TRANSLATION_COEFFICIENT_P, TRANSLATION_COEFFICIENT_I, TRANSLATION_COEFFICIENT_D);
@@ -76,8 +79,14 @@ public class MAXSwerveModule {
 	public SwerveModuleState getState() {
 		// Apply chassis angular offset to the encoder position to get the position
 		// relative to the chassis.
-		return new SwerveModuleState(m_turningEncoder.getVelocity(),
+		return new SwerveModuleState(m_drivingEncoder.getVelocity(),
 				new Rotation2d(m_turningEncoder.getPosition() - m_chassisAngularOffset));
+	}
+
+	public void periodic() {
+		SmartDashboard.putNumber("Swerve" + this.m_drivingSpark.getDeviceId(), getPosition().distanceMeters);
+		SmartDashboard.putNumber("AbsoluteEncoder" + this.m_drivingSpark.getDeviceId(), Math.toDegrees(getAbsoluteEncoderRad()));
+		SmartDashboard.putNumber("Swerve" + this.m_drivingSpark.getDeviceId() + "Angles", getPosition().angle.getDegrees());
 	}
 
 	/**
@@ -90,7 +99,7 @@ public class MAXSwerveModule {
 		// relative to the chassis.
 		return new SwerveModulePosition(
 				m_drivingEncoder.getPosition(),
-				new Rotation2d(m_turningEncoder.getPosition() - m_chassisAngularOffset));
+				new Rotation2d(getAbsoluteEncoderRad()));
 	}
 
 	public double getAbsoluteEncoderRad() {

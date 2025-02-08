@@ -140,6 +140,13 @@ public class DriveModule extends SubsystemBase {
         m_rearRight.resetEncoders();
     }
     
+    @Override
+    public void periodic() {
+        m_frontLeft.periodic();
+        m_frontRight.periodic();
+        m_rearLeft.periodic();
+        m_rearRight.periodic();
+    }
 
     /**
      * Returns the turn rate of the robot.
