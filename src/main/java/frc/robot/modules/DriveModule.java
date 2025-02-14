@@ -90,12 +90,17 @@ public class DriveModule extends SubsystemBase {
         double ySpeedDelivered = SLEW_FILTER_Y.calculate(ySpeed * MAX_ROBOT_SPEED * driveCoefficient);
         double rotDelivered = ROTATION_FILTER.calculate(rot * MAX_ANGULAR_SPEED * driveCoefficient);
 
-        SwerveModuleState[] swerveModuleStates = DRIVE_KINEMATICS.toSwerveModuleStates(
-                fieldRelative
-                        ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered,
-                                Rotation2d.fromDegrees(m_gyro.getGyroscopeYawDegrees()))
-                        : new ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered));
-        setModuleStates(DRIVE_KINEMATICS.toChassisSpeeds(swerveModuleStates));
+        ChassisSpeeds swerveChassisSpeed =
+            fieldRelative
+            ? ChassisSpeeds.fromFieldRelativeSpeeds(
+                xSpeedDelivered,
+                ySpeedDelivered,
+                rotDelivered, 
+                Rotation2d.fromDegrees(m_gyro.getGyroscopeYawDegrees())
+              )
+            : new ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered);
+                        
+        setModuleStates(swerveChassisSpeed);
     }
 
     /**
@@ -154,6 +159,6 @@ public class DriveModule extends SubsystemBase {
      * @return The turn rate of the robot, in degrees per second
      */
     public double getTurnRate() {
-        return m_gyro.getGyroscopeYawDegrees() * (GYROSCOPE_REVERSED ? -1.0 : 1.0);
+        return m_gyro.getTurnRate() * (GYROSCOPE_REVERSED ? -1.0 : 1.0);
     }
 }

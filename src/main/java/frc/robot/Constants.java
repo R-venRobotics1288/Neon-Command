@@ -49,9 +49,10 @@ public final class Constants {
         public static boolean FIELDRELATIVEDRIVING = false;
 
         // Chassis configuration
-        public static final double TRACK_WIDTH = Units.inchesToMeters(22.5);
+        // TODO: 2025 Bot Change to 22.5 inches to both Track Width and Wheel Base (please verify these numbers)
+        public static final double TRACK_WIDTH = Units.inchesToMeters(18);
         // Distance between centers of right and left wheels on robot
-        public static final double WHEEL_BASE = Units.inchesToMeters(22.5);
+        public static final double WHEEL_BASE = Units.inchesToMeters(24);
         // Distance between front and back wheels on robot
         public static final SwerveDriveKinematics DRIVE_KINEMATICS = new SwerveDriveKinematics(
             new Translation2d(WHEEL_BASE / 2, TRACK_WIDTH / 2),
@@ -90,6 +91,7 @@ public final class Constants {
         public static final int   REAR_LEFT_TURN_ENCODER_CAN_ID = 22;
         public static final int  REAR_RIGHT_TURN_ENCODER_CAN_ID = 23;
 
+        // Don't set this to true without making it work first
         public static final boolean GYROSCOPE_REVERSED = false;
     }
 
@@ -103,11 +105,11 @@ public final class Constants {
 
         // Calculations required for driving motor conversion factors and feed forward
         public static final double DRIVING_MOTOR_FREE_SPEED_RPS = NeoMotorConstants.FREE_SPEED_RPM / 60;
-        public static final double WHEEL_DIAMETER_METRES = 0.095;
+        public static final double WHEEL_DIAMETER_METRES = 0.09;
         public static final double WHEEL_CIRCUMFERENCE_METRES = WHEEL_DIAMETER_METRES * Math.PI;
         // 45 teeth on the wheel's bevel gear, 22 teeth on the first-stage spur gear, 15
         // teeth on the bevel pinion
-        public static final double DRIVING_MOTOR_REDUCTION = 6.75; //(45.0 * 22) / (DRIVING_MOTOR_PINION_TEETH * 15);
+        public static final double DRIVING_MOTOR_REDUCTION = 8.14;
         public static final double DRIVE_WHEEL_FREE_SPEED_RPS = (DRIVING_MOTOR_FREE_SPEED_RPS * WHEEL_CIRCUMFERENCE_METRES)
                 / DRIVING_MOTOR_REDUCTION;
 

@@ -54,10 +54,10 @@ public class AutonomousModule extends SubsystemBase {
         }
 
         AutoBuilder.configure(
-            positionModule::getRobotPose,
-            positionModule::resetPosition,
-            driveModule::getChassisSpeeds,
-            driveModule::setModuleStates,
+            this.positionModule::getRobotPose,
+            this.positionModule::resetPosition,
+            this.driveModule::getChassisSpeeds,
+            this.driveModule::setModuleStates,
             new PPHolonomicDriveController(
                 new PIDConstants(TRANSLATION_COEFFICIENT_P, TRANSLATION_COEFFICIENT_I, TRANSLATION_COEFFICIENT_D),
                 new PIDConstants(ROTATION_COEFFICIENT_P, ROTATION_COEFFICIENT_I, ROTATION_COEFFICIENT_D)
@@ -70,7 +70,7 @@ public class AutonomousModule extends SubsystemBase {
                 }
                 return false;
             },
-            this, positionModule, driveModule
+            this, this.positionModule, this.driveModule
         );
 
         test_field = new Field2d();

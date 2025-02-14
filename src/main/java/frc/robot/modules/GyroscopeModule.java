@@ -40,6 +40,10 @@ public class GyroscopeModule extends SubsystemBase {
         return pigeon.getYaw().getValueAsDouble();
     }
 
+    public double getTurnRate() {
+        return pigeon.getAngularVelocityZWorld().getValueAsDouble();
+    }
+
     /**
      * Gets the current yaw reported by the Pigeon IMU.
      * @return Current yaw as a double.
