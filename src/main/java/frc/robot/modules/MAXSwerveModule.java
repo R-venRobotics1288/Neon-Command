@@ -80,13 +80,13 @@ public class MAXSwerveModule {
 		// Apply chassis angular offset to the encoder position to get the position
 		// relative to the chassis.
 		return new SwerveModuleState(m_drivingEncoder.getVelocity(),
-				new Rotation2d(getAbsoluteEncoderRad() - m_chassisAngularOffset));
+				new Rotation2d(getAbsoluteEncoderRad() + m_chassisAngularOffset));
 	}
 
 	public void periodic() {
-		SmartDashboard.putNumber("Swerve" + this.m_drivingSpark.getDeviceId(), getPosition().distanceMeters);
-		SmartDashboard.putNumber("AbsoluteEncoder" + this.m_drivingSpark.getDeviceId(), Math.toDegrees(getAbsoluteEncoderRad()));
-		SmartDashboard.putNumber("Swerve" + this.m_drivingSpark.getDeviceId() + "Angles", getPosition().angle.getDegrees());
+		// SmartDashboard.putNumber("Swerve" + this.m_drivingSpark.getDeviceId(), m_drivingEncoder.getPosition());
+		// SmartDashboard.putNumber("AbsoluteEncoder" + this.m_drivingSpark.getDeviceId(), Math.toDegrees(getAbsoluteEncoderRad()));
+		// SmartDashboard.putNumber("Swerve" + this.m_drivingSpark.getDeviceId() + "Angles", getPosition().angle.getDegrees());
 	}
 
 	/**
@@ -99,7 +99,7 @@ public class MAXSwerveModule {
 		// relative to the chassis.
 		return new SwerveModulePosition(
 				m_drivingEncoder.getPosition(),
-				new Rotation2d(getAbsoluteEncoderRad())); // TODO: Investagate if offset should be applied
+				new Rotation2d(getAbsoluteEncoderRad() + m_chassisAngularOffset)); // TODO: Investagate if offset should be applied
 	}
 
 	public double getAbsoluteEncoderRad() {

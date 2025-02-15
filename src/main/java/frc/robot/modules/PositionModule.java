@@ -72,7 +72,8 @@ public class PositionModule extends SubsystemBase {
     @Override
     public void periodic() {
         // update odometry and gyro
-        estimator.updateWithTime(Timer.getTimestamp(), new Rotation2d(gyroscopeModule.getGyroscopeYawRadians()), driveModule.getModulePositions());
+        estimator.updateWithTime(Timer.getFPGATimestamp(), new Rotation2d(gyroscopeModule.getGyroscopeYawRadians()), driveModule.getModulePositions())
+            .times(2); // Estimator is halfed of actual travel, multipled by 2 to adjust to correct position
 
         // apply vision if, and only if, we're sure its constructive
         boolean rotationConfidence = Math.abs(driveModule.getTurnRate()) < 540;
@@ -84,6 +85,11 @@ public class PositionModule extends SubsystemBase {
 
         // grab the estimated position and put it on the map
         robotPose = estimator.getEstimatedPosition();
+        SmartDashboard.putNumber("Robot Pose X", robotPose.getX());
+        SmartDashboard.putNumber("Front Left Wheel", driveModule.getModulePositions()[0].distanceMeters);
+        SmartDashboard.putNumber("Front Right Wheel", driveModule.getModulePositions()[1].distanceMeters);
+        SmartDashboard.putNumber("Rear Left Wheel", driveModule.getModulePositions()[2].distanceMeters);
+        SmartDashboard.putNumber("Rear Right Wheel", driveModule.getModulePositions()[3].distanceMeters);
         dashboardField.setRobotPose(robotPose.getX(), robotPose.getY(), robotPose.getRotation());
     }
 }

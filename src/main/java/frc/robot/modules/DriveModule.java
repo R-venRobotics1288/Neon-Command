@@ -100,7 +100,7 @@ public class DriveModule extends SubsystemBase {
               )
             : new ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered);
                         
-        setModuleStates(swerveChassisSpeed);
+        setModuleStates(swerveChassisSpeed.unaryMinus());
     }
 
     /**

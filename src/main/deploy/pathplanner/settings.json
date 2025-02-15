@@ -1,6 +1,6 @@
 {
-  "robotWidth": 0.79,
-  "robotLength": 0.91,
+  "robotWidth": 0.8001,
+  "robotLength": 0.931,
   "holonomicMode": true,
   "pathFolders": [],
   "autoFolders": [],
@@ -13,8 +13,8 @@
   "robotMOI": 3.607,
   "robotTrackwidth": 0.546,
   "driveWheelRadius": 0.038,
-  "driveGearing": 6.75,
-  "maxDriveSpeed": 5.45,
+  "driveGearing": 8.14,
+  "maxDriveSpeed": 1.6,
   "driveMotorType": "NEO",
   "driveCurrentLimit": 50.0,
   "wheelCOF": 0.865,
@@ -26,7 +26,7 @@
   "blModuleY": 0.305,
   "brModuleX": -0.286,
   "brModuleY": -0.305,
-  "bumperOffsetX": 0.005,
-  "bumperOffsetY": 0.0,
+  "bumperOffsetX": 0.013,
+  "bumperOffsetY": 0.013,
   "robotFeatures": []
 }

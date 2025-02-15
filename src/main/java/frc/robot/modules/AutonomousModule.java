@@ -95,6 +95,7 @@ public class AutonomousModule extends SubsystemBase {
      */
     public Command getAutonomousCommand() {
         PathConstraints constraints = new PathConstraints(AUTO_MAX_SPEED, AUTO_MAX_ACCELERATION, AUTO_MAX_ANGULAR_SPEED, AUTO_MAX_ANGULAR_ACCELERATION);
-        return AutoBuilder.pathfindThenFollowPath(test_path, constraints);
+        // return AutoBuilder.pathfindThenFollowPath(test_path, constraints);
+        return test_auto;
     }
 }
