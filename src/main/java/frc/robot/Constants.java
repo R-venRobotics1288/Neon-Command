@@ -34,7 +34,7 @@ public final class Constants {
         public static boolean SHUFFLE_MANAGER_ENABLED = true;
         // Driving Parameters - Note that these are not the maximum capable speeds of
         // the robot, rather the allowed maximum speeds, in metres per second.
-        public static double MAX_ROBOT_SPEED = 2; // 15
+        public static double MAX_ROBOT_SPEED = 4; // 15
 
         public static double MAX_ROBOT_ROTATIONS_PER_SECOND = 1;
         public static double MAX_ANGULAR_SPEED = 2 * Math.PI * MAX_ROBOT_ROTATIONS_PER_SECOND; // radians per second
