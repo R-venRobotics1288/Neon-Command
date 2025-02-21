@@ -111,6 +111,8 @@ public final class Constants {
     public static final class OIConstants {
         public static final int DRIVER_CONTROLLER_PORT = 0;
         public static final double DRIVE_DEADBAND = 0.05;
+        public static final double OPERATOR_DEADBAND = 0.15;
+        public static final int OPERATOR_CONTROLLER_PORT = 0;
     }
 
     public static final class AutoConstants {
@@ -130,5 +132,18 @@ public final class Constants {
 
     public static final class NeoMotorConstants {
         public static final double FREE_SPEED_RPM = 5676;
+    }
+
+    public static final class IntakeConstants {
+        public static final int PIVOT_MOTOR_CANID = 0;
+        public static final double MAX_MOTOR_SPEED = 1.0;
+
+        public static final double PIVOT_PID_P = 3.0;
+        public static final double PIVOT_PID_I = 0.0;
+        public static final double PIVOT_PID_D = 0.0;
+        public static final double PIVOT_POSITION_TOLERANCE = 0.02;
+
+        public static final double PIVOT_DEGREE_UP = -119.0;
+        public static final double PIVOT_DEGREE_DOWN = 119.0;
     }
 }
