@@ -140,7 +140,7 @@ public final class Constants {
         public static final double TRANSLATION_COEFFICIENT_P = 4.0;
         public static final double TRANSLATION_COEFFICIENT_I = 0;
         public static final double TRANSLATION_COEFFICIENT_D = 0;
-        public static final double ROTATION_COEFFICIENT_P = 2.0;
+        public static final double ROTATION_COEFFICIENT_P = 6.0;
         public static final double ROTATION_COEFFICIENT_I = 0;
         public static final double ROTATION_COEFFICIENT_D = 0;
 

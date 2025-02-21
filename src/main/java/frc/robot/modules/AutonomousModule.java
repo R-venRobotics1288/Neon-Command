@@ -18,6 +18,7 @@ import com.pathplanner.lib.util.PathPlannerLogging;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -38,6 +39,8 @@ public class AutonomousModule extends SubsystemBase {
     @SuppressWarnings("unused")
     private final PathPlannerAuto test_auto;
     private final PathPlannerPath test_path;
+
+    public SendableChooser<Command> autoChooser;
 
     private final Field2d test_field;
 
@@ -73,8 +76,11 @@ public class AutonomousModule extends SubsystemBase {
             this, this.positionModule, this.driveModule
         );
 
+        autoChooser = AutoBuilder.buildAutoChooser();
+
         test_field = new Field2d();
         SmartDashboard.putData(test_field);
+        SmartDashboard.putData("Auto Chooser", autoChooser);
 
         test_auto = new PathPlannerAuto("Test");
         try {
@@ -96,6 +102,6 @@ public class AutonomousModule extends SubsystemBase {
     public Command getAutonomousCommand() {
         PathConstraints constraints = new PathConstraints(AUTO_MAX_SPEED, AUTO_MAX_ACCELERATION, AUTO_MAX_ANGULAR_SPEED, AUTO_MAX_ANGULAR_ACCELERATION);
         // return AutoBuilder.pathfindThenFollowPath(test_path, constraints);
-        return test_auto;
+        return autoChooser.getSelected();
     }
 }
