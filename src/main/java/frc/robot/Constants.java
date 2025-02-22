@@ -187,6 +187,21 @@ public final class Constants {
         public static final double ELEVATOR_PID_I = 0.0;
         public static final double ELEVATOR_PID_D = 0.0;
         public static final double ELEVATOR_TOLERANCE = 0.01;
-        
+    }
+    
+    public static final class LegConstants {
+        public static final int MOTOR_CANID = 42;
+
+        public static final double LEG_POS_ONE = 0;
+        public static final double LEG_POS_TWO = 0.33;
+        public static final double LEG_POS_THREE = 0.66;
+        public static final double LEG_POS_FOUR = 1;
+
+        public static final double MAX_MOTOR_SPEED = 1.0;
+        public static final double LEG_TOLERANCE = 0.02; // how many rotations off is considered fine for the PID controller.
+
+        public static final double LEG_PID_P = 2.0; // TODO: calibrate
+        public static final double LEG_PID_I = 0.0; // TODO: calibrate
+        public static final double LEG_PID_D = 0.0; // TODO: calibrate
     }
 }
