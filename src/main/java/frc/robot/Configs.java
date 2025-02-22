@@ -94,4 +94,14 @@ public final class Configs {
                 .smartCurrentLimit(50);
         }
     }
+
+    public static final class LegModuleConfig {
+        public static final SparkMaxConfig legConfig = new SparkMaxConfig();
+
+        static {
+            legConfig
+                .idleMode(IdleMode.kBrake)
+                .smartCurrentLimit(50);
+        }
+    }
 }
