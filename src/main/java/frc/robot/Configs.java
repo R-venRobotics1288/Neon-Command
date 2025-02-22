@@ -64,4 +64,14 @@ public final class Configs {
                 .smartCurrentLimit(50);
         }
     }
+
+    public static final class ArmModuleConfig {
+        public static final SparkMaxConfig armConfig = new SparkMaxConfig();
+
+        static {
+            armConfig
+                .idleMode(IdleMode.kBrake)
+                .smartCurrentLimit(50);
+        }
+    }
 }

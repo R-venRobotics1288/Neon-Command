@@ -8,15 +8,18 @@ import static frc.robot.Constants.DriveConstants.FIELDRELATIVEDRIVING;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.XboxController;
+import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.elevator.MoveElevatorCommand;
+import frc.robot.commands.arm.MoveArmCommand;
 import frc.robot.modules.DriveModule;
 import frc.robot.modules.ElevatorModule;
 import frc.robot.modules.GyroscopeModule;
 import frc.robot.modules.PositionModule;
 import frc.robot.modules.VisionModule;
 import frc.robot.modules.ElevatorModule;
+import frc.robot.modules.ArmModule;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -35,10 +38,15 @@ public class RobotContainer {
   // private final VisionModule m_vision;
   // private final DriveModule m_drive;
   private final ElevatorModule m_elevator;
+  private final ArmModule m_arm;
 
   private Command elevatorToLevelFourCommand;
   private Command elevatorToSafeHeightCommand;
   private Command elevatorToZeroCommand;
+  private Command moveArmToPosOne;
+  private Command moveArmToPosTwo;
+  private Command moveArmToPosThree;
+  private Command moveArmToPosFour;
 
   //@SuppressWarnings("unused") private final PositionModule m_position;
 
@@ -56,11 +64,17 @@ public class RobotContainer {
     // m_drive = new DriveModule(m_gyroscope);
     // m_position = new PositionModule(m_drive, m_vision, m_gyroscope);
     m_elevator = new ElevatorModule();
+    m_arm = new ArmModule();
 
     // Configures elevator commands
     elevatorToLevelFourCommand = new MoveElevatorCommand(ElevatorConstants.LEVEL_FOUR_POS, m_elevator);
     elevatorToSafeHeightCommand = new MoveElevatorCommand(ElevatorConstants.ELEVATOR_SAFE_HEIGHT, m_elevator);
     elevatorToZeroCommand = new MoveElevatorCommand(ElevatorConstants.ELEVATOR_ZERO_POS, m_elevator);
+    // Initializes arm commands.
+    moveArmToPosOne = new MoveArmCommand(ArmConstants.ARM_POS_ONE, m_arm);
+    moveArmToPosTwo = new MoveArmCommand(ArmConstants.ARM_POS_TWO, m_arm);
+    moveArmToPosThree = new MoveArmCommand(ArmConstants.ARM_POS_THREE, m_arm);
+    moveArmToPosFour = new MoveArmCommand(ArmConstants.ARM_POS_FOUR, m_arm);
 
     // Configure the button bindings
     configureButtonBindings();
