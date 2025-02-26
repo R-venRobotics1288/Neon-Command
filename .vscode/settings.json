@@ -56,5 +56,12 @@
     "edu.wpi.first.math.proto.*",
     "edu.wpi.first.math.**.proto.*",
     "edu.wpi.first.math.**.struct.*",
+  ],
+  "cSpell.words": [
+    "Cherukuru",
+    "DEADBAND",
+    "Tejas",
+    "Vadi",
+    "Vrishank"
   ]
 }

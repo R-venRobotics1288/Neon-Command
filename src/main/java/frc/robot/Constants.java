@@ -133,17 +133,48 @@ public final class Constants {
     public static final class NeoMotorConstants {
         public static final double FREE_SPEED_RPM = 5676;
     }
-
+    
     public static final class IntakeConstants {
-        public static final int PIVOT_MOTOR_CANID = 0;
-        public static final double MAX_MOTOR_SPEED = 1.0;
+        public static final double POSITION_TOLERANCE = 0.02;
+        public static final double MAX_MOTOR_SPEED = 0.1;
 
-        public static final double PIVOT_PID_P = 3.0;
+        public static final int PIVOT_MOTOR_CANID = 0; // TODO
+
+        public static final int FRONT_WHEELS_MOTOR_CANID = 0; // TODO
+        public static final int BACK_WHEELS_MOTOR_CANID = 0; // TODO
+
+        public static final int INTAKE_OPENER_LEFT_MOTOR_CANID = 0; // TODO
+        public static final int INTAKE_OPENER_RIGHT_MOTOR_CANID = 5;
+
+        public static final int LEFT_FEEDER_MOTOR_CANID = 0; // TODO
+        public static final int RIGHT_FEEDER_MOTOR_CANID = 0; // TODO
+
+        public static final double INTAKE_PID_P = 0.4;
+        public static final double INTAKE_PID_I = 0.0;
+        public static final double INTAKE_PID_D = 0.0;
+
+        public static final double OPENER_PID_P = 0.4;
+        public static final double OPENER_PID_I = 0.0;
+        public static final double OPENER_PID_D = 0.0;
+        
+        public static final double PIVOT_PID_P = 0.4;
         public static final double PIVOT_PID_I = 0.0;
         public static final double PIVOT_PID_D = 0.0;
-        public static final double PIVOT_POSITION_TOLERANCE = 0.02;
-
+        
+        public static final double FEEDER_PID_P = 0.4;
+        public static final double FEEDER_PID_I = 0.0;
+        public static final double FEEDER_PID_D = 0.0;
+        
+        public static final double OPENER_DEGREE_OPEN = 50.0;
+        public static final double OPENER_DEGREE_CLOSE = 0;
+        public static final double OPENER_GEAR_FACTOR = 60;
+        
+        public static final double INTAKE_SPEED_RPS = Math.PI;
+        
         public static final double PIVOT_DEGREE_UP = -119.0;
         public static final double PIVOT_DEGREE_DOWN = 119.0;
+        
+        public static final double INTAKE_SPEED_IN = 0.2;
+        public static final double INTAKE_SPEED_OUT = -0.2;
     }
 }

@@ -14,18 +14,18 @@ import static frc.robot.Constants.IntakeConstants.*;
  * @version 0.1.0
  * @since 15-FEB-2025
  */
-public class IntakePivotCommand extends Command {
+public class PivotIntakeCommand extends Command {
     private final IntakeModule intakeModule;
 
     private PIDController pivotPIDController;
     private double desiredPosition = 0;
     private boolean finished = false;
 
-    public IntakePivotCommand(double desiredPosition, IntakeModule intakeModule) {
+    public PivotIntakeCommand(double desiredPosition, IntakeModule intakeModule) {
         this.intakeModule = intakeModule;
         this.desiredPosition = desiredPosition;
         this.pivotPIDController = new PIDController(PIVOT_PID_P, PIVOT_PID_I, PIVOT_PID_D);
-        this.pivotPIDController.setTolerance(PIVOT_POSITION_TOLERANCE);
+        this.pivotPIDController.setTolerance(POSITION_TOLERANCE);
         super.addRequirements(this.intakeModule);
     }
 
@@ -40,8 +40,8 @@ public class IntakePivotCommand extends Command {
         double pivotEncoderPosition = intakeModule.getPivotEncoderPosition(); 
         double output = pivotPIDController.calculate(pivotEncoderPosition);
         intakeModule.setPivotMotorState(output);
-        SmartDashboard.putNumber("Intake Encoder Pos", pivotEncoderPosition);
-        SmartDashboard.putNumber("Intake Error", output);
+        SmartDashboard.putNumber("Intake Pivot Encoder Pos", pivotEncoderPosition);
+        SmartDashboard.putNumber("Intake Pivot Error", output);
         if (pivotPIDController.atSetpoint()) {
             finished = true;
             intakeModule.setIntakeState(pivotEncoderPosition < 0 ? IntakeState.UP : IntakeState.DOWN); // up is negative
