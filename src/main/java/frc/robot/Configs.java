@@ -5,6 +5,7 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
+import static frc.robot.Constants.IntakeConstants.OPENER_GEAR_FACTOR;
 import static frc.robot.Constants.ModuleConstants.*;
 
 public final class Configs {
@@ -57,12 +58,29 @@ public final class Configs {
 
     public static final class IntakeConfig {
         public static final SparkFlexConfig pivotConfig = new SparkFlexConfig();
+        public static final SparkFlexConfig wheelsConfig = new SparkFlexConfig();
+        public static final SparkMaxConfig openerConfig = new SparkMaxConfig();
+        public static final SparkFlexConfig feederConfig = new SparkFlexConfig();
 
         static {
                 pivotConfig
                         .idleMode(IdleMode.kBrake)
                         .smartCurrentLimit(80);
                 pivotConfig.encoder.positionConversionFactor(2 * Math.PI);
+
+                wheelsConfig
+                        .idleMode(IdleMode.kBrake)
+                        .smartCurrentLimit(80);
+
+                openerConfig
+                        .idleMode(IdleMode.kBrake)
+                        .smartCurrentLimit(80);
+                openerConfig.encoder.positionConversionFactor((2 * Math.PI)/OPENER_GEAR_FACTOR);
+
+                feederConfig
+                        .idleMode(IdleMode.kCoast)
+                        .smartCurrentLimit(80);
+                feederConfig.encoder.velocityConversionFactor(60);
         }
     }
 }

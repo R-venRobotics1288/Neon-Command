@@ -5,12 +5,16 @@
 package frc.robot;
 
 import static frc.robot.Constants.DriveConstants.FIELDRELATIVEDRIVING;
+import static frc.robot.Constants.IntakeConstants.OPENER_DEGREE_CLOSE;
+import static frc.robot.Constants.IntakeConstants.OPENER_DEGREE_OPEN;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.Constants.IntakeConstants;
+import frc.robot.Constants.ModuleConstants;
 import frc.robot.Constants.OIConstants;
-import frc.robot.commands.intake.IntakePivotCommand;
+import frc.robot.commands.intake.OpenIntakeCommand;
+import frc.robot.commands.intake.PivotIntakeCommand;
 import frc.robot.modules.DriveModule;
 import frc.robot.modules.GyroscopeModule;
 import frc.robot.modules.IntakeModule;
@@ -42,8 +46,11 @@ public class RobotContainer {
   // CommandXboxController m_driverController = new CommandXboxController(OIConstants.DRIVER_CONTROLLER_PORT);
   CommandXboxController m_operatorController = new CommandXboxController(OIConstants.OPERATOR_CONTROLLER_PORT);
 
-  private Command m_intakeCoralUpCommand;
-  private Command m_intakeCoralDownCommand;
+  // Intake commands
+  private Command m_intakePivotUpCommand;
+  private Command m_intakePivotDownCommand;
+  private Command m_intakeGrabberOpenCommand;
+  private Command m_intakeGrabberCloseCommand;
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -53,10 +60,12 @@ public class RobotContainer {
     // m_vision = new VisionModule();
     // m_drive = new DriveModule(m_gyroscope);
     // m_position = new PositionModule(m_drive, m_vision, m_gyroscope);
-
     m_intake = new IntakeModule();
-    m_intakeCoralUpCommand = new IntakePivotCommand(Math.toRadians(IntakeConstants.PIVOT_DEGREE_UP), m_intake);
-    m_intakeCoralDownCommand = new IntakePivotCommand(Math.toRadians(IntakeConstants.PIVOT_DEGREE_DOWN), m_intake);
+  
+    m_intakePivotUpCommand = new PivotIntakeCommand(Math.toRadians(IntakeConstants.PIVOT_DEGREE_UP), m_intake);
+    m_intakePivotDownCommand = new PivotIntakeCommand(Math.toRadians(IntakeConstants.PIVOT_DEGREE_DOWN), m_intake);
+    m_intakeGrabberOpenCommand = new OpenIntakeCommand(Math.toRadians(OPENER_DEGREE_OPEN), m_intake);
+    m_intakeGrabberCloseCommand = new OpenIntakeCommand(Math.toRadians(OPENER_DEGREE_CLOSE), m_intake);
 
     // Configure the button bindings
     configureButtonBindings();
@@ -98,8 +107,11 @@ public class RobotContainer {
     // m_driverController.rightBumper().onTrue(m_drive.cutSpeed(true))
     //     .onFalse(m_drive.cutSpeed(false));
     // m_driverController.y().onTrue(m_drive.toggleFieldRelative());
-    m_operatorController.leftTrigger().onTrue(m_intakeCoralUpCommand);
-    m_operatorController.rightTrigger().onTrue(m_intakeCoralDownCommand);
+    m_operatorController.leftTrigger().onTrue(m_intakePivotUpCommand);
+    m_operatorController.rightTrigger().onTrue(m_intakePivotDownCommand);
+    m_operatorController.button(7).onTrue(m_intakeGrabberCloseCommand);
+    m_operatorController.button(8).onTrue(m_intakeGrabberOpenCommand);
+    m_operatorController.leftBumper().onChange(m_intake.intakeAlgae(m_operatorController.leftBumper().getAsBoolean()));
   }
 
   /**

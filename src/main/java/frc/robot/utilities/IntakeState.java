@@ -7,6 +7,8 @@ package frc.robot.utilities;
  * @since 20-FEB-2025
  */
 public enum IntakeState {
-    UP, // Default state of the intake, lifted off the ground.
-    DOWN // The Intake is on the ground.
+    UP,     // The intake is lifted off the ground.
+    DOWN,   // The intake is on the ground.
+    OPEN,   // The intake is open.
+    CLOSED; // The intake is closed.
 }
