@@ -65,11 +65,11 @@ public final class Configs {
         }
     }
 
-    public static final class ArmModuleConfig {
-        public static final SparkMaxConfig armConfig = new SparkMaxConfig();
+    public static final class LegModuleConfig {
+        public static final SparkMaxConfig legConfig = new SparkMaxConfig();
 
         static {
-            armConfig
+            legConfig
                 .idleMode(IdleMode.kBrake)
                 .smartCurrentLimit(50);
         }
