@@ -85,14 +85,13 @@ public class PositionModule extends SubsystemBase {
 
         // Grab the estimated position and put it on the map
         robotPose = estimator.getEstimatedPosition();
-        // SmartDashboard.putNumber("Robot Pose X", robotPose.getX());
-        // SmartDashboard.putBoolean("Turn Rate Bool", rotationConfidence);
-        // SmartDashboard.putNumber("Turn Rate", Math.abs(driveModule.getTurnRate()));
+        SmartDashboard.putNumber("Robot Pose X", robotPose.getX());
+        SmartDashboard.putNumber("Turn Rate", Math.abs(driveModule.getTurnRate()));
         SmartDashboard.putNumber("Gyro Yaw Degrees", gyroscopeModule.getGyroscopeYawDegrees());
-        // SmartDashboard.putNumber("Front Left Wheel", driveModule.getModulePositions()[0].distanceMeters);
-        // SmartDashboard.putNumber("Front Right Wheel", driveModule.getModulePositions()[1].distanceMeters);
-        // SmartDashboard.putNumber("Rear Left Wheel", driveModule.getModulePositions()[2].distanceMeters);
-        // SmartDashboard.putNumber("Rear Right Wheel", driveModule.getModulePositions()[3].distanceMeters);
+        SmartDashboard.putNumber("Front Left Wheel", driveModule.getModulePositions()[0].distanceMeters);
+        SmartDashboard.putNumber("Front Right Wheel", driveModule.getModulePositions()[1].distanceMeters);
+        SmartDashboard.putNumber("Rear Left Wheel", driveModule.getModulePositions()[2].distanceMeters);
+        SmartDashboard.putNumber("Rear Right Wheel", driveModule.getModulePositions()[3].distanceMeters);
         dashboardField.setRobotPose(robotPose.getX(), robotPose.getY(), robotPose.getRotation());
     }
 }
