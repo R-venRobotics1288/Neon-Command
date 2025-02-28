@@ -12,9 +12,11 @@ import frc.robot.Constants.LegConstants;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.elevator.MoveElevatorCommand;
+import frc.robot.commands.leg.MoveFootCommand;
 import frc.robot.commands.leg.MoveLegCommand;
 import frc.robot.modules.DriveModule;
 import frc.robot.modules.ElevatorModule;
+import frc.robot.modules.FootModule;
 import frc.robot.modules.GyroscopeModule;
 import frc.robot.modules.PositionModule;
 import frc.robot.modules.VisionModule;
@@ -39,6 +41,7 @@ public class RobotContainer {
   // private final DriveModule m_drive;
   private final ElevatorModule m_elevator;
   private final LegModule m_leg;
+  private final FootModule m_foot;
 
   private Command elevatorToLevelFourCommand;
   private Command elevatorToSafeHeightCommand;
@@ -47,6 +50,9 @@ public class RobotContainer {
   private Command moveLegToPosTwo;
   private Command moveLegToPosThree;
   private Command moveLegToPosFour;
+
+  private Command moveFootIntake;
+  private Command moveFootOutTake;
 
   //@SuppressWarnings("unused") private final PositionModule m_position;
 
@@ -65,16 +71,22 @@ public class RobotContainer {
     // m_position = new PositionModule(m_drive, m_vision, m_gyroscope);
     m_elevator = new ElevatorModule();
     m_leg = new LegModule();
+    m_foot = new FootModule();
 
     // Configures elevator commands
     elevatorToLevelFourCommand = new MoveElevatorCommand(ElevatorConstants.LEVEL_FOUR_POS, m_elevator);
     elevatorToSafeHeightCommand = new MoveElevatorCommand(ElevatorConstants.ELEVATOR_SAFE_HEIGHT, m_elevator);
     elevatorToZeroCommand = new MoveElevatorCommand(ElevatorConstants.ELEVATOR_ZERO_POS, m_elevator);
+
     // Initializes leg commands.
     moveLegToPosOne = new MoveLegCommand(LegConstants.LEG_POS_ONE, m_leg);
     moveLegToPosTwo = new MoveLegCommand(LegConstants.LEG_POS_TWO, m_leg);
     moveLegToPosThree = new MoveLegCommand(LegConstants.LEG_POS_THREE, m_leg);
     moveLegToPosFour = new MoveLegCommand(LegConstants.LEG_POS_FOUR, m_leg);
+
+    // Initializes foot commands.
+    moveFootIntake = new MoveFootCommand(true, m_foot);
+    moveFootOutTake = new MoveFootCommand(false, m_foot);
 
     // Configure the button bindings
     configureButtonBindings();
@@ -116,6 +128,8 @@ public class RobotContainer {
     // m_driverController.rightBumper().onTrue(m_drive.cutSpeed(true))
     //     .onFalse(m_drive.cutSpeed(false));
     // m_driverController.y().onTrue(m_drive.toggleFieldRelative());
+    m_operatorController.x().whileTrue(moveFootIntake);
+    m_operatorController.b().whileTrue(moveFootOutTake);
   }
 
   public void resetElevator() {
