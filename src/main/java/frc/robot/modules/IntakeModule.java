@@ -8,8 +8,6 @@ import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Configs;
 import frc.robot.utilities.IntakeState;
@@ -20,39 +18,35 @@ import java.util.EnumSet;
 import java.util.Set;
 
 public class IntakeModule extends SubsystemBase {
-
     private SparkFlex pivotMotor;
-    private SparkFlex frontWheelsMotor;
-    private SparkFlex backWheelsMotor;
-    private SparkMax intakeOpenerLeftMotor;
-    private SparkMax intakeOpenerRightMotor;
-    private SparkFlex leftFeederMotor;
-    private SparkFlex rightFeederMotor;
-
     private RelativeEncoder pivotEncoder;
+
+    private SparkMax leftOpenerMotor;
+    private SparkMax rightOpenerMotor;
     private RelativeEncoder openerEncoder;
 
-    private boolean intakeAlgae = false;
-
+    private SparkFlex intakeMotor;
+    private SparkFlex leftFeederMotor;
+    private SparkFlex rightFeederMotor;
+    
     private final Set<IntakeState> state = EnumSet.of(IntakeState.CLOSED, IntakeState.UP);
-    private final PIDController feederPIDController = new PIDController(FEEDER_PID_P, FEEDER_PID_I, FEEDER_PID_D);
-    private final PIDController intakePIDController = new PIDController(INTAKE_PID_P, INTAKE_PID_I, INTAKE_PID_D);
 
+    /**
+     * Initializes the {@link IntakeModule}, containing six motors as well as internal state. Intake operates as a state machine with inputs changing outputs.
+     */
     public IntakeModule() {
-        // pivotMotor = new SparkFlex(PIVOT_MOTOR_CANID, MotorType.kBrushless);
-        // pivotMotor.configure(Configs.IntakeConfig.pivotConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-        // pivotEncoder = pivotMotor.getEncoder();
+        pivotMotor = new SparkFlex(PIVOT_MOTOR_CANID, MotorType.kBrushless);
+        pivotMotor.configure(Configs.IntakeConfig.pivotConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        pivotEncoder = pivotMotor.getEncoder();
 
-        // frontWheelsMotor = new SparkFlex(FRONT_WHEELS_MOTOR_CANID, MotorType.kBrushless);
-        // frontWheelsMotor.configure(Configs.IntakeConfig.wheelsConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-        // backWheelsMotor = new SparkFlex(BACK_WHEELS_MOTOR_CANID, MotorType.kBrushless);
-        // backWheelsMotor.configure(Configs.IntakeConfig.wheelsConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-        
-        intakeOpenerLeftMotor = new SparkMax(INTAKE_OPENER_LEFT_MOTOR_CANID, MotorType.kBrushless);
-        intakeOpenerLeftMotor.configure(Configs.IntakeConfig.openerConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-        intakeOpenerRightMotor = new SparkMax(INTAKE_OPENER_RIGHT_MOTOR_CANID, MotorType.kBrushless);
-        intakeOpenerRightMotor.configure(Configs.IntakeConfig.openerConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-        openerEncoder = intakeOpenerRightMotor.getEncoder();
+        leftOpenerMotor = new SparkMax(LEFT_OPENER_MOTOR_CANID, MotorType.kBrushless);
+        leftOpenerMotor.configure(Configs.IntakeConfig.openerConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        rightOpenerMotor = new SparkMax(RIGHT_OPENER_MOTOR_CANID, MotorType.kBrushless);
+        rightOpenerMotor.configure(Configs.IntakeConfig.openerConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        openerEncoder = rightOpenerMotor.getEncoder();
+
+        intakeMotor = new SparkFlex(INTAKE_MOTOR_CANID, MotorType.kBrushless);
+        intakeMotor.configure(Configs.IntakeConfig.wheelsConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
         leftFeederMotor = new SparkFlex(LEFT_FEEDER_MOTOR_CANID, MotorType.kBrushless);
         leftFeederMotor.configure(Configs.IntakeConfig.feederConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
@@ -74,6 +68,22 @@ public class IntakeModule extends SubsystemBase {
      */
     public double getOpenerEncoderPosition() {
         return openerEncoder.getPosition();
+    }
+
+    /**
+     * Gets the current feeder encoder velocity.
+     * @return current velocity of the feeder encoder.
+     */
+    public double getFeederEncoderVelocity() {
+        return rightFeederMotor.getEncoder().getVelocity();
+    }
+
+    /**
+     * Gets the current intake encoder velocity.
+     * @return current velocity of the intake encoder.
+     */
+    public double getIntakeEncoderVelocity() {
+        return intakeMotor.getEncoder().getVelocity();
     }
 
     /**
@@ -102,14 +112,6 @@ public class IntakeModule extends SubsystemBase {
     }
 
     /**
-     * Gets the current state of the intake module.
-     * @return set of current {@link IntakeState}
-     */
-    public Set<IntakeState> getIntakeStates() {
-        return state;
-    }
-
-    /**
      * Checks the current state of the Intake against any potential state.
      * @param stateToCheck the potential intake state to check
      * @return true if stateToCheck is currently true
@@ -123,40 +125,37 @@ public class IntakeModule extends SubsystemBase {
         return false;
     }
 
-    public void setPivotMotorState(double state) {
-        pivotMotor.set(MathUtil.clamp(state, -MAX_MOTOR_SPEED, MAX_MOTOR_SPEED));
-    }
-
-    public void setOpenerMotorState(double state) {
-        intakeOpenerLeftMotor.set(MathUtil.clamp(-state, -MAX_MOTOR_SPEED, MAX_MOTOR_SPEED));
-        intakeOpenerRightMotor.set(MathUtil.clamp(state, -MAX_MOTOR_SPEED, MAX_MOTOR_SPEED));
-    }
-
-    public void setMotorState(double feederPower, double intakePower) {
-        leftFeederMotor.set(MathUtil.clamp(-feederPower, -MAX_MOTOR_SPEED, MAX_MOTOR_SPEED));
-        rightFeederMotor.set(MathUtil.clamp(feederPower, -MAX_MOTOR_SPEED, MAX_MOTOR_SPEED));
-        frontWheelsMotor.set(MathUtil.clamp(intakePower, -MAX_MOTOR_SPEED, MAX_MOTOR_SPEED));
-        backWheelsMotor.set(MathUtil.clamp(intakePower, -MAX_MOTOR_SPEED, MAX_MOTOR_SPEED));
+    /**
+     * Sets the power of the pivot motor, responsible for moving the Intake up and down.
+     * @param power the power to command
+     */
+    public void setPivotMotorState(double power) {
+        pivotMotor.set(MathUtil.clamp(power, -MAX_MOTOR_SPEED, MAX_MOTOR_SPEED));
     }
 
     /**
-     * If the intake is down, runs motors when toIntake is true.
-     * @param toIntake Sets the current state of the intake and feeder motors.
+     * Sets the power of the opener motors, responsible for opening or closing the jaw or the Intake.
+     * @param power the power to command
      */
-    public Command intakeAlgae(boolean toIntake) {
-        return this.runOnce(() -> {
-            intakeAlgae = toIntake;
-        });
+    public void setOpenerMotorState(double power) {
+        leftOpenerMotor.set(MathUtil.clamp(power, -MAX_MOTOR_SPEED, MAX_MOTOR_SPEED));
+        rightOpenerMotor.set(MathUtil.clamp(-power, -MAX_MOTOR_SPEED, MAX_MOTOR_SPEED));
     }
 
-    @Override
-    public void periodic() {
-        if (state.contains(IntakeState.DOWN) && (state.contains(IntakeState.CLOSED) || intakeAlgae)) {
-            double feederPower = feederPIDController.calculate(rightFeederMotor.getEncoder().getVelocity(), INTAKE_SPEED_RPS);
-            double intakePower = intakePIDController.calculate(frontWheelsMotor.getEncoder().getVelocity(), INTAKE_SPEED_RPS);
-            setMotorState(feederPower, intakePower);
-        } else {
-            setMotorState(0, 0);
-        }
+    /**
+     * Sets the power of the feeder motors, responsible for feeding coral from intake to foot.
+     * @param power the power to command
+     */
+    public void setFeederMotorState(double power) {
+        leftFeederMotor.set(MathUtil.clamp(-power, -MAX_MOTOR_SPEED, MAX_MOTOR_SPEED));
+        rightFeederMotor.set(MathUtil.clamp(power, -MAX_MOTOR_SPEED, MAX_MOTOR_SPEED));
+    }
+
+    /**
+     * Sets the power of the intake motor, responsible for initial pickup of game pieces from the ground.
+     * @param power the power to command
+     */
+    public void setIntakeMotorState(double power) {
+        intakeMotor.set(MathUtil.clamp(power, -MAX_MOTOR_SPEED, MAX_MOTOR_SPEED));
     }
 }
