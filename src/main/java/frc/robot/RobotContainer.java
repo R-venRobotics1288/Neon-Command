@@ -17,6 +17,7 @@ import frc.robot.commands.elevator.MoveElevatorCommand;
 import frc.robot.commands.intake.IntakeCommand;
 import frc.robot.commands.intake.OpenIntakeCommand;
 import frc.robot.commands.intake.PivotIntakeCommand;
+import frc.robot.commands.leg.MoveFootCommand;
 import frc.robot.commands.leg.MoveLegCommand;
 import frc.robot.modules.DriveModule;
 import frc.robot.modules.ElevatorModule;
@@ -25,7 +26,6 @@ import frc.robot.modules.IntakeModule;
 import frc.robot.modules.PositionModule;
 import frc.robot.modules.VisionModule;
 import frc.robot.utilities.IntakeState;
-import frc.robot.modules.ElevatorModule;
 import frc.robot.modules.LegModule;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -56,6 +56,9 @@ public class RobotContainer {
   private Command moveLegToPosThree;
   private Command moveLegToPosFour;
 
+  private Command moveFootIntake;
+  private Command moveFootOutTake;
+
   //@SuppressWarnings("unused") private final PositionModule m_position;
 
 	// The driver's controller
@@ -82,7 +85,7 @@ public class RobotContainer {
 		m_intake = new IntakeModule();
     m_elevator = new ElevatorModule();
     m_leg = new LegModule();
-	
+    	
 		m_intakePivotUpCommand = new PivotIntakeCommand(Math.toRadians(IntakeConstants.PIVOT_DEGREE_UP), m_intake);
 		m_intakePivotDownCommand = new PivotIntakeCommand(Math.toRadians(IntakeConstants.PIVOT_DEGREE_DOWN), m_intake);
 		m_intakeOpenCommand = new OpenIntakeCommand(Math.toRadians(IntakeConstants.OPENER_DEGREE_OPEN), m_intake);
@@ -95,11 +98,16 @@ public class RobotContainer {
     elevatorToLevelFourCommand = new MoveElevatorCommand(ElevatorConstants.LEVEL_FOUR_POS, m_elevator);
     elevatorToSafeHeightCommand = new MoveElevatorCommand(ElevatorConstants.ELEVATOR_SAFE_HEIGHT, m_elevator);
     elevatorToZeroCommand = new MoveElevatorCommand(ElevatorConstants.ELEVATOR_ZERO_POS, m_elevator);
+
     // Initializes leg commands.
     moveLegToPosOne = new MoveLegCommand(LegConstants.LEG_POS_ONE, m_leg);
     moveLegToPosTwo = new MoveLegCommand(LegConstants.LEG_POS_TWO, m_leg);
     moveLegToPosThree = new MoveLegCommand(LegConstants.LEG_POS_THREE, m_leg);
     moveLegToPosFour = new MoveLegCommand(LegConstants.LEG_POS_FOUR, m_leg);
+
+    // Initializes foot commands.
+    moveFootIntake = new MoveFootCommand(true, m_leg);
+    moveFootOutTake = new MoveFootCommand(false, m_leg);
 
 		// Configure the button bindings
 		configureButtonBindings();
@@ -141,6 +149,8 @@ public class RobotContainer {
 		// m_driverController.leftBumper().onTrue(m_drive.cutSpeed(true))
 		//     .onFalse(m_drive.cutSpeed(false));
 		// m_driverController.y().onTrue(m_drive.toggleFieldRelative());
+    m_operatorController.x().whileTrue(moveFootIntake);
+    m_operatorController.b().whileTrue(moveFootOutTake);
 
 		// TODO: ensure leg is moved away BEFORE we schedule pivot up
 		m_driverController.a().onTrue(new RunCommand(() -> {
