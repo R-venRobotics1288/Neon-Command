@@ -254,4 +254,18 @@ public final class Constants {
         public static final double MOTOR_PID_I = 0.0; // TODO: calibrate
         public static final double MOTOR_PID_D = 0.00110; // TODO: calibrate
     }
+
+    public static final class ClimberConstants {
+        public static final int LEFT_CLIMBER_MOTOR_CAN_ID = 0; //CHANGEME
+        public static final int RIGHT_CLIMBER_MOTOR_CAN_ID = 0; //CHANGEME
+
+        public static final double MAX_MOTOR_SPEED = 1.0;
+
+        public static final double CLIMBER_PID_P = 4.0;
+        public static final double CLIMBER_PID_I = 0.0;
+        public static final double CLIMBER_PID_D = 0.0;
+        
+        public static final double CLIMBER_TOLERANCE = 0.01;
+
+    }
 }
