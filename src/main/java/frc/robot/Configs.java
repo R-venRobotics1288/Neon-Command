@@ -5,7 +5,7 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
-import static frc.robot.Constants.IntakeConstants.OPENER_GEAR_FACTOR;
+import static frc.robot.Constants.IntakeConstants.*;
 import static frc.robot.Constants.ModuleConstants.*;
 
 public final class Configs {
@@ -66,21 +66,22 @@ public final class Configs {
                 pivotConfig
                         .idleMode(IdleMode.kBrake)
                         .smartCurrentLimit(80);
-                pivotConfig.encoder.positionConversionFactor(2 * Math.PI);
-
-                wheelsConfig
-                        .idleMode(IdleMode.kBrake)
-                        .smartCurrentLimit(80);
+                pivotConfig.encoder.positionConversionFactor((2 * Math.PI)/PIVOT_GEAR_FACTOR); // Axle Radians
 
                 openerConfig
                         .idleMode(IdleMode.kBrake)
                         .smartCurrentLimit(80);
-                openerConfig.encoder.positionConversionFactor((2 * Math.PI)/OPENER_GEAR_FACTOR);
+                openerConfig.encoder.positionConversionFactor((2 * Math.PI)/OPENER_GEAR_FACTOR); // Axle Radians
+
+                wheelsConfig
+                        .idleMode(IdleMode.kBrake)
+                        .smartCurrentLimit(80);
+                wheelsConfig.encoder.velocityConversionFactor(60); // Rotations Per Second
 
                 feederConfig
                         .idleMode(IdleMode.kCoast)
                         .smartCurrentLimit(80);
-                feederConfig.encoder.velocityConversionFactor(60);
+                feederConfig.encoder.velocityConversionFactor(60); // Rotations Per Second
         }
     }
 }
