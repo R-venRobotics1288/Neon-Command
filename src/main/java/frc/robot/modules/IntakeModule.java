@@ -147,8 +147,8 @@ public class IntakeModule extends SubsystemBase {
      * @param power the power to command
      */
     public void setFeederMotorState(double power) {
-        leftFeederMotor.set(MathUtil.clamp(-power, -MAX_MOTOR_SPEED, MAX_MOTOR_SPEED));
-        rightFeederMotor.set(MathUtil.clamp(power, -MAX_MOTOR_SPEED, MAX_MOTOR_SPEED));
+        leftFeederMotor.set(MathUtil.clamp(power, -MAX_MOTOR_SPEED, MAX_MOTOR_SPEED));
+        rightFeederMotor.set(MathUtil.clamp(-power, -MAX_MOTOR_SPEED, MAX_MOTOR_SPEED));
     }
 
     /**
