@@ -3,7 +3,7 @@ package frc.robot.modules;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.LimelightHelpers;
+import frc.robot.utilities.LimelightHelpers;
 
 import static frc.robot.Constants.ModuleConstants.LIMELIGHT_HOSTNAME;
 

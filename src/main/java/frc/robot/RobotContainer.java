@@ -32,7 +32,6 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
-
 /*
  * This class is where the bulk of the robot should be declared. Since Command-based is a
  * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
@@ -59,7 +58,7 @@ public class RobotContainer {
   private Command moveFootIntake;
   private Command moveFootOutTake;
 
-  //@SuppressWarnings("unused") private final PositionModule m_position;
+  // @SuppressWarnings("unused") private final PositionModule m_position;
 
 	// The driver's controller
 	CommandXboxController m_driverController = new CommandXboxController(OIConstants.DRIVER_CONTROLLER_PORT);
@@ -147,10 +146,33 @@ public class RobotContainer {
 	 */
 	private void configureButtonBindings() {
 		// m_driverController.leftBumper().onTrue(m_drive.cutSpeed(true))
-		//     .onFalse(m_drive.cutSpeed(false));
+		// .onFalse(m_drive.cutSpeed(false));
 		// m_driverController.y().onTrue(m_drive.toggleFieldRelative());
-    m_operatorController.x().whileTrue(moveFootIntake);
-    m_operatorController.b().whileTrue(moveFootOutTake);
+    
+    m_operatorController.x().onChange(new RunCommand(() -> {
+      if (m_operatorController.x().getAsBoolean()) {
+        if (!moveFootIntake.isScheduled())
+          moveFootIntake.schedule();
+      } else {
+        if (moveFootIntake.isScheduled())
+          moveFootIntake.cancel();
+      }
+    }, m_leg));
+
+    m_operatorController.b().onChange(new RunCommand(() -> {
+      if (m_operatorController.b().getAsBoolean()) {
+        if (!moveFootOutTake.isScheduled())
+          moveFootOutTake.schedule();
+      } else {
+        if (moveFootOutTake.isScheduled())
+          moveFootOutTake.cancel();
+      }
+    }, m_leg));
+    
+    m_operatorController.x().onTrue(moveLegToPosOne);
+    m_operatorController.a().onTrue(moveLegToPosTwo);
+    m_operatorController.b().onTrue(moveLegToPosThree);
+    m_operatorController.y().onTrue(moveLegToPosFour);
 
 		// TODO: ensure leg is moved away BEFORE we schedule pivot up
 		m_driverController.a().onTrue(new RunCommand(() -> {
