@@ -174,6 +174,6 @@ public final class Constants {
 
         public static final double MOTOR_PID_P = 0.04; // TODO: calibrate
         public static final double MOTOR_PID_I = 0.0; // TODO: calibrate
-        public static final double MOTOR_PID_D = 0.00123; // TODO: calibrate
+        public static final double MOTOR_PID_D = 0.00110; // TODO: calibrate
     }
 }

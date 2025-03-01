@@ -33,7 +33,7 @@ public class MoveFootCommand extends Command {
     public void execute() {
         double state = footPIDController.calculate(legModule.getFootEncoderVelocity());
         SmartDashboard.putNumber("Foot Velocity", legModule.getFootEncoderVelocity());
-        SmartDashboard.putNumber("Foot State", state);
+        SmartDashboard.putNumber("Foot State", FOOT_SPEED_RPS);
         SmartDashboard.putNumber("Foot Current (Amps)", legModule.getFootMotorOutputCurrent());
         legModule.setFootMotorState(state);
     }
