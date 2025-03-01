@@ -5,8 +5,9 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
-import static frc.robot.Constants.IntakeConstants.*;
-import static frc.robot.Constants.ModuleConstants.*;
+import static frc.robot.Constants.FootConstants;
+import static frc.robot.Constants.IntakeConstants;
+import static frc.robot.Constants.ModuleConstants;
 
 public final class Configs {
     public static final class MAXSwerveModule {
@@ -15,10 +16,10 @@ public final class Configs {
 
         static {
             // Use module constants to calculate conversion factors and feed forward gain.
-            double drivingFactor = WHEEL_DIAMETER_METRES * Math.PI
-                    / DRIVING_MOTOR_REDUCTION;
+            double drivingFactor = ModuleConstants.WHEEL_DIAMETER_METRES * Math.PI
+                    / ModuleConstants.DRIVING_MOTOR_REDUCTION;
             double turningFactor = 2 * Math.PI;
-            double drivingVelocityFeedForward = 1 / DRIVE_WHEEL_FREE_SPEED_RPS;
+            double drivingVelocityFeedForward = 1 / ModuleConstants.DRIVE_WHEEL_FREE_SPEED_RPS;
 
             drivingConfig
                     .idleMode(IdleMode.kBrake)
@@ -35,7 +36,7 @@ public final class Configs {
 
             turningConfig
                     .idleMode(IdleMode.kBrake);
-                //    .smartCurrentLimit(20);
+            // .smartCurrentLimit(20);
             turningConfig.absoluteEncoder
                     // Invert the turning encoder, since the output shaft rotates in the opposite
                     // direction of the steering motor in the MAXSwerve Module.
@@ -66,22 +67,22 @@ public final class Configs {
                 pivotConfig
                         .idleMode(IdleMode.kBrake)
                         .smartCurrentLimit(80);
-                pivotConfig.encoder.positionConversionFactor((2 * Math.PI)/PIVOT_GEAR_FACTOR); // Axle Radians
+                pivotConfig.encoder.positionConversionFactor((2 * Math.PI)/IntakeConstants.PIVOT_GEAR_FACTOR); // Axle Radians
 
                 openerConfig
                         .idleMode(IdleMode.kBrake)
                         .smartCurrentLimit(80);
-                openerConfig.encoder.positionConversionFactor((2 * Math.PI)/OPENER_GEAR_FACTOR); // Axle Radians
+                openerConfig.encoder.positionConversionFactor((2 * Math.PI)/IntakeConstants.OPENER_GEAR_FACTOR); // Axle Radians
 
                 wheelsConfig
                         .idleMode(IdleMode.kBrake)
                         .smartCurrentLimit(80);
-                wheelsConfig.encoder.velocityConversionFactor(60); // Rotations Per Second
+                wheelsConfig.encoder.velocityConversionFactor(1 / 60); // Rotations Per Second
 
                 feederConfig
                         .idleMode(IdleMode.kCoast)
                         .smartCurrentLimit(80);
-                feederConfig.encoder.velocityConversionFactor(60); // Rotations Per Second
+                feederConfig.encoder.velocityConversionFactor(1 / 60); // Rotations Per Second
         }
     }
 
@@ -90,8 +91,8 @@ public final class Configs {
 
         static {
             elevatorConfig
-                .idleMode(IdleMode.kBrake)
-                .smartCurrentLimit(50);
+                    .idleMode(IdleMode.kBrake)
+                    .smartCurrentLimit(50);
         }
     }
 
@@ -100,8 +101,8 @@ public final class Configs {
 
         static {
             legConfig
-                .idleMode(IdleMode.kBrake)
-                .smartCurrentLimit(50);
+                    .idleMode(IdleMode.kBrake)
+                    .smartCurrentLimit(50);
         }
     }
 
@@ -110,8 +111,9 @@ public final class Configs {
 
         static {
             footConfig
-                .idleMode(IdleMode.kBrake)
-                .smartCurrentLimit(50);
+                    .idleMode(IdleMode.kBrake)
+                    .smartCurrentLimit(80).encoder
+                    .velocityConversionFactor(1 / (60.0 * FootConstants.FOOT_GEAR_FACTOR));
         }
     }
 }

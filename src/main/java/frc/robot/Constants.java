@@ -175,22 +175,22 @@ public final class Constants {
     }
 
     public static final class ElevatorConstants {
-        public static final int MOTOR_CANID = 5;
+        public static final int MOTOR_CANID = 4;
 
-        public static final double LEVEL_FOUR_POS = 50.0;
-        public static final double ELEVATOR_SAFE_HEIGHT = 10.0;
+        public static final double LEVEL_FOUR_POS = 100.0;
+        public static final double ELEVATOR_SAFE_HEIGHT = 25.0;
         public static final double ELEVATOR_ZERO_POS = 0.0;
 
-        public static final double MAX_MOTOR_SPEED = 0.1;
+        public static final double MAX_MOTOR_SPEED = 0.5;
 
-        public static final double ELEVATOR_PID_P = 4.0;
-        public static final double ELEVATOR_PID_I = 0.0;
-        public static final double ELEVATOR_PID_D = 0.0;
-        public static final double ELEVATOR_TOLERANCE = 0.01;
+        public static final double ELEVATOR_PID_P = 0.075;
+        public static final double ELEVATOR_PID_I = 0.0; //0.7
+        public static final double ELEVATOR_PID_D = 0.00125;
+        public static final double ELEVATOR_TOLERANCE = 0.1;
     }
     
     public static final class LegConstants {
-        public static final int MOTOR_CANID = 42;
+        public static final int MOTOR_CANID = 5;
 
         public static final double LEG_POS_ONE = 0;
         public static final double LEG_POS_TWO = 0.33;
@@ -207,6 +207,13 @@ public final class Constants {
 
     public static final class FootConstants {
         public static final int MOTOR_CANID = 40;
-        public static final double MOTOR_SPEED = 0.4;
+        public static final double MAX_MOTOR_SPEED = 1;
+        public static final double FOOT_SPEED_RPS = 8; // rotations per second target of foot wheels
+        public static final double FOOT_TOLERANCE = 0.02;
+        public static final double FOOT_GEAR_FACTOR = 4.0;
+
+        public static final double MOTOR_PID_P = 0.04; // TODO: calibrate
+        public static final double MOTOR_PID_I = 0.0; // TODO: calibrate
+        public static final double MOTOR_PID_D = 0.00110; // TODO: calibrate
     }
 }
