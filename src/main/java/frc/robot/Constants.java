@@ -166,7 +166,7 @@ public final class Constants {
     }
 
     public static final class FootConstants {
-        public static final int MOTOR_CANID = 0;
+        public static final int MOTOR_CANID = 40;
         public static final double MOTOR_SPEED = 0.4;
     }
 }

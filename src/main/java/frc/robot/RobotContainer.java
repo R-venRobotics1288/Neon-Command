@@ -16,11 +16,9 @@ import frc.robot.commands.leg.MoveFootCommand;
 import frc.robot.commands.leg.MoveLegCommand;
 import frc.robot.modules.DriveModule;
 import frc.robot.modules.ElevatorModule;
-import frc.robot.modules.FootModule;
 import frc.robot.modules.GyroscopeModule;
 import frc.robot.modules.PositionModule;
 import frc.robot.modules.VisionModule;
-import frc.robot.modules.ElevatorModule;
 import frc.robot.modules.LegModule;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -41,7 +39,6 @@ public class RobotContainer {
   // private final DriveModule m_drive;
   private final ElevatorModule m_elevator;
   private final LegModule m_leg;
-  private final FootModule m_foot;
 
   private Command elevatorToLevelFourCommand;
   private Command elevatorToSafeHeightCommand;
@@ -71,7 +68,6 @@ public class RobotContainer {
     // m_position = new PositionModule(m_drive, m_vision, m_gyroscope);
     m_elevator = new ElevatorModule();
     m_leg = new LegModule();
-    m_foot = new FootModule();
 
     // Configures elevator commands
     elevatorToLevelFourCommand = new MoveElevatorCommand(ElevatorConstants.LEVEL_FOUR_POS, m_elevator);
@@ -85,8 +81,8 @@ public class RobotContainer {
     moveLegToPosFour = new MoveLegCommand(LegConstants.LEG_POS_FOUR, m_leg);
 
     // Initializes foot commands.
-    moveFootIntake = new MoveFootCommand(true, m_foot);
-    moveFootOutTake = new MoveFootCommand(false, m_foot);
+    moveFootIntake = new MoveFootCommand(true, m_leg);
+    moveFootOutTake = new MoveFootCommand(false, m_leg);
 
     // Configure the button bindings
     configureButtonBindings();

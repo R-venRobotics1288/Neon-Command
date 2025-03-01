@@ -1,28 +1,28 @@
 package frc.robot.commands.leg;
 
-import static frc.robot.Constants.FootConstants.MOTOR_SPEED;
+import static frc.robot.Constants.FootConstants.*;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.modules.FootModule;
+import frc.robot.modules.LegModule;
 
 public class MoveFootCommand extends Command {
-    private final FootModule footModule;
+    private final LegModule legModule;
 
     private boolean isIntaking = true;
 
-    public MoveFootCommand(boolean isIntaking, FootModule footModule) {
-        this.footModule = footModule;
+    public MoveFootCommand(boolean isIntaking, LegModule legModule) {
+        this.legModule = legModule;
         this.isIntaking = isIntaking;
-        super.addRequirements(this.footModule);
+        super.addRequirements(this.legModule);
     }
 
     @Override
     public void execute() {
-        footModule.setMotorState(isIntaking ? MOTOR_SPEED : -MOTOR_SPEED);
+        legModule.setFootMotorState(isIntaking ? MOTOR_SPEED : -MOTOR_SPEED);
     }
 
     @Override
     public void end(boolean interrupted) {
-        footModule.setMotorState(0);
+        legModule.setFootMotorState(0);
     }
 }
