@@ -135,18 +135,18 @@ public final class Constants {
     }
 
     public static final class ElevatorConstants {
-        public static final int MOTOR_CANID = 5;
+        public static final int MOTOR_CANID = 4;
 
-        public static final double LEVEL_FOUR_POS = 50.0;
-        public static final double ELEVATOR_SAFE_HEIGHT = 10.0;
+        public static final double LEVEL_FOUR_POS = 100.0;
+        public static final double ELEVATOR_SAFE_HEIGHT = 25.0;
         public static final double ELEVATOR_ZERO_POS = 0.0;
 
-        public static final double MAX_MOTOR_SPEED = 0.1;
+        public static final double MAX_MOTOR_SPEED = 0.5;
 
-        public static final double ELEVATOR_PID_P = 4.0;
-        public static final double ELEVATOR_PID_I = 0.0;
-        public static final double ELEVATOR_PID_D = 0.0;
-        public static final double ELEVATOR_TOLERANCE = 0.01;
+        public static final double ELEVATOR_PID_P = 0.075;
+        public static final double ELEVATOR_PID_I = 0.0; //0.7
+        public static final double ELEVATOR_PID_D = 0.00125;
+        public static final double ELEVATOR_TOLERANCE = 0.1;
     }
     
     public static final class LegConstants {
