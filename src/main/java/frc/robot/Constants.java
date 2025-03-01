@@ -138,9 +138,13 @@ public final class Constants {
 
         public static final double MAX_MOTOR_SPEED = 1.0;
 
-        public static final double CLIMBER_PID_P = 4.0;
-        public static final double CLIMBER_PID_I = 0.0;
-        public static final double CLIMBER_PID_D = 0.0;
+        public static final double RIGHT_CLIMBER_PID_P = 4.0;
+        public static final double RIGHT_CLIMBER_PID_I = 0.0;
+        public static final double RIGHT_CLIMBER_PID_D = 0.0;
+
+        public static final double LEFT_CLIMBER_PID_P = 4.0;
+        public static final double LEFT_CLIMBER_PID_I = 0.0;
+        public static final double LEFT_CLIMBER_PID_D = 0.0;
         
         public static final double CLIMBER_TOLERANCE = 0.01;
 

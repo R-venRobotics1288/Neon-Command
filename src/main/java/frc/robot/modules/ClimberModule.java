@@ -24,12 +24,12 @@ public class ClimberModule extends SubsystemBase {
      */
     public ClimberModule() {
         climberMotorR = new SparkMax(RIGHT_CLIMBER_MOTOR_CAN_ID, MotorType.kBrushless);
-        climberMotorR.configure(Configs.climberModuleConfig.climberConfig, ResetMode.kResetSafeParameters,
+        climberMotorR.configure(Configs.ClimberModuleConfig.climberConfig, ResetMode.kResetSafeParameters,
 				PersistMode.kPersistParameters);
         climberEncoderR = climberMotorR.getEncoder();
 
         climberMotorL = new SparkMax(LEFT_CLIMBER_MOTOR_CAN_ID, MotorType.kBrushless);
-        climberMotorL.configure(Configs.climberModuleConfig.climberConfig, ResetMode.kResetSafeParameters,
+        climberMotorL.configure(Configs.ClimberModuleConfig.climberConfig, ResetMode.kResetSafeParameters,
 				PersistMode.kPersistParameters);
         climberEncoderL = climberMotorL.getEncoder();
         reset();

@@ -54,7 +54,7 @@ public final class Configs {
                     .positionWrappingInputRange(0, turningFactor);
         }
     }
-    public static final class climberModuleConfig {
+    public static final class ClimberModuleConfig {
         public static final SparkFlexConfig climberConfig = new SparkFlexConfig();
 
         static {
