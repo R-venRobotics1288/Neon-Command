@@ -5,6 +5,8 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
+import frc.robot.Constants.FootConstants;
+
 import static frc.robot.Constants.ModuleConstants.*;
 
 public final class Configs {
@@ -34,7 +36,7 @@ public final class Configs {
 
             turningConfig
                     .idleMode(IdleMode.kBrake);
-                //    .smartCurrentLimit(20);
+            // .smartCurrentLimit(20);
             turningConfig.absoluteEncoder
                     // Invert the turning encoder, since the output shaft rotates in the opposite
                     // direction of the steering motor in the MAXSwerve Module.
@@ -60,8 +62,8 @@ public final class Configs {
 
         static {
             elevatorConfig
-                .idleMode(IdleMode.kBrake)
-                .smartCurrentLimit(50);
+                    .idleMode(IdleMode.kBrake)
+                    .smartCurrentLimit(50);
         }
     }
 
@@ -70,8 +72,8 @@ public final class Configs {
 
         static {
             legConfig
-                .idleMode(IdleMode.kBrake)
-                .smartCurrentLimit(50);
+                    .idleMode(IdleMode.kBrake)
+                    .smartCurrentLimit(50);
         }
     }
 
@@ -80,8 +82,9 @@ public final class Configs {
 
         static {
             footConfig
-                .idleMode(IdleMode.kBrake)
-                .smartCurrentLimit(50);
+                    .idleMode(IdleMode.kBrake)
+                    .smartCurrentLimit(80).encoder
+                    .velocityConversionFactor(1 / (60.0 * FootConstants.FOOT_GEAR_FACTOR));
         }
     }
 }

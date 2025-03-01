@@ -167,6 +167,13 @@ public final class Constants {
 
     public static final class FootConstants {
         public static final int MOTOR_CANID = 40;
-        public static final double MOTOR_SPEED = 0.4;
+        public static final double MAX_MOTOR_SPEED = 1;
+        public static final double FOOT_SPEED_RPS = 8; // rotations per second target of foot wheels
+        public static final double FOOT_TOLERANCE = 0.02;
+        public static final double FOOT_GEAR_FACTOR = 4.0;
+
+        public static final double MOTOR_PID_P = 0.04; // TODO: calibrate
+        public static final double MOTOR_PID_I = 0.0; // TODO: calibrate
+        public static final double MOTOR_PID_D = 0.00123; // TODO: calibrate
     }
 }
