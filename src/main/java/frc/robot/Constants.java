@@ -49,11 +49,10 @@ public final class Constants {
         public static boolean FIELD_RELATIVE_DRIVING = true;
 
         // Chassis configuration
-        // TODO: 2025 Bot Change to 22.5 inches to both Track Width and Wheel Base (please verify these numbers)
         // Distance between centers of right and left wheels on robot
-        public static final double TRACK_WIDTH = Units.inchesToMeters(18);
+        public static final double TRACK_WIDTH = Units.inchesToMeters(22.5);
         // Distance between front and back wheels on robot
-        public static final double WHEEL_BASE = Units.inchesToMeters(24);
+        public static final double WHEEL_BASE = Units.inchesToMeters(22.5);
 
         public static final SwerveDriveKinematics DRIVE_KINEMATICS = new SwerveDriveKinematics(
             new Translation2d(WHEEL_BASE / 2, TRACK_WIDTH / 2),
