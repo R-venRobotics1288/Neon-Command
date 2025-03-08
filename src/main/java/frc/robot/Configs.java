@@ -6,6 +6,7 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
+import static frc.robot.Constants.ElevatorConstants;
 import static frc.robot.Constants.FootConstants;
 import static frc.robot.Constants.IntakeConstants;
 import static frc.robot.Constants.ModuleConstants;
@@ -84,12 +85,13 @@ public final class Configs {
     }
 
     public static final class ElevatorModuleConfig {
-		public static final SparkFlexConfig elevatorConfig = new SparkFlexConfig();
+		public static final SparkMaxConfig elevatorConfig = new SparkMaxConfig();
 
 		static {
 		    elevatorConfig
 			    .idleMode(IdleMode.kBrake)
-			    .smartCurrentLimit(50);
+			    .smartCurrentLimit(50)
+				.encoder.positionConversionFactor(1 / ElevatorConstants.ELEVATOR_GEAR_FACTOR); // Apply gearing to get rotations of the rod
 		}
     }
 

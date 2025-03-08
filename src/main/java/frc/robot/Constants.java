@@ -214,6 +214,7 @@ public final class Constants {
         public static final double LEVEL_FOUR_POS = 100.0;
         public static final double ELEVATOR_SAFE_HEIGHT = 25.0;
         public static final double ELEVATOR_ZERO_POS = 0.0;
+        public static final double ELEVATOR_GEAR_FACTOR = 9.0;
 
         public static final double MAX_MOTOR_SPEED = 0.5;
 

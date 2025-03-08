@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.RelativeEncoder;
-import com.revrobotics.spark.SparkFlex;
+import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import edu.wpi.first.math.MathUtil;
 import frc.robot.Configs;
@@ -23,7 +23,7 @@ import static frc.robot.Constants.ElevatorConstants.*;
 public class ElevatorModule extends SubsystemBase {
 
     private RelativeEncoder elevatorEncoder;
-    private SparkFlex elevatorMotor;
+    private SparkMax elevatorMotor;
 
     public ElevatorState elevatorState;
 
@@ -31,7 +31,7 @@ public class ElevatorModule extends SubsystemBase {
      * Initializes the Elevator of the robot.
      */
     public ElevatorModule() {
-        elevatorMotor = new SparkFlex(MOTOR_CANID, MotorType.kBrushless);
+        elevatorMotor = new SparkMax(MOTOR_CANID, MotorType.kBrushless);
         elevatorMotor.configure(Configs.ElevatorModuleConfig.elevatorConfig, ResetMode.kResetSafeParameters,
                 PersistMode.kPersistParameters);
         elevatorEncoder = elevatorMotor.getEncoder();
