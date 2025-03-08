@@ -32,12 +32,11 @@ import static frc.robot.Constants.AutoConstants.*;
  * @since 27-JAN-2025
  */
 public class AutonomousModule extends SubsystemBase {
-    @SuppressWarnings("unused")
     private final PositionModule positionModule;
-    @SuppressWarnings("unused")
     private final DriveModule driveModule;
     @SuppressWarnings("unused")
     private final PathPlannerAuto test_auto;
+    @SuppressWarnings("unused")
     private final PathPlannerPath test_path;
 
     public SendableChooser<Command> autoChooser;
@@ -100,6 +99,7 @@ public class AutonomousModule extends SubsystemBase {
      * @return Autonomous {@link Command}
      */
     public Command getAutonomousCommand() {
+        @SuppressWarnings("unused")
         PathConstraints constraints = new PathConstraints(AUTO_MAX_SPEED, AUTO_MAX_ACCELERATION, AUTO_MAX_ANGULAR_SPEED, AUTO_MAX_ANGULAR_ACCELERATION);
         // return AutoBuilder.pathfindThenFollowPath(test_path, constraints);
         return autoChooser.getSelected();

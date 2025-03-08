@@ -9,12 +9,13 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import static frc.robot.Constants.ElevatorConstants;
 import static frc.robot.Constants.FootConstants;
 import static frc.robot.Constants.IntakeConstants;
+import static frc.robot.Constants.LegConstants;
 import static frc.robot.Constants.ModuleConstants;
 
 public final class Configs {
     public static final class MAXSwerveModule {
-		public static final SparkMaxConfig drivingConfig = new SparkMaxConfig();
-		public static final SparkMaxConfig turningConfig = new SparkMaxConfig();
+		public static final SparkFlexConfig drivingConfig = new SparkFlexConfig();
+		public static final SparkFlexConfig turningConfig = new SparkFlexConfig();
 
 		static {
 		    // Use module constants to calculate conversion factors and feed forward gain.
@@ -100,7 +101,8 @@ public final class Configs {
 		static {
 		    legConfig
 			    .idleMode(IdleMode.kBrake)
-			    .smartCurrentLimit(50);
+			    .smartCurrentLimit(50)
+				.absoluteEncoder.positionConversionFactor(1 / LegConstants.LEG_GEAR_FACTOR);
 		}
     }
 

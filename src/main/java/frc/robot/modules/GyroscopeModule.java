@@ -6,7 +6,7 @@ import com.ctre.phoenix6.hardware.Pigeon2;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-import static frc.robot.Constants.ModuleConstants.PIGEON_IMU_CAN_ID;
+import static frc.robot.Constants.ModuleConstants.*;
 
 /**
  * Implements the Pigeon IMU.

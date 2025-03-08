@@ -4,20 +4,21 @@
 
 package frc.robot;
 
-import static frc.robot.Constants.DriveConstants.*;
-
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.XboxController;
-import frc.robot.Constants.IntakeConstants;
-import frc.robot.Constants.LegConstants;
-import frc.robot.Constants.ElevatorConstants;
-import frc.robot.Constants.OIConstants;
-import frc.robot.commands.elevator.MoveElevatorCommand;
-import frc.robot.commands.intake.IntakeCommand;
-import frc.robot.commands.intake.OpenIntakeCommand;
-import frc.robot.commands.intake.PivotIntakeCommand;
-import frc.robot.commands.leg.RunFootCommand;
-import frc.robot.commands.leg.MoveLegCommand;
+
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+
+import static frc.robot.Constants.DriveConstants;
+import static frc.robot.Constants.ElevatorConstants;
+import static frc.robot.Constants.IntakeConstants;
+import static frc.robot.Constants.LegConstants;
+import static frc.robot.Constants.OIConstants;
+
 import frc.robot.modules.AutonomousModule;
 import frc.robot.modules.DriveModule;
 import frc.robot.modules.ElevatorModule;
@@ -26,11 +27,13 @@ import frc.robot.modules.IntakeModule;
 import frc.robot.modules.PositionModule;
 import frc.robot.modules.VisionModule;
 import frc.robot.modules.LegModule;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.RunCommand;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+
+import frc.robot.commands.elevator.MoveElevatorCommand;
+import frc.robot.commands.intake.IntakeCommand;
+import frc.robot.commands.intake.OpenIntakeCommand;
+import frc.robot.commands.intake.PivotIntakeCommand;
+import frc.robot.commands.leg.RunFootCommand;
+import frc.robot.commands.leg.MoveLegCommand;
 
 /*
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -121,22 +124,22 @@ public class RobotContainer {
 		// The left stick controls translation of the robot.
 		// Turning is controlled by the X axis of the right stick.
 		m_drive.setDefaultCommand(
-			new RunCommand(() -> {
-				double xInput = m_driverController.getLeftX();
-				double yInput = m_driverController.getLeftY();
-				double thetaInput = m_driverController.getRightX();
-				double distanceFromZero = Math.sqrt(Math.pow(xInput, 2) + Math.pow(yInput, 2));
-				if (distanceFromZero < OIConstants.DRIVE_DEADBAND) {
-					xInput = 0;
-					yInput = 0;
-				}
-				m_drive.drive(
-					Math.pow(yInput, 3) * Math.abs(yInput),
-					Math.pow(xInput, 3) * Math.abs(xInput),
-					Math.pow(MathUtil.applyDeadband(-thetaInput, OIConstants.DRIVE_DEADBAND), 3) * Math.abs(thetaInput),
-					FIELD_RELATIVE_DRIVING);
-			}, m_drive)
-		);
+				new RunCommand(() -> {
+					double xInput = m_driverController.getLeftX();
+					double yInput = m_driverController.getLeftY();
+					double thetaInput = m_driverController.getRightX();
+					double distanceFromZero = Math.sqrt(Math.pow(xInput, 2) + Math.pow(yInput, 2));
+					if (distanceFromZero < OIConstants.DRIVE_DEADBAND) {
+						xInput = 0;
+						yInput = 0;
+					}
+					m_drive.drive(
+							Math.pow(yInput, 3) * Math.abs(yInput),
+							Math.pow(xInput, 3) * Math.abs(xInput),
+							Math.pow(MathUtil.applyDeadband(-thetaInput, OIConstants.DRIVE_DEADBAND), 3)
+									* Math.abs(thetaInput),
+							DriveConstants.FIELD_RELATIVE_DRIVING);
+				}, m_drive));
 	}
 
 	/**
@@ -151,39 +154,36 @@ public class RobotContainer {
 	private void configureButtonBindings() {
 		// DRIVER Left Bumper -> Cut Speed
 		m_driverController.leftBumper().onTrue(m_drive.cutSpeed(true)).onFalse(m_drive.cutSpeed(false));
-		
+
 		// DRIVER Left Middle Button -> Swerve Alignment
 		m_driverController.button(OIConstants.SWERVE_ALIGNMENT_BUTTON).onTrue(new RunCommand(() -> {
 			m_gyroscope.resetGyroscope();
 		}, m_gyroscope));
-		
-		//#region Normal Bindings
+
+		// #region Normal Bindings
 		// DRIVER Button A -> Toggles Pivot
 		Command pivotCommand = Commands.either(
-			m_legPosRestCommand
-				.onlyIf(m_leg::isIntakingPosition)
-				.andThen(m_intakePivotUpCommand),
-			m_intakePivotDownCommand,
-			m_intake::isDown
-		);
+				m_legPosRestCommand
+						.onlyIf(m_leg::isIntakingPosition)
+						.andThen(m_intakePivotUpCommand),
+				m_intakePivotDownCommand,
+				m_intake::isDown);
 		m_driverController.a().onTrue(pivotCommand);
 
 		// DRIVER Button B -> Toggles Jaw
 		Command jawCommand = Commands.either(
-			m_intakeOpenCommand,
-			m_intakeCloseCommand,
-			m_intake::isClosed
-		).onlyWhile(m_intake::isDown);
+				m_intakeOpenCommand,
+				m_intakeCloseCommand,
+				m_intake::isClosed).onlyWhile(m_intake::isDown);
 		m_driverController.b().onTrue(jawCommand);
 
 		// OPERATOR Right Trigger -> Intakes
 		Command intakeCommand = Commands.either(
-			m_legPosIntakeCommand
-				.onlyIf(m_leg::isNotIntakingPosition)
-				.andThen(m_intakeCoralCommand.alongWith(m_footIntakeCommand)),
-			m_intakeAlgaeCommand,
-			m_intake::isClosed
-		).onlyWhile(m_intake::isDown);
+				m_legPosIntakeCommand
+						.onlyIf(m_leg::isNotIntakingPosition)
+						.andThen(m_intakeCoralCommand.alongWith(m_footIntakeCommand)),
+				m_intakeAlgaeCommand,
+				m_intake::isClosed).onlyWhile(m_intake::isDown);
 		m_operatorController.rightTrigger().whileTrue(intakeCommand);
 
 		// OPERATOR Left Bumper -> Clears stuck intake.
@@ -193,56 +193,60 @@ public class RobotContainer {
 		m_operatorController.rightBumper().whileTrue(m_footOuttakeCommand);
 
 		// OPERATOR Button X -> Leg Position One
-		m_operatorController.x().onTrue(m_raiseElevatorSafeCommand.andThen(m_legPosOneCommand).onlyIf(m_leg::isNotInPositionOne));
+		m_operatorController.x()
+				.onTrue(m_raiseElevatorSafeCommand.andThen(m_legPosOneCommand).onlyIf(m_leg::isNotInPositionOne));
 
 		// OPERATOR Button A -> Leg Position Two
-		m_operatorController.a().onTrue(m_raiseElevatorSafeCommand.andThen(m_legPosTwoCommand).onlyIf(m_leg::isNotInPositionTwo));
+		m_operatorController.a()
+				.onTrue(m_raiseElevatorSafeCommand.andThen(m_legPosTwoCommand).onlyIf(m_leg::isNotInPositionTwo));
 
 		// OPERATOR Button B -> Leg Position Three
-		m_operatorController.b().onTrue(m_raiseElevatorSafeCommand.andThen(m_legPosThreeCommand).onlyIf(m_leg::isNotInPositionThree));
+		m_operatorController.b()
+				.onTrue(m_raiseElevatorSafeCommand.andThen(m_legPosThreeCommand).onlyIf(m_leg::isNotInPositionThree));
 
 		// OPERATOR Button Y -> Leg Position Four
-		m_operatorController.y().onTrue(m_raiseElevatorMaxCommand.andThen(m_legPosFourCommand).onlyIf(m_leg::isNotInPositionFour));
+		m_operatorController.y()
+				.onTrue(m_raiseElevatorMaxCommand.andThen(m_legPosFourCommand).onlyIf(m_leg::isNotInPositionFour));
 
 		// OPERATOR Joystick Right BUTTON -> Leg to Rest Position and Reset Elevator
-		m_operatorController.rightStick().onTrue(m_legPosRestCommand.andThen(m_resetElevatorCommand).onlyIf(m_leg::isNotAtRest));
-		//#endregion Normal Bindings
-		
-		//#region Test Bindings
+		m_operatorController.rightStick()
+				.onTrue(m_legPosRestCommand.andThen(m_resetElevatorCommand).onlyIf(m_leg::isNotAtRest));
+		// #endregion Normal Bindings
+
+		// #region Test Bindings
 		// TEST INTAKE AT 15% POWER
 		m_operatorController.povLeft().and(m_operatorController.button(OIConstants.ENABLE_TESTING_BUTTON)).debounce(0.5)
-		.onTrue(
-			new RunCommand(() -> {
-				m_intake.setIntakeMotorState(0.15);
-			}, m_intake)
-		).onFalse(
-			new RunCommand(() -> {
-				m_intake.setIntakeMotorState(0);
-			}, m_intake)
-		);
+				.onTrue(
+						new RunCommand(() -> {
+							m_intake.setIntakeMotorState(0.15);
+						}, m_intake))
+				.onFalse(
+						new RunCommand(() -> {
+							m_intake.setIntakeMotorState(0);
+						}, m_intake));
 		// TEST FEEDER AT 15% POWER
 		m_operatorController.povUp().and(m_operatorController.button(OIConstants.ENABLE_TESTING_BUTTON)).debounce(0.5)
-		.onTrue(
-				new RunCommand(() -> {
-					if (m_intake.isDown()) m_intake.setFeederMotorState(0.15);
-				}, m_intake)
-		).onFalse(
-			new RunCommand(() -> {
-				m_intake.setFeederMotorState(0);
-			}, m_intake)
-		);
+				.onTrue(
+						new RunCommand(() -> {
+							if (m_intake.isDown())
+								m_intake.setFeederMotorState(0.15);
+						}, m_intake))
+				.onFalse(
+						new RunCommand(() -> {
+							m_intake.setFeederMotorState(0);
+						}, m_intake));
 		// TEST FOOT AT 15% POWER
-		m_operatorController.povRight().and(m_operatorController.button(OIConstants.ENABLE_TESTING_BUTTON)).debounce(0.5)
-		.onTrue(
-			new RunCommand(() -> {
-				m_leg.setFootMotorState(0.15);
-			}, m_leg)
-		).onFalse(
-			new RunCommand(() -> {
-				m_leg.setFootMotorState(0);
-			}, m_leg)
-		);
-		//#endregion Test Bindings
+		m_operatorController.povRight().and(m_operatorController.button(OIConstants.ENABLE_TESTING_BUTTON))
+				.debounce(0.5)
+				.onTrue(
+						new RunCommand(() -> {
+							m_leg.setFootMotorState(0.15);
+						}, m_leg))
+				.onFalse(
+						new RunCommand(() -> {
+							m_leg.setFootMotorState(0);
+						}, m_leg));
+		// #endregion Test Bindings
 	}
 
 	/**

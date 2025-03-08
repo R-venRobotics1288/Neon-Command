@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.utilities.LimelightHelpers;
 
-import static frc.robot.Constants.ModuleConstants.LIMELIGHT_HOSTNAME;
+import static frc.robot.Constants.ModuleConstants.*;
 
 /**
  * Implements Limelight to detect AprilTags and map them to field layout.

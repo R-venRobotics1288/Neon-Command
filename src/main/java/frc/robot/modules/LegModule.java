@@ -1,6 +1,7 @@
 package frc.robot.modules;
 
-import com.revrobotics.RelativeEncoder;
+import com.revrobotics.AbsoluteEncoder;
+import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
@@ -24,17 +25,17 @@ import static frc.robot.Constants.LegConstants;
  */
 public class LegModule extends SubsystemBase {
 
-    private SparkMax legMotor;
-    private RelativeEncoder legEncoder;
+    private SparkFlex legMotor;
+    private AbsoluteEncoder legEncoder;
     private SparkMax footMotor;
     private LegState legState;
 
     // LegModule
     public LegModule() {
-        legMotor = new SparkMax(LegConstants.MOTOR_CANID, MotorType.kBrushless);
+        legMotor = new SparkFlex(LegConstants.MOTOR_CANID, MotorType.kBrushless);
         legMotor.configure(Configs.LegModuleConfig.legConfig, ResetMode.kResetSafeParameters,
                 PersistMode.kPersistParameters);
-        legEncoder = legMotor.getEncoder();
+        legEncoder = legMotor.getAbsoluteEncoder();
 
         footMotor = new SparkMax(FootConstants.MOTOR_CANID, MotorType.kBrushless);
         footMotor.configure(Configs.FootModuleConfig.footConfig, ResetMode.kResetSafeParameters,

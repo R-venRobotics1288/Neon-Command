@@ -49,11 +49,10 @@ public final class Constants {
         public static boolean FIELD_RELATIVE_DRIVING = true;
 
         // Chassis configuration
-        // TODO: 2025 Bot Change to 22.5 inches to both Track Width and Wheel Base (please verify these numbers)
         // Distance between centers of right and left wheels on robot
-        public static final double TRACK_WIDTH = Units.inchesToMeters(18);
+        public static final double TRACK_WIDTH = Units.inchesToMeters(22.5);
         // Distance between front and back wheels on robot
-        public static final double WHEEL_BASE = Units.inchesToMeters(24);
+        public static final double WHEEL_BASE = Units.inchesToMeters(22.5);
 
         public static final SwerveDriveKinematics DRIVE_KINEMATICS = new SwerveDriveKinematics(
             new Translation2d(WHEEL_BASE / 2, TRACK_WIDTH / 2),
@@ -185,7 +184,7 @@ public final class Constants {
         public static final int RIGHT_FEEDER_MOTOR_CANID = 0; // TODO
 
 
-        public static final double PIVOT_GEAR_FACTOR = 1; // TODO
+        public static final double PIVOT_GEAR_FACTOR = 16;
         public static final double PIVOT_DEGREE_UP = -119;
         public static final double PIVOT_DEGREE_DOWN = 0;
         public static final double PIVOT_PID_P = 0.4;
@@ -214,7 +213,7 @@ public final class Constants {
         public static final double LEVEL_FOUR_POS = 100.0;
         public static final double ELEVATOR_SAFE_HEIGHT = 25.0;
         public static final double ELEVATOR_ZERO_POS = 0.0;
-        public static final double ELEVATOR_GEAR_FACTOR = 9.0;
+        public static final double ELEVATOR_GEAR_FACTOR = 16.0;
 
         public static final double MAX_MOTOR_SPEED = 0.5;
 
@@ -236,6 +235,8 @@ public final class Constants {
 
         public static final double MAX_MOTOR_SPEED = 1.0;
         public static final double LEG_TOLERANCE = 0.02; // how many rotations off is considered fine for the PID controller.
+
+        public static final double LEG_GEAR_FACTOR = 144.0;
 
         public static final double LEG_PID_P = 2.0; // TODO: calibrate
         public static final double LEG_PID_I = 0.0; // TODO: calibrate
