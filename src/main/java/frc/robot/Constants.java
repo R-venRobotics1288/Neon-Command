@@ -46,7 +46,7 @@ public final class Constants {
         public static double ROT_SLEW_RATE = 15;
         public static SlewRateLimiter ROTATION_FILTER = new SlewRateLimiter(ROT_SLEW_RATE);
 
-        public static boolean FIELDRELATIVEDRIVING = false;
+        public static boolean FIELD_RELATIVE_DRIVING = true;
 
         // Chassis configuration
         // TODO: 2025 Bot Change to 22.5 inches to both Track Width and Wheel Base (please verify these numbers)
@@ -126,6 +126,9 @@ public final class Constants {
         public static final double DRIVE_DEADBAND = 0.05;
         public static final double OPERATOR_DEADBAND = 0.15;
         public static final int OPERATOR_CONTROLLER_PORT = 1;
+
+        public static final int SWERVE_ALIGNMENT_BUTTON = 7;
+        public static final int ENABLE_TESTING_BUTTON = 8;
     }
 
     public static final class AutoConstants {
@@ -223,10 +226,12 @@ public final class Constants {
     public static final class LegConstants {
         public static final int MOTOR_CANID = 5;
 
-        public static final double LEG_POS_ONE = 0;
-        public static final double LEG_POS_TWO = 0.33;
-        public static final double LEG_POS_THREE = 0.66;
-        public static final double LEG_POS_FOUR = 1;
+        public static final double LEG_POS_INTAKING = 0;
+        public static final double LEG_POS_REST = 0.2;
+        public static final double LEG_POS_ONE = 0.4;
+        public static final double LEG_POS_TWO = 0.6;
+        public static final double LEG_POS_THREE = 0.8;
+        public static final double LEG_POS_FOUR = 1.0;
 
         public static final double MAX_MOTOR_SPEED = 1.0;
         public static final double LEG_TOLERANCE = 0.02; // how many rotations off is considered fine for the PID controller.

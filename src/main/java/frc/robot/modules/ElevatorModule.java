@@ -9,11 +9,13 @@ import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import edu.wpi.first.math.MathUtil;
 import frc.robot.Configs;
+import frc.robot.utilities.ElevatorState;
 
 import static frc.robot.Constants.ElevatorConstants.*;
 
 /**
  * Implements the Elevator of the robot.
+ * 
  * @author Vaibhav Mohankumar, Vrishank Vadi, & Tejas Cherukuru
  * @version 0.1.0
  * @since 22-FEB-2025
@@ -22,15 +24,18 @@ public class ElevatorModule extends SubsystemBase {
 
     private RelativeEncoder elevatorEncoder;
     private SparkFlex elevatorMotor;
-    
+
+    public ElevatorState elevatorState;
+
     /**
      * Initializes the Elevator of the robot.
      */
     public ElevatorModule() {
         elevatorMotor = new SparkFlex(MOTOR_CANID, MotorType.kBrushless);
         elevatorMotor.configure(Configs.ElevatorModuleConfig.elevatorConfig, ResetMode.kResetSafeParameters,
-				PersistMode.kPersistParameters);
+                PersistMode.kPersistParameters);
         elevatorEncoder = elevatorMotor.getEncoder();
+        elevatorState = ElevatorState.LEVEL_ZERO;
         reset();
     }
 
@@ -40,21 +45,24 @@ public class ElevatorModule extends SubsystemBase {
     public void reset() {
         setMotorState(0);
         elevatorEncoder.setPosition(0);
+        elevatorState = ElevatorState.LEVEL_ZERO;
     }
 
     /**
      * Gets a command to reset the Elevator module.
+     * 
      * @return the reset command
      */
     public Command resetCommand() {
         return this.runOnce(
-            () -> {
-                reset();
-            });
+                () -> {
+                    reset();
+                });
     }
 
     /**
      * Gets the current position of the elevator encoder.
+     * 
      * @return current position
      */
     public double getEncoderPosition() {
@@ -63,9 +71,18 @@ public class ElevatorModule extends SubsystemBase {
 
     /**
      * Sets the current state of the elevator motor.
+     * 
      * @param state desired speed of the motor
      */
     public void setMotorState(double state) {
         elevatorMotor.set(MathUtil.clamp(state, -MAX_MOTOR_SPEED, MAX_MOTOR_SPEED));
+    }
+
+    public void setElevatorState(ElevatorState elevatorState) {
+        this.elevatorState = elevatorState;
+    }
+
+    public ElevatorState getElevatorState() {
+        return this.elevatorState;
     }
 }

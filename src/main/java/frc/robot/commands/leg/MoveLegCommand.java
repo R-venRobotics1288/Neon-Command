@@ -4,11 +4,13 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.modules.LegModule;
+import frc.robot.utilities.LegState;
 
 import static frc.robot.Constants.LegConstants.*;
 
 /**
  * Moves the Leg of the robot to a specified position.
+ * 
  * @author Nirmaha Mukherjee and Vaibhav Mohankumar
  * @version 0.1.0
  * @since 13-FEB-2025
@@ -22,7 +24,8 @@ public class MoveLegCommand extends Command {
 
     /**
      * Creates a new command to move the leg to the specified position.
-     * @param to desired position of the leg, in rotations
+     * 
+     * @param to        desired position of the leg, in rotations
      * @param legModule reference to the {@link LegModule}
      */
     public MoveLegCommand(double to, LegModule legModule) {
@@ -38,6 +41,19 @@ public class MoveLegCommand extends Command {
         finished = false;
         legPidController.reset();
         legPidController.setSetpoint(desiredPosition);
+        if (desiredPosition == LEG_POS_INTAKING) {
+            legModule.setLegState(LegState.INTAKING);
+        } else if (desiredPosition == LEG_POS_REST) {
+            legModule.setLegState(LegState.REST);
+        } else if (desiredPosition == LEG_POS_ONE) {
+            legModule.setLegState(LegState.POSITION_ONE);
+        } else if (desiredPosition == LEG_POS_TWO) {
+            legModule.setLegState(LegState.POSITION_TWO);
+        } else if (desiredPosition == LEG_POS_THREE) {
+            legModule.setLegState(LegState.POSITION_THREE);
+        } else {
+            legModule.setLegState(LegState.POSITION_FOUR);
+        }
     }
 
     @Override

@@ -125,6 +125,14 @@ public class IntakeModule extends SubsystemBase {
         return false;
     }
 
+    public boolean isDown() {
+        return hasIntakeState(IntakeState.DOWN);
+    }
+
+    public boolean isClosed() {
+        return hasIntakeState(IntakeState.CLOSED);
+    }
+
     /**
      * Sets the power of the pivot motor, responsible for moving the Intake up and down.
      * @param power the power to command

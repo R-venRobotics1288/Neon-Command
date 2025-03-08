@@ -132,8 +132,8 @@ public class DriveModule extends SubsystemBase {
     public Command toggleFieldRelative() {
         return this.runOnce(() -> {
             m_gyro.resetGyroscope();
-            FIELDRELATIVEDRIVING = !FIELDRELATIVEDRIVING;
-            System.out.println(FIELDRELATIVEDRIVING ? "Field Relvative is ON" : "Field Relvative is OFF");
+            FIELD_RELATIVE_DRIVING = !FIELD_RELATIVE_DRIVING;
+            System.out.println(FIELD_RELATIVE_DRIVING ? "Field Relative is ON" : "Field Relative is OFF");
         });
     }
 
