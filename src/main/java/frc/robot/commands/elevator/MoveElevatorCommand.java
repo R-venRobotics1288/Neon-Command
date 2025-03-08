@@ -4,6 +4,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.modules.ElevatorModule;
+import frc.robot.utilities.ElevatorState;
 
 /**
  * Moves the Elevator of the robot to a specified position.
@@ -22,7 +23,8 @@ public class MoveElevatorCommand extends Command {
 
     /**
      * Creates a new command to move the elevator to the specified position.
-     * @param to desired position of the elevator
+     * 
+     * @param to             desired position of the elevator
      * @param elevatorModule reference to the {@link ElevatorModule}
      */
     public MoveElevatorCommand(double to, ElevatorModule elevatorModule) {
@@ -30,6 +32,7 @@ public class MoveElevatorCommand extends Command {
         this.elevatorPIDController = new PIDController(ELEVATOR_PID_P, ELEVATOR_PID_I, ELEVATOR_PID_D);
         this.elevatorPIDController.setTolerance(ELEVATOR_TOLERANCE);
         this.desiredPosition = to;
+
         super.addRequirements(this.elevatorModule);
     }
 
@@ -38,6 +41,14 @@ public class MoveElevatorCommand extends Command {
         finished = false;
         elevatorPIDController.reset();
         elevatorPIDController.setSetpoint(desiredPosition);
+
+        if (desiredPosition == ELEVATOR_SAFE_HEIGHT) {
+            elevatorModule.setElevatorState(ElevatorState.LEVEL_SAFE);
+        } else if (desiredPosition == ELEVATOR_ZERO_POS) {
+            elevatorModule.setElevatorState(ElevatorState.LEVEL_ZERO);
+        } else {
+            elevatorModule.setElevatorState(ElevatorState.LEVEL_MAX);
+        }
     }
 
     @Override

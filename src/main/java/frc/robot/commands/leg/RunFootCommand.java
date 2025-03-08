@@ -7,13 +7,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.modules.LegModule;
 
-public class MoveFootCommand extends Command {
+public class RunFootCommand extends Command {
     private final LegModule legModule;
     private final PIDController footPIDController;
 
     private final boolean isIntaking;
 
-    public MoveFootCommand(boolean isIntaking, LegModule legModule) {
+    public RunFootCommand(boolean isIntaking, LegModule legModule) {
         this.legModule = legModule;
         this.isIntaking = isIntaking;
 

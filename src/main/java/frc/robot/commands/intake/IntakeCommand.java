@@ -4,6 +4,7 @@ import static frc.robot.Constants.IntakeConstants.*;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.commands.leg.RunFootCommand;
 import frc.robot.modules.IntakeModule;
 
 /**
@@ -14,6 +15,7 @@ import frc.robot.modules.IntakeModule;
  */
 public class IntakeCommand extends Command {
     private final IntakeModule intakeModule;
+    private final RunFootCommand runFootCommand;
     private final boolean coral;
     private final boolean reversed;
 
@@ -25,11 +27,13 @@ public class IntakeCommand extends Command {
      * @param coral true for inhaling coral, false for inhaling algae
      * @param reversed true for outtake, false for intake
      * @param intakeModule reference to the {@link IntakeModule}
+     * @param runFootCommand reference to the foot intake command
      */
-    public IntakeCommand(boolean coral, boolean reversed, IntakeModule intakeModule) {
+    public IntakeCommand(boolean coral, boolean reversed, IntakeModule intakeModule, RunFootCommand runFootCommand) {
         this.coral = coral;
         this.reversed = reversed;
         this.intakeModule = intakeModule;
+        this.runFootCommand = runFootCommand;
 
         this.feederPID.setTolerance(VELOCITY_TOLERANCE);
         this.feederPID.setSetpoint(this.reversed ? -INTAKE_SPEED_RPS : INTAKE_SPEED_RPS);
@@ -47,10 +51,10 @@ public class IntakeCommand extends Command {
 
     @Override
     public void execute() {
-        // TODO: run the foot motor as well
         intakeModule.setIntakeMotorState(intakePID.calculate(intakeModule.getIntakeEncoderVelocity()));
         if (coral) {
             intakeModule.setFeederMotorState(feederPID.calculate(intakeModule.getFeederEncoderVelocity()));
+            runFootCommand.schedule();
         }
     }
 
@@ -62,5 +66,7 @@ public class IntakeCommand extends Command {
         }
         intakeModule.setFeederMotorState(0);
         intakeModule.setIntakeMotorState(0);
+        if (runFootCommand.isScheduled())
+            runFootCommand.cancel();
     }
 }

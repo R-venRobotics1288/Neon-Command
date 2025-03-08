@@ -10,6 +10,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.Configs;
+import frc.robot.utilities.LegState;
 
 import static frc.robot.Constants.FootConstants;
 import static frc.robot.Constants.LegConstants;
@@ -25,8 +26,8 @@ public class LegModule extends SubsystemBase {
 
     private SparkMax legMotor;
     private RelativeEncoder legEncoder;
-
     private SparkMax footMotor;
+    private LegState legState;
 
     // LegModule
     public LegModule() {
@@ -38,6 +39,7 @@ public class LegModule extends SubsystemBase {
         footMotor = new SparkMax(FootConstants.MOTOR_CANID, MotorType.kBrushless);
         footMotor.configure(Configs.FootModuleConfig.footConfig, ResetMode.kResetSafeParameters,
                 PersistMode.kPersistParameters);
+        this.legState = LegState.REST;
     }
 
     /**
@@ -58,7 +60,6 @@ public class LegModule extends SubsystemBase {
         legMotor.set(MathUtil.clamp(state, -LegConstants.MAX_MOTOR_SPEED, LegConstants.MAX_MOTOR_SPEED));
     }
 
-    // TODO: Add a limit to foot
     /**
      * Sets the desired state of the foot motor.
      * 
@@ -70,14 +71,53 @@ public class LegModule extends SubsystemBase {
 
     /**
      * Gets the current foot encoder velocity.
-     * 
      * @return current velocity of the foot encoder.
      */
     public double getFootEncoderVelocity() {
         return footMotor.getEncoder().getVelocity();
     }
 
+    /**
+     * Gets the current Current of the footMotor in Amps
+     * @return current of the foot motor in Amps
+     */
     public double getFootMotorOutputCurrent() {
         return footMotor.getOutputCurrent();
+    }
+
+    public void setLegState(LegState legState) {
+        this.legState = legState;
+    }
+
+    public LegState getLegState() {
+        return this.legState;
+    }
+
+    public boolean isIntakingPosition() {
+        return legState == LegState.INTAKING;
+    }
+
+    public boolean isNotIntakingPosition() {
+        return legState != LegState.INTAKING;
+    }
+
+    public boolean isNotInPositionOne() {
+        return legState != LegState.POSITION_ONE;
+    }
+    
+    public boolean isNotInPositionTwo() {
+        return legState != LegState.POSITION_TWO;
+    }
+
+    public boolean isNotInPositionThree() {
+        return legState != LegState.POSITION_THREE;
+    }
+
+    public boolean isNotInPositionFour() {
+        return legState != LegState.POSITION_FOUR;
+    }
+
+    public boolean isNotAtRest() {
+        return legState != LegState.REST;
     }
 }
