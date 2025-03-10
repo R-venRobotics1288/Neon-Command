@@ -116,4 +116,14 @@ public final class Configs {
 			    .velocityConversionFactor(1 / (60.0 * FootConstants.FOOT_GEAR_FACTOR));
 		}
     }
+	
+    public static final class ClimberModuleConfig {
+        public static final SparkFlexConfig climberConfig = new SparkFlexConfig();
+
+        static {
+            climberConfig
+                .idleMode(IdleMode.kBrake)
+                .smartCurrentLimit(50);
+        }
+    }
 }
