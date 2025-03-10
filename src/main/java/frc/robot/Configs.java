@@ -102,7 +102,7 @@ public final class Configs {
 		    legConfig
 			    .idleMode(IdleMode.kBrake)
 			    .smartCurrentLimit(50)
-				.absoluteEncoder.positionConversionFactor(1 / LegConstants.LEG_GEAR_FACTOR);
+				.encoder.positionConversionFactor(1 / LegConstants.LEG_GEAR_FACTOR);
 		}
     }
 
