@@ -2,7 +2,9 @@
   "robotWidth": 0.8001,
   "robotLength": 0.931,
   "holonomicMode": true,
-  "pathFolders": [],
+  "pathFolders": [
+    "Reef"
+  ],
   "autoFolders": [],
   "defaultMaxVel": 10.0,
   "defaultMaxAccel": 8.0,
