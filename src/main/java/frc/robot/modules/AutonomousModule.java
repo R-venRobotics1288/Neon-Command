@@ -1,23 +1,14 @@
 package frc.robot.modules;
 
-import java.io.IOException;
 import java.util.Optional;
 
-import org.json.simple.parser.ParseException;
-
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
-import com.pathplanner.lib.path.PathConstraints;
-import com.pathplanner.lib.path.PathPlannerPath;
-import com.pathplanner.lib.util.FileVersionException;
-import com.pathplanner.lib.util.PathPlannerLogging;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -34,14 +25,8 @@ import static frc.robot.Constants.AutoConstants.*;
 public class AutonomousModule extends SubsystemBase {
     private final PositionModule positionModule;
     private final DriveModule driveModule;
-    @SuppressWarnings("unused")
-    private final PathPlannerAuto test_auto;
-    @SuppressWarnings("unused")
-    private final PathPlannerPath test_path;
 
     public SendableChooser<Command> autoChooser;
-
-    private final Field2d test_field;
 
     public AutonomousModule(PositionModule positionModule, DriveModule driveModule) {
         this.positionModule = positionModule;
@@ -76,22 +61,7 @@ public class AutonomousModule extends SubsystemBase {
         );
 
         autoChooser = AutoBuilder.buildAutoChooser();
-
-        test_field = new Field2d();
-        SmartDashboard.putData(test_field);
-        SmartDashboard.putData("Auto Chooser", autoChooser);
-
-        test_auto = new PathPlannerAuto("Test");
-        try {
-            test_path = PathPlannerPath.fromPathFile("StraightLine");
-        } catch (FileVersionException | IOException | ParseException e) {
-            e.printStackTrace();
-            throw new IllegalStateException();
-        }
-
-        PathPlannerLogging.setLogTargetPoseCallback((pose) -> {
-            test_field.setRobotPose(pose);
-        });
+        SmartDashboard.putData("Selected Autonomous Routine", autoChooser);
     }
 
     /**
@@ -99,9 +69,6 @@ public class AutonomousModule extends SubsystemBase {
      * @return Autonomous {@link Command}
      */
     public Command getAutonomousCommand() {
-        @SuppressWarnings("unused")
-        PathConstraints constraints = new PathConstraints(AUTO_MAX_SPEED, AUTO_MAX_ACCELERATION, AUTO_MAX_ANGULAR_SPEED, AUTO_MAX_ANGULAR_ACCELERATION);
-        // return AutoBuilder.pathfindThenFollowPath(test_path, constraints);
         return autoChooser.getSelected();
     }
 }

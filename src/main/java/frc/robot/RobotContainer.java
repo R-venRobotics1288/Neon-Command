@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.auto.NamedCommands;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.XboxController;
 
@@ -91,8 +93,7 @@ public class RobotContainer {
 		m_elevator = new ElevatorModule();
 		m_leg = new LegModule();
 		m_intake = new IntakeModule();
-		m_auto = new AutonomousModule(m_position, m_drive);
-
+		
 		// Leg commands.
 		m_legPosIntakeCommand = new MoveLegCommand(LegConstants.LEG_POS_INTAKING, m_leg);
 		m_legPosRestCommand = new MoveLegCommand(LegConstants.LEG_POS_REST, m_leg);
@@ -102,7 +103,7 @@ public class RobotContainer {
 		m_legPosFourCommand = new MoveLegCommand(LegConstants.LEG_POS_FOUR, m_leg);
 		m_footIntakeCommand = new RunFootCommand(true, m_leg);
 		m_footOuttakeCommand = new RunFootCommand(false, m_leg);
-
+		
 		// Intake commands.
 		m_intakePivotUpCommand = new PivotIntakeCommand(Math.toRadians(IntakeConstants.PIVOT_DEGREE_UP), m_intake);
 		m_intakePivotDownCommand = new PivotIntakeCommand(Math.toRadians(IntakeConstants.PIVOT_DEGREE_DOWN), m_intake);
@@ -111,12 +112,23 @@ public class RobotContainer {
 		m_intakeCoralCommand = new IntakeCommand(true, false, m_intake, m_footIntakeCommand);
 		m_intakeAlgaeCommand = new IntakeCommand(false, false, m_intake, m_footIntakeCommand);
 		m_intakeReverseCommand = new IntakeCommand(true, true, m_intake, m_footOuttakeCommand);
-
+		
 		// Elevator commands
 		m_raiseElevatorMaxCommand = new MoveElevatorCommand(ElevatorConstants.LEVEL_FOUR_POS, m_elevator);
 		m_raiseElevatorSafeCommand = new MoveElevatorCommand(ElevatorConstants.ELEVATOR_SAFE_HEIGHT, m_elevator);
 		m_resetElevatorCommand = new MoveElevatorCommand(ElevatorConstants.ELEVATOR_ZERO_POS, m_elevator);
-
+		
+		// Register and Initialize Autonomous Module
+		NamedCommands.registerCommand("ElevatorMax", m_raiseElevatorMaxCommand);
+		NamedCommands.registerCommand("ElevatorSafe", m_raiseElevatorSafeCommand);
+		NamedCommands.registerCommand("LegRest", m_legPosRestCommand);
+		NamedCommands.registerCommand("LegMax", m_legPosFourCommand);
+		NamedCommands.registerCommand("Score", m_footOuttakeCommand);
+		NamedCommands.registerCommand("IntakeDown", m_intakePivotDownCommand);
+		NamedCommands.registerCommand("IntakeUp", m_intakePivotUpCommand);
+		NamedCommands.registerCommand("Intake", m_intakeCoralCommand);
+		m_auto = new AutonomousModule(m_position, m_drive);
+		
 		// Configure the button bindings
 		configureButtonBindings();
 
