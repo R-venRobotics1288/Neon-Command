@@ -7,11 +7,14 @@ import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
+
+import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.math.MathUtil;
 import frc.robot.Configs;
 
 import static frc.robot.Constants.ClimberConstants.*;
 
+@Logged
 public class ClimberModule extends SubsystemBase {
     private RelativeEncoder climberEncoderR;
     private RelativeEncoder climberEncoderL;

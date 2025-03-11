@@ -7,6 +7,8 @@ import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
+
+import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.math.MathUtil;
 import frc.robot.Configs;
 import frc.robot.utilities.ElevatorState;
@@ -20,6 +22,7 @@ import static frc.robot.Constants.ElevatorConstants.*;
  * @version 0.1.0
  * @since 22-FEB-2025
  */
+@Logged
 public class ElevatorModule extends SubsystemBase {
 
     private RelativeEncoder elevatorEncoder;

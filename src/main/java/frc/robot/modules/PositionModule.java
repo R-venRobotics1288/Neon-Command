@@ -1,8 +1,10 @@
 package frc.robot.modules;
 
+import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -21,6 +23,7 @@ public class PositionModule extends SubsystemBase {
     private final VisionModule visionModule;
     private final GyroscopeModule gyroscopeModule;
 
+    @Logged
     private Pose2d robotPose; // pose of the robot relative to its origin
     
     private final Field2d dashboardField;
@@ -57,13 +60,13 @@ public class PositionModule extends SubsystemBase {
     public void resetPosition() {
         estimator.resetPose(Pose2d.kZero);
         robotPose = new Pose2d();
-        System.out.println("INFO: PositionModule: Reset relative position, current position is now the origin!");
+        DataLogManager.log("PositionModule: Reset relative position, current position is now the origin!");
     }
 
     public void resetPosition(Pose2d to) {
         estimator.resetPose(to);
         robotPose = to;
-        System.out.println(
+        DataLogManager.log(
             "INFO: PostitionModule: Reset relative position, current position is now ("
             + to.getX() + ", " + to.getY() + ") yaw: " + to.getRotation().getDegrees()
         );
