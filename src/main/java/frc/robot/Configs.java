@@ -6,6 +6,8 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
+import frc.robot.Constants.ClimberConstants;
+
 import static frc.robot.Constants.ElevatorConstants;
 import static frc.robot.Constants.FootConstants;
 import static frc.robot.Constants.IntakeConstants;
@@ -123,7 +125,8 @@ public final class Configs {
         static {
             climberConfig
                 .idleMode(IdleMode.kBrake)
-                .smartCurrentLimit(50);
+                .smartCurrentLimit(50)
+				.encoder.positionConversionFactor(1 / ClimberConstants.CLIMBER_GEAR_FACTOR);
         }
     }
 }

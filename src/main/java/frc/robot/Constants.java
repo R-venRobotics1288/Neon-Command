@@ -264,6 +264,8 @@ public final class Constants {
         public static final double CLIMBER_PID_P = 4.0;
         public static final double CLIMBER_PID_I = 0.0;
         public static final double CLIMBER_PID_D = 0.0;
+
+        public static final double CLIMBER_GEAR_FACTOR = 108.0;
         
         public static final double CLIMBER_TOLERANCE = 0.01;
 
