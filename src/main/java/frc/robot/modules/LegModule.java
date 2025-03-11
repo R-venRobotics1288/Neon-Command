@@ -33,12 +33,12 @@ public class LegModule extends SubsystemBase {
 
     // LegModule
     public LegModule() {
-        legMotor = new SparkFlex(LegConstants.MOTOR_CANID, MotorType.kBrushless);
+        legMotor = new SparkFlex(LegConstants.MOTOR_CAN_ID, MotorType.kBrushless);
         legMotor.configure(Configs.LegModuleConfig.legConfig, ResetMode.kResetSafeParameters,
                 PersistMode.kPersistParameters);
         legEncoder = legMotor.getEncoder();
 
-        footMotor = new SparkMax(FootConstants.MOTOR_CANID, MotorType.kBrushless);
+        footMotor = new SparkMax(FootConstants.MOTOR_CAN_ID, MotorType.kBrushless);
         footMotor.configure(Configs.FootModuleConfig.footConfig, ResetMode.kResetSafeParameters,
                 PersistMode.kPersistParameters);
         this.legState = LegState.REST;

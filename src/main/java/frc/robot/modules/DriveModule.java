@@ -5,17 +5,25 @@
 package frc.robot.modules;
 
 import edu.wpi.first.epilogue.Logged;
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.ModuleConstants;
 
 import static frc.robot.Constants.DriveConstants.*;
+
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 
 public class DriveModule extends SubsystemBase {
     private GyroscopeModule m_gyro;
@@ -167,4 +175,73 @@ public class DriveModule extends SubsystemBase {
     public double getTurnRate() {
         return m_gyro.getTurnRate() * (GYROSCOPE_REVERSED ? -1.0 : 1.0);
     }
+
+    private static class WheelRadiusCharacterizationState {
+        double[] positions = new double[4];
+        Rotation2d lastAngle = new Rotation2d();
+        double gyroDelta = 0.0;
+    }
+
+    public double[] getWheelRadiusCharacterizationPositions() {
+        double drivingFactor = ModuleConstants.WHEEL_DIAMETER_METRES * Math.PI
+			    / ModuleConstants.DRIVING_MOTOR_REDUCTION;
+        double[] values = new double[4];
+        values[0] = m_frontLeft.getPosition().distanceMeters / drivingFactor;
+        values[1] = m_frontRight.getPosition().distanceMeters / drivingFactor;
+        values[2] = m_rearLeft.getPosition().distanceMeters / drivingFactor;
+        values[3] = m_rearRight.getPosition().distanceMeters / drivingFactor;
+        return values;
+    }
+    
+    public static Command wheelRadiusCharacterization(DriveModule drive, GyroscopeModule gyro) {
+        SlewRateLimiter limiter = new SlewRateLimiter(WHEEL_RADIUS_RAMP_RATE);
+        WheelRadiusCharacterizationState state = new WheelRadiusCharacterizationState();
+
+        return Commands.parallel(
+            Commands.sequence(
+                Commands.runOnce(() -> {
+                    limiter.reset(0.0);
+                }),
+                Commands.run(() -> {
+                    double speed = limiter.calculate(WHEEL_RADIUS_MAX_VELOCITY);
+                    drive.setModuleStates(new ChassisSpeeds(0.0, 0.0, speed));
+                }, drive)
+            ),
+            Commands.sequence(
+                Commands.waitSeconds(1.0),
+                Commands.runOnce(() -> {
+                    state.positions = drive.getWheelRadiusCharacterizationPositions();
+                    state.lastAngle = Rotation2d.fromRadians(gyro.getGyroscopeYawRadians());
+                    state.gyroDelta = 0.0;
+                }),
+                Commands.run(() -> {
+                    var rotation = Rotation2d.fromRadians(gyro.getGyroscopeYawRadians());
+                    state.gyroDelta += Math.abs(rotation.minus(state.lastAngle).getRadians());
+                    state.lastAngle = rotation;
+                })
+                .finallyDo(() -> {
+                      double[] positions = drive.getWheelRadiusCharacterizationPositions();
+                      double wheelDelta = 0.0;
+                      for (int i = 0; i < 4; i++) {
+                        wheelDelta += Math.abs(positions[i] - state.positions[i]) / 4.0;
+                      }
+                      double wheelRadius = (state.gyroDelta * DriveConstants.WHEEL_BASE) / wheelDelta;
+                      NumberFormat formatter = new DecimalFormat("#0.000");
+                      System.out.println(
+                          "********** Wheel Radius Characterization Results **********");
+                      System.out.println(
+                          "\tWheel Delta: " + formatter.format(wheelDelta) + " radians");
+                      System.out.println(
+                          "\tGyro Delta: " + formatter.format(state.gyroDelta) + " radians");
+                      System.out.println(
+                          "\tWheel Radius: "
+                              + formatter.format(wheelRadius)
+                              + " meters, "
+                              + formatter.format(Units.metersToInches(wheelRadius))
+                              + " inches");
+                })
+            )
+        );
+    }
+
 }

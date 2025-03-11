@@ -93,6 +93,9 @@ public final class Constants {
 
         // Don't set this to true without making it work first
         public static final boolean GYROSCOPE_REVERSED = false;
+
+        public static final double WHEEL_RADIUS_RAMP_RATE = 0.05;
+        public static final double WHEEL_RADIUS_MAX_VELOCITY = 0.25;
     }
 
     public static final class ModuleConstants {
@@ -173,15 +176,15 @@ public final class Constants {
         public static final double MAX_MOTOR_SPEED = 0.2;
         public static final double INTAKE_SPEED_RPS = Math.PI; // rotations per second target of wheel and feeders
 
-        public static final int PIVOT_MOTOR_CANID = 0; // TODO
+        public static final int PIVOT_MOTOR_CAN_ID = 0; // TODO
 
-        public static final int INTAKE_MOTOR_CANID = 0; // TODO
+        public static final int INTAKE_MOTOR_CAN_ID = 0; // TODO
 
-        public static final int LEFT_OPENER_MOTOR_CANID = 0; // TODO
-        public static final int RIGHT_OPENER_MOTOR_CANID = 5;
+        public static final int LEFT_OPENER_MOTOR_CAN_ID = 0; // TODO
+        public static final int RIGHT_OPENER_MOTOR_CAN_ID = 5;
 
-        public static final int LEFT_FEEDER_MOTOR_CANID = 0; // TODO
-        public static final int RIGHT_FEEDER_MOTOR_CANID = 0; // TODO
+        public static final int LEFT_FEEDER_MOTOR_CAN_ID = 0; // TODO
+        public static final int RIGHT_FEEDER_MOTOR_CAN_ID = 0; // TODO
 
 
         public static final double PIVOT_GEAR_FACTOR = 16;
@@ -208,7 +211,7 @@ public final class Constants {
     }
 
     public static final class ElevatorConstants {
-        public static final int MOTOR_CANID = 4;
+        public static final int MOTOR_CAN_ID = 4;
 
         public static final double LEVEL_FOUR_POS = 100.0;
         public static final double ELEVATOR_SAFE_HEIGHT = 25.0;
@@ -224,7 +227,7 @@ public final class Constants {
     }
     
     public static final class LegConstants {
-        public static final int MOTOR_CANID = 5;
+        public static final int MOTOR_CAN_ID = 5;
 
         public static final double LEG_POS_INTAKING = 0;
         public static final double LEG_POS_REST = 0.2;
@@ -244,7 +247,7 @@ public final class Constants {
     }
 
     public static final class FootConstants {
-        public static final int MOTOR_CANID = 40;
+        public static final int MOTOR_CAN_ID = 40;
         public static final double MAX_MOTOR_SPEED = 1;
         public static final double FOOT_SPEED_RPS = 8; // rotations per second target of foot wheels
         public static final double FOOT_TOLERANCE = 0.02;

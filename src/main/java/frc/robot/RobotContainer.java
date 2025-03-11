@@ -131,7 +131,7 @@ public class RobotContainer {
 		NamedCommands.registerCommand("IntakeDown", m_intakePivotDownCommand);
 		NamedCommands.registerCommand("IntakeUp", m_intakePivotUpCommand);
 		NamedCommands.registerCommand("Intake", m_intakeCoralCommand);
-		m_auto = new AutonomousModule(m_position, m_drive);
+		m_auto = new AutonomousModule(m_position, m_drive, m_gyroscope);
 		
 		// Configure the button bindings
 		configureButtonBindings();

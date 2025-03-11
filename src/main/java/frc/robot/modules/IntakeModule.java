@@ -36,22 +36,22 @@ public class IntakeModule extends SubsystemBase {
      * Initializes the {@link IntakeModule}, containing six motors as well as internal state. Intake operates as a state machine with inputs changing outputs.
      */
     public IntakeModule() {
-        pivotMotor = new SparkFlex(PIVOT_MOTOR_CANID, MotorType.kBrushless);
+        pivotMotor = new SparkFlex(PIVOT_MOTOR_CAN_ID, MotorType.kBrushless);
         pivotMotor.configure(Configs.IntakeConfig.pivotConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
         pivotEncoder = pivotMotor.getEncoder();
 
-        leftOpenerMotor = new SparkMax(LEFT_OPENER_MOTOR_CANID, MotorType.kBrushless);
+        leftOpenerMotor = new SparkMax(LEFT_OPENER_MOTOR_CAN_ID, MotorType.kBrushless);
         leftOpenerMotor.configure(Configs.IntakeConfig.openerConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-        rightOpenerMotor = new SparkMax(RIGHT_OPENER_MOTOR_CANID, MotorType.kBrushless);
+        rightOpenerMotor = new SparkMax(RIGHT_OPENER_MOTOR_CAN_ID, MotorType.kBrushless);
         rightOpenerMotor.configure(Configs.IntakeConfig.openerConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
         openerEncoder = rightOpenerMotor.getEncoder();
 
-        intakeMotor = new SparkFlex(INTAKE_MOTOR_CANID, MotorType.kBrushless);
+        intakeMotor = new SparkFlex(INTAKE_MOTOR_CAN_ID, MotorType.kBrushless);
         intakeMotor.configure(Configs.IntakeConfig.wheelsConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
-        leftFeederMotor = new SparkFlex(LEFT_FEEDER_MOTOR_CANID, MotorType.kBrushless);
+        leftFeederMotor = new SparkFlex(LEFT_FEEDER_MOTOR_CAN_ID, MotorType.kBrushless);
         leftFeederMotor.configure(Configs.IntakeConfig.feederConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-        rightFeederMotor = new SparkFlex(RIGHT_FEEDER_MOTOR_CANID, MotorType.kBrushless);
+        rightFeederMotor = new SparkFlex(RIGHT_FEEDER_MOTOR_CAN_ID, MotorType.kBrushless);
         rightFeederMotor.configure(Configs.IntakeConfig.feederConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     }
 

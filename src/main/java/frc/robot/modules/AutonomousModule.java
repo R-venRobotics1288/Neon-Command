@@ -28,7 +28,7 @@ public class AutonomousModule extends SubsystemBase {
 
     public SendableChooser<Command> autoChooser;
 
-    public AutonomousModule(PositionModule positionModule, DriveModule driveModule) {
+    public AutonomousModule(PositionModule positionModule, DriveModule driveModule, GyroscopeModule gyroModule) {
         this.positionModule = positionModule;
         this.driveModule = driveModule;
 
@@ -61,6 +61,7 @@ public class AutonomousModule extends SubsystemBase {
         );
 
         autoChooser = AutoBuilder.buildAutoChooser();
+        autoChooser.addOption("Wheel Radius Characterization", DriveModule.wheelRadiusCharacterization(driveModule, gyroModule));
         SmartDashboard.putData("Selected Autonomous Routine", autoChooser);
     }
 

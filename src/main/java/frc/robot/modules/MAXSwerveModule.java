@@ -42,15 +42,15 @@ public class MAXSwerveModule {
 	 * MAXSwerve Module built with NEOs, SPARKS MAX, and a Through Bore
 	 * Encoder.
 	 */
-	public MAXSwerveModule(int drivingCANId, int turningCANId, int absoluteEncoderCANId, double chassisAngularOffset) {
-		m_drivingSpark = new SparkFlex(drivingCANId, MotorType.kBrushless);
-		m_turningSpark = new SparkFlex(turningCANId, MotorType.kBrushless);
+	public MAXSwerveModule(int drivingCAN_ID, int turningCAN_ID, int absoluteEncoderCAN_ID, double chassisAngularOffset) {
+		m_drivingSpark = new SparkFlex(drivingCAN_ID, MotorType.kBrushless);
+		m_turningSpark = new SparkFlex(turningCAN_ID, MotorType.kBrushless);
 
 		m_drivingEncoder = m_drivingSpark.getEncoder();
 		m_drivingEncoder.setPosition(0);
 		m_turningEncoder = m_turningSpark.getEncoder();
 		m_turningEncoder.setPosition(0);
-		m_absoluteEncoder = new CANcoder(absoluteEncoderCANId);
+		m_absoluteEncoder = new CANcoder(absoluteEncoderCAN_ID);
 
 		m_drivingPIDController = new PIDController(TRANSLATION_COEFFICIENT_P, TRANSLATION_COEFFICIENT_I, TRANSLATION_COEFFICIENT_D);
 		m_turningPIDController = new PIDController(ROTATION_COEFFICIENT_P, ROTATION_COEFFICIENT_I, ROTATION_COEFFICIENT_D);

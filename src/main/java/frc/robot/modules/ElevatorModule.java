@@ -33,7 +33,7 @@ public class ElevatorModule extends SubsystemBase {
      * Initializes the Elevator of the robot.
      */
     public ElevatorModule() {
-        elevatorMotor = new SparkMax(MOTOR_CANID, MotorType.kBrushless);
+        elevatorMotor = new SparkMax(MOTOR_CAN_ID, MotorType.kBrushless);
         elevatorMotor.configure(Configs.ElevatorModuleConfig.elevatorConfig, ResetMode.kResetSafeParameters,
                 PersistMode.kPersistParameters);
         elevatorEncoder = elevatorMotor.getEncoder();
