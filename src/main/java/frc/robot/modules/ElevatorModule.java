@@ -7,6 +7,8 @@ import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
+
+import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.math.MathUtil;
 import frc.robot.Configs;
 import frc.robot.utilities.ElevatorState;
@@ -65,6 +67,7 @@ public class ElevatorModule extends SubsystemBase {
      * 
      * @return current position
      */
+    @Logged
     public double getEncoderPosition() {
         return elevatorEncoder.getPosition();
     }
@@ -82,6 +85,7 @@ public class ElevatorModule extends SubsystemBase {
         this.elevatorState = elevatorState;
     }
 
+    @Logged
     public ElevatorState getElevatorState() {
         return this.elevatorState;
     }

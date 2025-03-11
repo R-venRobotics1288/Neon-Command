@@ -30,10 +30,8 @@ public class ShuffleManager {
     }
     public void updateShuffleboard() {
         if (SHUFFLE_MANAGER_ENABLED) {
-            //MAX_ROBOT_SPEED = maxSpeed.getDouble(MAX_ROBOT_SPEED);
             if (MAX_ROBOT_SPEED != maxSpeed.getDouble(MAX_ROBOT_SPEED)) {
                 MAX_ROBOT_SPEED = maxSpeed.getDouble(MAX_ROBOT_SPEED);
-                System.out.println("changed speed");
             }
             if (MAX_ROBOT_ROTATIONS_PER_SECOND != maxRot.getDouble(MAX_ROBOT_ROTATIONS_PER_SECOND)){
                 MAX_ROBOT_ROTATIONS_PER_SECOND = maxRot.getDouble(MAX_ROBOT_ROTATIONS_PER_SECOND);

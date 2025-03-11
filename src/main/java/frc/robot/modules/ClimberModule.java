@@ -7,6 +7,8 @@ import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
+
+import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.math.MathUtil;
 import frc.robot.Configs;
 
@@ -60,10 +62,12 @@ public class ClimberModule extends SubsystemBase {
      * Gets the current position of the climber encoder.
      * @return current position
      */
-   
+    @Logged
     public double getEncoderPositionR() {
         return climberEncoderR.getPosition();
     }
+    
+    @Logged
     public double getEncoderPositionL() {
         return climberEncoderL.getPosition();
     }

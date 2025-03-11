@@ -7,6 +7,8 @@ package frc.robot;
 import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.wpilibj.DataLogManager;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
 
 import edu.wpi.first.wpilibj2.command.Command;
@@ -20,6 +22,8 @@ import static frc.robot.Constants.ElevatorConstants;
 import static frc.robot.Constants.IntakeConstants;
 import static frc.robot.Constants.LegConstants;
 import static frc.robot.Constants.OIConstants;
+
+import org.littletonrobotics.urcl.URCL;
 
 import frc.robot.modules.AutonomousModule;
 import frc.robot.modules.DriveModule;
@@ -152,6 +156,10 @@ public class RobotContainer {
 									* Math.abs(thetaInput),
 							DriveConstants.FIELD_RELATIVE_DRIVING);
 				}, m_drive));
+
+		DataLogManager.start();
+		URCL.start();
+		DriverStation.startDataLog(DataLogManager.getLog());
 	}
 
 	/**

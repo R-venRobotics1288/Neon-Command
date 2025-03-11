@@ -1,5 +1,6 @@
 package frc.robot.modules;
 
+import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -14,6 +15,7 @@ import static frc.robot.Constants.ModuleConstants.*;
  * @version 0.1.2
  * @since 17-JAN-2025
  */
+@Logged
 public class VisionModule extends SubsystemBase {
     // VisionModule Initialization
     public VisionModule() {}

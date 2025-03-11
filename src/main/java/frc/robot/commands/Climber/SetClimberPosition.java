@@ -1,4 +1,4 @@
-package frc.robot.commands.Climber;
+package frc.robot.commands.climber;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;

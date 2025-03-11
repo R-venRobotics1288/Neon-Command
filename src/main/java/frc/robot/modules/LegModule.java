@@ -7,6 +7,7 @@ import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
+import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -48,6 +49,7 @@ public class LegModule extends SubsystemBase {
      * 
      * @return encoder position, in rotations of the motor
      */
+    @Logged
     public double getEncoderPosition() {
         return legEncoder.getPosition();
     }
@@ -74,6 +76,7 @@ public class LegModule extends SubsystemBase {
      * Gets the current foot encoder velocity.
      * @return current velocity of the foot encoder.
      */
+    @Logged
     public double getFootEncoderVelocity() {
         return footMotor.getEncoder().getVelocity();
     }
@@ -82,6 +85,7 @@ public class LegModule extends SubsystemBase {
      * Gets the current Current of the footMotor in Amps
      * @return current of the foot motor in Amps
      */
+    @Logged
     public double getFootMotorOutputCurrent() {
         return footMotor.getOutputCurrent();
     }
@@ -90,6 +94,7 @@ public class LegModule extends SubsystemBase {
         this.legState = legState;
     }
 
+    @Logged
     public LegState getLegState() {
         return this.legState;
     }

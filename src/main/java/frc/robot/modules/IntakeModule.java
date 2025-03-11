@@ -7,6 +7,7 @@ import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
+import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Configs;
@@ -58,6 +59,7 @@ public class IntakeModule extends SubsystemBase {
      * Gets the current pivot encoder position.
      * @return current position of the pivot encoder.
      */
+    @Logged
     public double getPivotEncoderPosition() {
         return pivotEncoder.getPosition();
     }
@@ -66,6 +68,7 @@ public class IntakeModule extends SubsystemBase {
      * Gets the current opener encoder position.
      * @return current position of the opener encoder.
      */
+    @Logged
     public double getOpenerEncoderPosition() {
         return openerEncoder.getPosition();
     }
@@ -74,6 +77,7 @@ public class IntakeModule extends SubsystemBase {
      * Gets the current feeder encoder velocity.
      * @return current velocity of the feeder encoder.
      */
+    @Logged
     public double getFeederEncoderVelocity() {
         return rightFeederMotor.getEncoder().getVelocity();
     }
@@ -82,6 +86,7 @@ public class IntakeModule extends SubsystemBase {
      * Gets the current intake encoder velocity.
      * @return current velocity of the intake encoder.
      */
+    @Logged
     public double getIntakeEncoderVelocity() {
         return intakeMotor.getEncoder().getVelocity();
     }

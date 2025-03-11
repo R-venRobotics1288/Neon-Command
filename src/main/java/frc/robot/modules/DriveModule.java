@@ -4,11 +4,14 @@
 
 package frc.robot.modules;
 
+import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.Alert;
+import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -17,6 +20,8 @@ import static frc.robot.Constants.DriveConstants.*;
 public class DriveModule extends SubsystemBase {
     private GyroscopeModule m_gyro;
     private double driveCoefficient = 1;
+    private final Alert fieldRelativeAlert = new Alert("Field relative drive active.", AlertType.kInfo);
+
     // Create MAXSwerveModules
     private final MAXSwerveModule m_frontLeft = new MAXSwerveModule(
         FRONT_LEFT_DRIVE_MOTOR_CAN_ID,
@@ -66,6 +71,7 @@ public class DriveModule extends SubsystemBase {
      * Gets the current chassis speed of the robot.
      * @return {@link ChassisSpeeds} chassis speed.
      */
+    @Logged
     public ChassisSpeeds getChassisSpeeds() {
         return DRIVE_KINEMATICS.toChassisSpeeds(
             m_frontLeft.getState(),
@@ -133,7 +139,7 @@ public class DriveModule extends SubsystemBase {
         return this.runOnce(() -> {
             m_gyro.resetGyroscope();
             FIELD_RELATIVE_DRIVING = !FIELD_RELATIVE_DRIVING;
-            System.out.println(FIELD_RELATIVE_DRIVING ? "Field Relative is ON" : "Field Relative is OFF");
+            fieldRelativeAlert.set(FIELD_RELATIVE_DRIVING);
         });
     }
 

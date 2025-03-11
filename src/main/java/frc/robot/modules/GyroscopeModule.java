@@ -4,6 +4,10 @@ import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.hardware.Pigeon2;
 
+import edu.wpi.first.epilogue.Logged;
+import edu.wpi.first.wpilibj.Alert;
+import edu.wpi.first.wpilibj.DataLogManager;
+import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import static frc.robot.Constants.ModuleConstants.*;
@@ -15,20 +19,23 @@ import static frc.robot.Constants.ModuleConstants.*;
  * @since 18-JAN-2025
  */
 public class GyroscopeModule extends SubsystemBase {
-    //private PigeonIMU pigeon; <-- used to be, check git history if needed
     private Pigeon2 pigeon;
+    private final Alert gyroStateAlert = new Alert("Pigeon IMU State NOT OK!", AlertType.kError);
 
     public GyroscopeModule() {
         pigeon = new Pigeon2(PIGEON_IMU_CAN_ID);
         pigeon.setYaw(0); // zeros initial gyrometer yaw reading
-        System.out.println("INFO: PositionModule: Initialization Complete");
+        DataLogManager.log("GyroscopeModule: Initialization Complete");
     }
 
     @Override
     public void periodic() {
         StatusSignal<Integer> status = pigeon.getFaultField();
         if (status.getStatus() != StatusCode.OK) {
-            System.out.println("ERROR: PositionModule: Pigeon IMU: State is NOT OK, instead reported " + status.getStatus().name());
+            gyroStateAlert.set(true);
+            gyroStateAlert.setText("Pigeon IMU State NOT OK, instead reported " + status.getStatus().name());
+        } else {
+            gyroStateAlert.set(false);
         }
     } 
 
@@ -36,10 +43,12 @@ public class GyroscopeModule extends SubsystemBase {
      * Gets the current yaw reported by the Pigeon IMU.
      * @return Current yaw as a double.
      */
+    @Logged
     public double getGyroscopeYawDegrees() {
         return pigeon.getYaw().getValueAsDouble();
     }
 
+    @Logged
     public double getTurnRate() {
         return pigeon.getAngularVelocityZWorld().getValueAsDouble();
     }
@@ -48,6 +57,7 @@ public class GyroscopeModule extends SubsystemBase {
      * Gets the current yaw reported by the Pigeon IMU.
      * @return Current yaw as a double.
      */
+    @Logged
     public double getGyroscopeYawRadians() {
         return Math.toRadians(pigeon.getYaw().getValueAsDouble());
     }
