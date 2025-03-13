@@ -62,34 +62,35 @@ public final class Constants {
         );
 
         // Angular offsets of the modules relative to the chassis in radians
-        public static final double FRONT_LEFT_CHASSIS_ANGULAR_OFFSET = 0;
-        public static final double FRONT_RIGHT_CHASSIS_ANGULAR_OFFSET = 0;
-        public static final double REAR_LEFT_CHASSIS_ANGULAR_OFFSET = 0;
-        public static final double REAR_RIGHT_CHASSIS_ANGULAR_OFFSET = Math.PI;
+        public static final double FRONT_LEFT_CHASSIS_ANGULAR_OFFSET = -0.010737865515199 + Math.PI;
+        public static final double FRONT_RIGHT_CHASSIS_ANGULAR_OFFSET = 0.006135923151543;
+        public static final double REAR_LEFT_CHASSIS_ANGULAR_OFFSET = 0.007669903939428;
+        public static final double REAR_RIGHT_CHASSIS_ANGULAR_OFFSET = 0.003067961575771;
 
         // P, I, D coefficients
         public static final double TRANSLATION_COEFFICIENT_P = 0.25;
         public static final double TRANSLATION_COEFFICIENT_I = 0;
         public static final double TRANSLATION_COEFFICIENT_D = 0;
-        public static final double ROTATION_COEFFICIENT_P = 0.6;
+        public static final double ROTATION_COEFFICIENT_P = 0.3;
         public static final double ROTATION_COEFFICIENT_I = 0;
         public static final double ROTATION_COEFFICIENT_D = 0;
 
         // SPARK MAX CAN IDs
-        public static final int  FRONT_LEFT_DRIVE_MOTOR_CAN_ID = 1;
-        public static final int   REAR_LEFT_DRIVE_MOTOR_CAN_ID = 7;
-        public static final int FRONT_RIGHT_DRIVE_MOTOR_CAN_ID = 8;
-        public static final int  REAR_RIGHT_DRIVE_MOTOR_CAN_ID = 3;
+        public static final int  FRONT_LEFT_DRIVE_MOTOR_CAN_ID = 2;
+        public static final int  FRONT_LEFT_TURN_MOTOR_CAN_ID = 3;
+        public static final int  FRONT_LEFT_TURN_ENCODER_CAN_ID = 4;
 
-        public static final int  FRONT_LEFT_TURN_MOTOR_CAN_ID = 10;
-        public static final int   REAR_LEFT_TURN_MOTOR_CAN_ID = 6;
-        public static final int FRONT_RIGHT_TURN_MOTOR_CAN_ID = 2;
-        public static final int  REAR_RIGHT_TURN_MOTOR_CAN_ID = 9;
+        public static final int FRONT_RIGHT_DRIVE_MOTOR_CAN_ID = 5;
+        public static final int FRONT_RIGHT_TURN_MOTOR_CAN_ID = 6;
+        public static final int FRONT_RIGHT_TURN_ENCODER_CAN_ID = 7;
 
-        public static final int  FRONT_LEFT_TURN_ENCODER_CAN_ID = 20;
-        public static final int FRONT_RIGHT_TURN_ENCODER_CAN_ID = 21;
-        public static final int   REAR_LEFT_TURN_ENCODER_CAN_ID = 22;
-        public static final int  REAR_RIGHT_TURN_ENCODER_CAN_ID = 23;
+        public static final int   REAR_LEFT_DRIVE_MOTOR_CAN_ID = 8;
+        public static final int   REAR_LEFT_TURN_MOTOR_CAN_ID = 9;
+        public static final int   REAR_LEFT_TURN_ENCODER_CAN_ID = 10;
+
+        public static final int  REAR_RIGHT_DRIVE_MOTOR_CAN_ID = 11;
+        public static final int  REAR_RIGHT_TURN_MOTOR_CAN_ID = 12;
+        public static final int  REAR_RIGHT_TURN_ENCODER_CAN_ID = 13;
 
         // Don't set this to true without making it work first
         public static final boolean GYROSCOPE_REVERSED = false;
@@ -117,7 +118,7 @@ public final class Constants {
                 / DRIVING_MOTOR_REDUCTION;
 
         // PositionModule System Bus Constants
-        public static final int PIGEON_IMU_CAN_ID = 30;
+        public static final int PIGEON_IMU_CAN_ID = 14;
 
         // VisionModule Constants
         public static final String LIMELIGHT_HOSTNAME = "limelight-raven";
@@ -125,9 +126,9 @@ public final class Constants {
 
     public static final class OIConstants {
         public static final int DRIVER_CONTROLLER_PORT = 0;
+        public static final int OPERATOR_CONTROLLER_PORT = 1;
         public static final double DRIVE_DEADBAND = 0.05;
         public static final double OPERATOR_DEADBAND = 0.15;
-        public static final int OPERATOR_CONTROLLER_PORT = 1;
 
         public static final int SWERVE_ALIGNMENT_BUTTON = 7;
         public static final int ENABLE_TESTING_BUTTON = 8;
@@ -173,24 +174,24 @@ public final class Constants {
     public static final class IntakeConstants {
         public static final double POSITION_TOLERANCE = 0.05;
         public static final double VELOCITY_TOLERANCE = 0.1;
-        public static final double MAX_MOTOR_SPEED = 0.2;
+        public static final double MAX_MOTOR_SPEED = 1;
         public static final double INTAKE_SPEED_RPS = Math.PI; // rotations per second target of wheel and feeders
 
-        public static final int PIVOT_MOTOR_CAN_ID = 0; // TODO
+        public static final int PIVOT_MOTOR_CAN_ID = 15;
 
-        public static final int INTAKE_MOTOR_CAN_ID = 0; // TODO
+        public static final int RIGHT_OPENER_MOTOR_CAN_ID = 16;
+        public static final int LEFT_OPENER_MOTOR_CAN_ID = 17;
 
-        public static final int LEFT_OPENER_MOTOR_CAN_ID = 0; // TODO
-        public static final int RIGHT_OPENER_MOTOR_CAN_ID = 5;
+        public static final int INTAKE_MOTOR_CAN_ID = 18;
 
-        public static final int LEFT_FEEDER_MOTOR_CAN_ID = 0; // TODO
-        public static final int RIGHT_FEEDER_MOTOR_CAN_ID = 0; // TODO
-
+        public static final int LEFT_FEEDER_MOTOR_CAN_ID = 19;
+        public static final int RIGHT_FEEDER_MOTOR_CAN_ID = 20;
 
         public static final double PIVOT_GEAR_FACTOR = 16;
         public static final double PIVOT_DEGREE_UP = -119;
         public static final double PIVOT_DEGREE_DOWN = 0;
-        public static final double PIVOT_PID_P = 0.4;
+        
+        public static final double PIVOT_PID_P = 0.8;
         public static final double PIVOT_PID_I = 0.0;
         public static final double PIVOT_PID_D = 0.0;
         
@@ -198,12 +199,15 @@ public final class Constants {
         public static final double INTAKE_PID_I = 0.0;
         public static final double INTAKE_PID_D = 0.0;
         
-        public static final double OPENER_DEGREE_OPEN = 50;
-        public static final double OPENER_DEGREE_CLOSE = 0;
-        public static final double OPENER_GEAR_FACTOR = 60;
-        public static final double OPENER_PID_P = 0.4;
-        public static final double OPENER_PID_I = 0.0;
-        public static final double OPENER_PID_D = 0.0;
+        public static final double OPENER_DEGREE_OPEN = 60.0;
+        public static final double OPENER_DEGREE_CLOSE = 0.0;
+        public static final double OPENER_GEAR_FACTOR = 60.0;
+        public static final double RIGHT_OPENER_PID_P = 0.2;
+        public static final double RIGHT_OPENER_PID_I = 0.0;
+        public static final double RIGHT_OPENER_PID_D = 0.0;
+        public static final double LEFT_OPENER_PID_P = 0.4;
+        public static final double LEFT_OPENER_PID_I = 0.0;
+        public static final double LEFT_OPENER_PID_D = 0.0;
 
         public static final double FEEDER_PID_P = 0.4;
         public static final double FEEDER_PID_I = 0.0;
@@ -211,30 +215,31 @@ public final class Constants {
     }
 
     public static final class ElevatorConstants {
-        public static final int MOTOR_CAN_ID = 4;
+        public static final int MOTOR_CAN_ID = 22;
 
-        public static final double LEVEL_FOUR_POS = 100.0;
-        public static final double ELEVATOR_SAFE_HEIGHT = 25.0;
+        public static final double ELEVATOR_MAX_POS = 18.0;
+        public static final double ELEVATOR_SAFE_POS = -0.274;
         public static final double ELEVATOR_ZERO_POS = 0.0;
         public static final double ELEVATOR_GEAR_FACTOR = 16.0;
 
         public static final double MAX_MOTOR_SPEED = 0.5;
 
-        public static final double ELEVATOR_PID_P = 0.075;
-        public static final double ELEVATOR_PID_I = 0.0; //0.7
-        public static final double ELEVATOR_PID_D = 0.00125;
-        public static final double ELEVATOR_TOLERANCE = 0.1;
+        public static final double ELEVATOR_PID_P = 0.4;
+        public static final double ELEVATOR_PID_I = 0.0;
+        public static final double ELEVATOR_PID_D = 0.0;
+        public static final double ELEVATOR_TOLERANCE = 0.05;
     }
     
     public static final class LegConstants {
-        public static final int MOTOR_CAN_ID = 5;
+        public static final int MOTOR_CAN_ID = 23;
+        public static final int ENCODER_DIGITAL_INPUT_CHANNEL = 1;
 
         public static final double LEG_POS_INTAKING = 0;
-        public static final double LEG_POS_REST = 0.2;
-        public static final double LEG_POS_ONE = 0.4;
-        public static final double LEG_POS_TWO = 0.6;
-        public static final double LEG_POS_THREE = 0.8;
-        public static final double LEG_POS_FOUR = 1.0;
+        public static final double LEG_POS_REST = 0.02;
+        public static final double LEG_POS_ONE = -0.277;
+        public static final double LEG_POS_TWO = -0.6;
+        public static final double LEG_POS_THREE = -0.8;
+        public static final double LEG_POS_FOUR = -1.0;
 
         public static final double MAX_MOTOR_SPEED = 1.0;
         public static final double LEG_TOLERANCE = 0.02; // how many rotations off is considered fine for the PID controller.
@@ -247,7 +252,7 @@ public final class Constants {
     }
 
     public static final class FootConstants {
-        public static final int MOTOR_CAN_ID = 40;
+        public static final int MOTOR_CAN_ID = 21;
         public static final double MAX_MOTOR_SPEED = 1;
         public static final double FOOT_SPEED_RPS = 8; // rotations per second target of foot wheels
         public static final double FOOT_TOLERANCE = 0.02;
@@ -259,8 +264,8 @@ public final class Constants {
     }
 
     public static final class ClimberConstants {
-        public static final int LEFT_CLIMBER_MOTOR_CAN_ID = 0; //CHANGEME
-        public static final int RIGHT_CLIMBER_MOTOR_CAN_ID = 0; //CHANGEME
+        public static final int LEFT_CLIMBER_MOTOR_CAN_ID = 24;
+        public static final int RIGHT_CLIMBER_MOTOR_CAN_ID = 25;
 
         public static final double MAX_MOTOR_SPEED = 1.0;
 

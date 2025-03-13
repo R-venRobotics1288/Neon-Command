@@ -24,13 +24,15 @@ public class IntakeModule extends SubsystemBase {
 
     private SparkMax leftOpenerMotor;
     private SparkMax rightOpenerMotor;
-    private RelativeEncoder openerEncoder;
+    private RelativeEncoder rightOpenerEncoder;
+    private RelativeEncoder leftOpenerEncoder;
 
     private SparkFlex intakeMotor;
     private SparkFlex leftFeederMotor;
     private SparkFlex rightFeederMotor;
     
     private final Set<IntakeState> state = EnumSet.of(IntakeState.CLOSED, IntakeState.UP);
+    // private final Set<IntakeState> state = EnumSet.of(IntakeState.CLOSED, IntakeState.DOWN);
 
     /**
      * Initializes the {@link IntakeModule}, containing six motors as well as internal state. Intake operates as a state machine with inputs changing outputs.
@@ -44,7 +46,8 @@ public class IntakeModule extends SubsystemBase {
         leftOpenerMotor.configure(Configs.IntakeConfig.openerConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
         rightOpenerMotor = new SparkMax(RIGHT_OPENER_MOTOR_CAN_ID, MotorType.kBrushless);
         rightOpenerMotor.configure(Configs.IntakeConfig.openerConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-        openerEncoder = rightOpenerMotor.getEncoder();
+        rightOpenerEncoder = rightOpenerMotor.getEncoder();
+        leftOpenerEncoder = leftOpenerMotor.getEncoder();
 
         intakeMotor = new SparkFlex(INTAKE_MOTOR_CAN_ID, MotorType.kBrushless);
         intakeMotor.configure(Configs.IntakeConfig.wheelsConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
@@ -69,8 +72,12 @@ public class IntakeModule extends SubsystemBase {
      * @return current position of the opener encoder.
      */
     @Logged
-    public double getOpenerEncoderPosition() {
-        return openerEncoder.getPosition();
+    public double getRightOpenerEncoderPosition() {
+        return rightOpenerEncoder.getPosition();
+    }
+
+    public double getLeftOpenerEncoderPosition() {
+        return leftOpenerEncoder.getPosition();
     }
 
     /**
@@ -150,9 +157,12 @@ public class IntakeModule extends SubsystemBase {
      * Sets the power of the opener motors, responsible for opening or closing the jaw or the Intake.
      * @param power the power to command
      */
-    public void setOpenerMotorState(double power) {
-        leftOpenerMotor.set(MathUtil.clamp(power, -MAX_MOTOR_SPEED, MAX_MOTOR_SPEED));
-        rightOpenerMotor.set(MathUtil.clamp(-power, -MAX_MOTOR_SPEED, MAX_MOTOR_SPEED));
+    public void setRightOpenerMotorState(double power) {
+        rightOpenerMotor.set(MathUtil.clamp(power, -MAX_MOTOR_SPEED, MAX_MOTOR_SPEED));
+    }
+
+    public void setLeftOpenerMotorState(double power) {
+        leftOpenerMotor.set(MathUtil.clamp(-power, -MAX_MOTOR_SPEED, MAX_MOTOR_SPEED));
     }
 
     /**
@@ -169,6 +179,6 @@ public class IntakeModule extends SubsystemBase {
      * @param power the power to command
      */
     public void setIntakeMotorState(double power) {
-        intakeMotor.set(MathUtil.clamp(power, -MAX_MOTOR_SPEED, MAX_MOTOR_SPEED));
+        intakeMotor.set(MathUtil.clamp(-power, -MAX_MOTOR_SPEED, MAX_MOTOR_SPEED));
     }
 }

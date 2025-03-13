@@ -5,6 +5,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.utilities.ShuffleManager;
@@ -51,6 +52,10 @@ public class Robot extends TimedRobot {
         CommandScheduler.getInstance().run();
 
         m_ShuffleManager.updateShuffleboard();
+        SmartDashboard.putNumber("Front Left Encoder position", m_robotContainer.m_drive.getEncoderPositions()[0]);
+        SmartDashboard.putNumber("Front Right Encoder position", m_robotContainer.m_drive.getEncoderPositions()[1]);
+        SmartDashboard.putNumber("Rear Left Encoder position", m_robotContainer.m_drive.getEncoderPositions()[2]);
+        SmartDashboard.putNumber("Rear Right Encoder position", m_robotContainer.m_drive.getEncoderPositions()[3]);
     }
 
     /** This function is called once each time the robot enters Disabled mode. */

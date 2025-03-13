@@ -42,7 +42,7 @@ public class MoveElevatorCommand extends Command {
         elevatorPIDController.reset();
         elevatorPIDController.setSetpoint(desiredPosition);
 
-        if (desiredPosition == ELEVATOR_SAFE_HEIGHT) {
+        if (desiredPosition == ELEVATOR_SAFE_POS) {
             elevatorModule.setElevatorState(ElevatorState.LEVEL_SAFE);
         } else if (desiredPosition == ELEVATOR_ZERO_POS) {
             elevatorModule.setElevatorState(ElevatorState.LEVEL_ZERO);
@@ -53,7 +53,7 @@ public class MoveElevatorCommand extends Command {
 
     @Override
     public void execute() {
-        double output = elevatorPIDController.calculate(elevatorModule.getEncoderPosition());
+        double output = -elevatorPIDController.calculate(elevatorModule.getEncoderPosition());
         elevatorModule.setMotorState(output);
         SmartDashboard.putNumber("Elevator Encoder Pos", elevatorModule.getEncoderPosition());
         SmartDashboard.putNumber("Elevator Desired Pos", desiredPosition);

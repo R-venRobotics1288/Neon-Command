@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
-import com.revrobotics.RelativeEncoder;
+import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
@@ -24,7 +24,7 @@ import static frc.robot.Constants.ElevatorConstants.*;
  */
 public class ElevatorModule extends SubsystemBase {
 
-    private RelativeEncoder elevatorEncoder;
+    private AbsoluteEncoder elevatorEncoder;
     private SparkMax elevatorMotor;
 
     public ElevatorState elevatorState;
@@ -36,7 +36,7 @@ public class ElevatorModule extends SubsystemBase {
         elevatorMotor = new SparkMax(MOTOR_CAN_ID, MotorType.kBrushless);
         elevatorMotor.configure(Configs.ElevatorModuleConfig.elevatorConfig, ResetMode.kResetSafeParameters,
                 PersistMode.kPersistParameters);
-        elevatorEncoder = elevatorMotor.getEncoder();
+        elevatorEncoder = elevatorMotor.getAbsoluteEncoder();
         elevatorState = ElevatorState.LEVEL_ZERO;
         reset();
     }
@@ -46,7 +46,6 @@ public class ElevatorModule extends SubsystemBase {
      */
     public void reset() {
         setMotorState(0);
-        elevatorEncoder.setPosition(0);
         elevatorState = ElevatorState.LEVEL_ZERO;
     }
 
@@ -69,7 +68,7 @@ public class ElevatorModule extends SubsystemBase {
      */
     @Logged
     public double getEncoderPosition() {
-        return elevatorEncoder.getPosition();
+        return -elevatorEncoder.getPosition();
     }
 
     /**

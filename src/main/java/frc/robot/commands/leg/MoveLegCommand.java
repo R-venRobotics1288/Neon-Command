@@ -64,6 +64,7 @@ public class MoveLegCommand extends Command {
         SmartDashboard.putNumber("Leg Error", output);
         if (legPidController.atSetpoint()) {
             finished = true;
+            System.out.println("Finished moving leg!");
         }
     }
 

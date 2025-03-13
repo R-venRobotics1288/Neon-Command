@@ -14,39 +14,51 @@ public class OpenIntakeCommand extends Command {
 
     private boolean finished = false;
 
-    private PIDController openerPIDController;
+    private PIDController rightOpenerMotorPIDController;
+    private PIDController leftOpenerMotorPidController;
 
     public OpenIntakeCommand(double desiredPosition, IntakeModule intakeModule) {
         this.intakeModule = intakeModule;
         this.desiredPosition = desiredPosition;
-        this.openerPIDController = new PIDController(OPENER_PID_P, OPENER_PID_I, OPENER_PID_D);
-        this.openerPIDController.setTolerance(POSITION_TOLERANCE);
+        this.rightOpenerMotorPIDController = new PIDController(RIGHT_OPENER_PID_P, RIGHT_OPENER_PID_I, RIGHT_OPENER_PID_D);
+        this.leftOpenerMotorPidController = new PIDController(LEFT_OPENER_PID_P, LEFT_OPENER_PID_I, LEFT_OPENER_PID_D);
+        this.rightOpenerMotorPIDController.setTolerance(POSITION_TOLERANCE);
+        this.leftOpenerMotorPidController.setTolerance(POSITION_TOLERANCE);
         super.addRequirements(this.intakeModule);
     }
 
     @Override
     public void initialize() {
         finished = false;
-        openerPIDController.reset();
-        openerPIDController.setSetpoint(desiredPosition);
+        rightOpenerMotorPIDController.reset();
+        rightOpenerMotorPIDController.setSetpoint(desiredPosition);
+        leftOpenerMotorPidController.reset();
+        leftOpenerMotorPidController.setSetpoint(desiredPosition);
     }
 
     @Override
     public void execute() {
-        double openerEncoderPosition = intakeModule.getOpenerEncoderPosition(); 
-        double output = openerPIDController.calculate(openerEncoderPosition);
-        intakeModule.setOpenerMotorState(output);
-        SmartDashboard.putNumber("Intake Opener Encoder Pos", openerEncoderPosition);
-        SmartDashboard.putNumber("Intake Opener Error", output);
-        if (openerPIDController.atSetpoint()) {
+        double rightOpenerEncoderPosition = intakeModule.getRightOpenerEncoderPosition();
+        double rightOutput = rightOpenerMotorPIDController.calculate(rightOpenerEncoderPosition);
+        intakeModule.setRightOpenerMotorState(rightOutput);
+        SmartDashboard.putNumber("Right Intake Opener Encoder Pos", rightOpenerEncoderPosition);
+        SmartDashboard.putNumber("Right Intake Opener Error", rightOutput);
+
+        double leftOpenerEncoderPosition = intakeModule.getLeftOpenerEncoderPosition();
+        double leftOutput = leftOpenerMotorPidController.calculate(leftOpenerEncoderPosition);
+        intakeModule.setLeftOpenerMotorState(leftOutput);
+        SmartDashboard.putNumber("Right Intake Opener Encoder Pos", leftOpenerEncoderPosition);
+        SmartDashboard.putNumber("Right Intake Opener Error", leftOutput);
+        if (rightOpenerMotorPIDController.atSetpoint() && leftOpenerMotorPidController.atSetpoint()) {
             finished = true;
-            intakeModule.setIntakeState(openerEncoderPosition < 0 ? IntakeState.OPEN : IntakeState.CLOSED); // up is negative
+            intakeModule.setIntakeState(leftOpenerEncoderPosition < 0 ? IntakeState.OPEN : IntakeState.CLOSED); // up is negative
         }
     }
 
     @Override
     public void end(boolean interrupted) {
-        intakeModule.setOpenerMotorState(0);
+        intakeModule.setRightOpenerMotorState(0);
+        intakeModule.setLeftOpenerMotorState(0);
     }
 
     @Override

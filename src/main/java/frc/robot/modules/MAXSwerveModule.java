@@ -123,15 +123,16 @@ public class MAXSwerveModule {
         final double driveOutput = m_drivingPIDController.calculate(m_drivingEncoder.getVelocity(), correctedDesiredState.speedMetersPerSecond);		
         final double turnOutput = m_turningPIDController.calculate(getAbsoluteEncoderRad(), correctedDesiredState.angle.getRadians());
 
-        final double driveFeedforward = m_feedForwardPIDController.calculate(correctedDesiredState.speedMetersPerSecond);
+        final double driveFeedForward = m_feedForwardPIDController.calculate(correctedDesiredState.speedMetersPerSecond);
 		m_feedForwardPIDController.reset();
 
-        m_drivingSpark.set(driveOutput + driveFeedforward / 3);
+        m_drivingSpark.set(driveOutput + driveFeedForward / 3);
 		//m_drivingSpark.set(driveOutput);
         m_turningSpark.set(turnOutput / 3);
 
 		m_desiredState = desiredState;
 	}
+	
 
 	/** Zeroes all the SwerveModule encoders. */
 	public void resetEncoders() {

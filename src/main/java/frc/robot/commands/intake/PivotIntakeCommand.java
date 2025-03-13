@@ -39,7 +39,7 @@ public class PivotIntakeCommand extends Command {
     public void execute() {
         double pivotEncoderPosition = intakeModule.getPivotEncoderPosition(); 
         double output = pivotPIDController.calculate(pivotEncoderPosition);
-        intakeModule.setPivotMotorState(output);
+        intakeModule.setPivotMotorState(desiredPosition < 0 ? -output : output);
         SmartDashboard.putNumber("Intake Pivot Encoder Pos", pivotEncoderPosition);
         SmartDashboard.putNumber("Intake Pivot Error", output);
         if (pivotPIDController.atSetpoint()) {

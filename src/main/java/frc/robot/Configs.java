@@ -11,7 +11,6 @@ import frc.robot.Constants.ClimberConstants;
 import static frc.robot.Constants.ElevatorConstants;
 import static frc.robot.Constants.FootConstants;
 import static frc.robot.Constants.IntakeConstants;
-import static frc.robot.Constants.LegConstants;
 import static frc.robot.Constants.ModuleConstants;
 
 public final class Configs {
@@ -75,15 +74,16 @@ public final class Configs {
 				.smartCurrentLimit(80);
 			openerConfig.encoder.positionConversionFactor((2 * Math.PI)/IntakeConstants.OPENER_GEAR_FACTOR); // Axle Radians
 
+			final double RPS_FACTOR = (double)1.0 / (double)60.0;
 			wheelsConfig
 				.idleMode(IdleMode.kBrake)
 				.smartCurrentLimit(80);
-			wheelsConfig.encoder.velocityConversionFactor(1 / 60); // Rotations Per Second
+			wheelsConfig.encoder.velocityConversionFactor(RPS_FACTOR); // Rotations Per Second
 
 			feederConfig
 				.idleMode(IdleMode.kCoast)
 				.smartCurrentLimit(80);
-			feederConfig.encoder.velocityConversionFactor(1 / 60); // Rotations Per Second
+			feederConfig.encoder.velocityConversionFactor(RPS_FACTOR); // Rotations Per Second
 		}
     }
 
@@ -94,7 +94,7 @@ public final class Configs {
 		    elevatorConfig
 			    .idleMode(IdleMode.kBrake)
 			    .smartCurrentLimit(50)
-				.encoder.positionConversionFactor(1 / ElevatorConstants.ELEVATOR_GEAR_FACTOR); // Apply gearing to get rotations of the rod
+				.absoluteEncoder.positionConversionFactor(1 / ElevatorConstants.ELEVATOR_GEAR_FACTOR); // Apply gearing to get rotations of the rod
 		}
     }
 
@@ -103,8 +103,7 @@ public final class Configs {
 		static {
 		    legConfig
 			    .idleMode(IdleMode.kBrake)
-			    .smartCurrentLimit(50)
-				.encoder.positionConversionFactor(1 / LegConstants.LEG_GEAR_FACTOR);
+			    .smartCurrentLimit(50);
 		}
     }
 

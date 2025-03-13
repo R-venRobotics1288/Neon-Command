@@ -51,7 +51,7 @@ public class RobotContainer {
 	// The robot's subsystems
 	private final GyroscopeModule m_gyroscope;
 	private final VisionModule m_vision;
-	private final DriveModule m_drive;
+	public final DriveModule m_drive;
 	private final ElevatorModule m_elevator;
 	private final IntakeModule m_intake;
 	private final LegModule m_leg;
@@ -61,30 +61,6 @@ public class RobotContainer {
 	// The driver's controller
 	CommandXboxController m_driverController = new CommandXboxController(OIConstants.DRIVER_CONTROLLER_PORT);
 	CommandXboxController m_operatorController = new CommandXboxController(OIConstants.OPERATOR_CONTROLLER_PORT);
-
-	// Elevator Commands
-	private MoveElevatorCommand m_raiseElevatorMaxCommand;
-	private MoveElevatorCommand m_raiseElevatorSafeCommand;
-	private MoveElevatorCommand m_resetElevatorCommand;
-
-	// Leg Commands
-	private MoveLegCommand m_legPosIntakeCommand;
-	private MoveLegCommand m_legPosRestCommand;
-	private MoveLegCommand m_legPosOneCommand;
-	private MoveLegCommand m_legPosTwoCommand;
-	private MoveLegCommand m_legPosThreeCommand;
-	private MoveLegCommand m_legPosFourCommand;
-	private RunFootCommand m_footIntakeCommand;
-	private RunFootCommand m_footOuttakeCommand;
-
-	// Intake Commands
-	private PivotIntakeCommand m_intakePivotUpCommand;
-	private PivotIntakeCommand m_intakePivotDownCommand;
-	private OpenIntakeCommand m_intakeOpenCommand;
-	private OpenIntakeCommand m_intakeCloseCommand;
-	private IntakeCommand m_intakeCoralCommand;
-	private IntakeCommand m_intakeAlgaeCommand;
-	private IntakeCommand m_intakeReverseCommand;
 
 	/**
 	 * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -97,40 +73,16 @@ public class RobotContainer {
 		m_elevator = new ElevatorModule();
 		m_leg = new LegModule();
 		m_intake = new IntakeModule();
-		
-		// Leg commands.
-		m_legPosIntakeCommand = new MoveLegCommand(LegConstants.LEG_POS_INTAKING, m_leg);
-		m_legPosRestCommand = new MoveLegCommand(LegConstants.LEG_POS_REST, m_leg);
-		m_legPosOneCommand = new MoveLegCommand(LegConstants.LEG_POS_ONE, m_leg);
-		m_legPosTwoCommand = new MoveLegCommand(LegConstants.LEG_POS_TWO, m_leg);
-		m_legPosThreeCommand = new MoveLegCommand(LegConstants.LEG_POS_THREE, m_leg);
-		m_legPosFourCommand = new MoveLegCommand(LegConstants.LEG_POS_FOUR, m_leg);
-		m_footIntakeCommand = new RunFootCommand(true, m_leg);
-		m_footOuttakeCommand = new RunFootCommand(false, m_leg);
-		
-		// Intake commands.
-		m_intakePivotUpCommand = new PivotIntakeCommand(Math.toRadians(IntakeConstants.PIVOT_DEGREE_UP), m_intake);
-		m_intakePivotDownCommand = new PivotIntakeCommand(Math.toRadians(IntakeConstants.PIVOT_DEGREE_DOWN), m_intake);
-		m_intakeOpenCommand = new OpenIntakeCommand(Math.toRadians(IntakeConstants.OPENER_DEGREE_OPEN), m_intake);
-		m_intakeCloseCommand = new OpenIntakeCommand(Math.toRadians(IntakeConstants.OPENER_DEGREE_CLOSE), m_intake);
-		m_intakeCoralCommand = new IntakeCommand(true, false, m_intake, m_footIntakeCommand);
-		m_intakeAlgaeCommand = new IntakeCommand(false, false, m_intake, m_footIntakeCommand);
-		m_intakeReverseCommand = new IntakeCommand(true, true, m_intake, m_footOuttakeCommand);
-		
-		// Elevator commands
-		m_raiseElevatorMaxCommand = new MoveElevatorCommand(ElevatorConstants.LEVEL_FOUR_POS, m_elevator);
-		m_raiseElevatorSafeCommand = new MoveElevatorCommand(ElevatorConstants.ELEVATOR_SAFE_HEIGHT, m_elevator);
-		m_resetElevatorCommand = new MoveElevatorCommand(ElevatorConstants.ELEVATOR_ZERO_POS, m_elevator);
-		
+
 		// Register and Initialize Autonomous Module
-		NamedCommands.registerCommand("ElevatorMax", m_raiseElevatorMaxCommand);
-		NamedCommands.registerCommand("ElevatorSafe", m_raiseElevatorSafeCommand);
-		NamedCommands.registerCommand("LegRest", m_legPosRestCommand);
-		NamedCommands.registerCommand("LegMax", m_legPosFourCommand);
-		NamedCommands.registerCommand("Score", m_footOuttakeCommand);
-		NamedCommands.registerCommand("IntakeDown", m_intakePivotDownCommand);
-		NamedCommands.registerCommand("IntakeUp", m_intakePivotUpCommand);
-		NamedCommands.registerCommand("Intake", m_intakeCoralCommand);
+		NamedCommands.registerCommand("ElevatorMax", new MoveElevatorCommand(ElevatorConstants.ELEVATOR_MAX_POS, m_elevator));
+		NamedCommands.registerCommand("ElevatorSafe", new MoveElevatorCommand(ElevatorConstants.ELEVATOR_SAFE_POS, m_elevator));
+		NamedCommands.registerCommand("LegRest", new MoveLegCommand(LegConstants.LEG_POS_REST, m_leg));
+		NamedCommands.registerCommand("LegMax", new MoveLegCommand(LegConstants.LEG_POS_FOUR, m_leg));
+		NamedCommands.registerCommand("Score", new RunFootCommand(false, m_leg));
+		NamedCommands.registerCommand("IntakeDown", new PivotIntakeCommand(Math.toRadians(IntakeConstants.PIVOT_DEGREE_DOWN), m_intake));
+		NamedCommands.registerCommand("IntakeUp", new PivotIntakeCommand(Math.toRadians(IntakeConstants.PIVOT_DEGREE_UP), m_intake));
+		NamedCommands.registerCommand("Intake", new IntakeCommand(true, false, m_intake).alongWith(new RunFootCommand(true, m_leg)));
 		m_auto = new AutonomousModule(m_position, m_drive, m_gyroscope);
 		
 		// Configure the button bindings
@@ -183,59 +135,59 @@ public class RobotContainer {
 		// #region Normal Bindings
 		// DRIVER Button A -> Toggles Pivot
 		Command pivotCommand = Commands.either(
-				m_legPosRestCommand
-						.onlyIf(m_leg::isIntakingPosition)
-						.andThen(m_intakePivotUpCommand),
-				m_intakePivotDownCommand,
-				m_intake::isDown);
+			/*new MoveLegCommand(LegConstants.LEG_POS_REST, m_leg)
+				.onlyIf(m_leg::isIntakingPosition)
+				.andThen*/(new PivotIntakeCommand(Math.toRadians(IntakeConstants.PIVOT_DEGREE_UP), m_intake)),
+			new PivotIntakeCommand(Math.toRadians(IntakeConstants.PIVOT_DEGREE_DOWN), m_intake),
+			m_intake::isDown);
 		m_driverController.a().onTrue(pivotCommand);
 
 		// DRIVER Button B -> Toggles Jaw
 		Command jawCommand = Commands.either(
-				m_intakeOpenCommand,
-				m_intakeCloseCommand,
-				m_intake::isClosed).onlyWhile(m_intake::isDown);
+			new OpenIntakeCommand(Math.toRadians(IntakeConstants.OPENER_DEGREE_OPEN), m_intake),
+			new OpenIntakeCommand(Math.toRadians(IntakeConstants.OPENER_DEGREE_CLOSE), m_intake),
+			m_intake::isClosed).onlyWhile(m_intake::isDown);
 		m_driverController.b().onTrue(jawCommand);
 
 		// OPERATOR Right Trigger -> Intakes
 		Command intakeCommand = Commands.either(
-				m_legPosIntakeCommand
-						.onlyIf(m_leg::isNotIntakingPosition)
-						.andThen(m_intakeCoralCommand.alongWith(m_footIntakeCommand)),
-				m_intakeAlgaeCommand,
-				m_intake::isClosed).onlyWhile(m_intake::isDown);
+			new MoveLegCommand(LegConstants.LEG_POS_INTAKING, m_leg)
+				.onlyIf(m_leg::isNotIntakingPosition)
+				.andThen(new IntakeCommand(true, false, m_intake).alongWith(new RunFootCommand(true, m_leg))),
+			new IntakeCommand(false, false, m_intake),
+			m_intake::isClosed).onlyWhile(m_intake::isDown);
 		m_operatorController.rightTrigger().whileTrue(intakeCommand);
 
 		// OPERATOR Left Bumper -> Clears stuck intake.
-		m_operatorController.leftBumper().whileTrue(m_intakeReverseCommand.onlyWhile(m_intake::isDown));
+		m_operatorController.leftBumper().whileTrue(new IntakeCommand(true, true, m_intake).onlyWhile(m_intake::isDown));
 
 		// OPERATOR Right Bumper -> Score with foot.
-		m_operatorController.rightBumper().whileTrue(m_footOuttakeCommand);
+		m_operatorController.rightBumper().whileTrue(new RunFootCommand(false, m_leg));
 
 		// OPERATOR Button X -> Leg Position One
 		m_operatorController.x()
-				.onTrue(m_raiseElevatorSafeCommand.andThen(m_legPosOneCommand).onlyIf(m_leg::isNotInPositionOne));
+			.onTrue(new MoveElevatorCommand(ElevatorConstants.ELEVATOR_SAFE_POS, m_elevator)/*.andThen(new MoveLegCommand(LegConstants.LEG_POS_ONE, m_leg)).onlyIf(m_leg::isNotInPositionOne)*/);
 
 		// OPERATOR Button A -> Leg Position Two
 		m_operatorController.a()
-				.onTrue(m_raiseElevatorSafeCommand.andThen(m_legPosTwoCommand).onlyIf(m_leg::isNotInPositionTwo));
+			.onTrue(/*new MoveElevatorCommand(ElevatorConstants.ELEVATOR_SAFE_POS, m_elevator).andThen*/(new MoveLegCommand(LegConstants.LEG_POS_TWO, m_leg)).onlyIf(m_leg::isNotInPositionTwo));
 
 		// OPERATOR Button B -> Leg Position Three
 		m_operatorController.b()
-				.onTrue(m_raiseElevatorSafeCommand.andThen(m_legPosThreeCommand).onlyIf(m_leg::isNotInPositionThree));
+			.onTrue(/*new MoveElevatorCommand(ElevatorConstants.ELEVATOR_SAFE_POS, m_elevator).andThen*/(new MoveLegCommand(LegConstants.LEG_POS_THREE, m_leg)).onlyIf(m_leg::isNotInPositionThree));
 
 		// OPERATOR Button Y -> Leg Position Four
 		m_operatorController.y()
-				.onTrue(m_raiseElevatorMaxCommand.andThen(m_legPosFourCommand).onlyIf(m_leg::isNotInPositionFour));
+			.onTrue(/*new MoveElevatorCommand(ElevatorConstants.ELEVATOR_MAX_POS, m_elevator).andThen*/(new MoveLegCommand(LegConstants.LEG_POS_FOUR, m_leg)).onlyIf(m_leg::isNotInPositionFour));
 
 		// OPERATOR Joystick Right BUTTON -> Leg to Rest Position and Reset Elevator
 		m_operatorController.rightStick()
-				.onTrue(m_legPosRestCommand.andThen(m_resetElevatorCommand).onlyIf(m_leg::isNotAtRest));
+			.onTrue(new MoveLegCommand(LegConstants.LEG_POS_REST, m_leg).andThen(new MoveElevatorCommand(ElevatorConstants.ELEVATOR_ZERO_POS, m_elevator)).onlyIf(m_leg::isNotAtRest));
 		// #endregion Normal Bindings
 
 		// #region Test Bindings
 		// TEST INTAKE AT 15% POWER
-		m_operatorController.povLeft().and(m_operatorController.button(OIConstants.ENABLE_TESTING_BUTTON)).debounce(0.5)
+		m_operatorController.povLeft().and(m_operatorController.button(OIConstants.ENABLE_TESTING_BUTTON))
 				.onTrue(
 						new RunCommand(() -> {
 							m_intake.setIntakeMotorState(0.15);
@@ -245,11 +197,10 @@ public class RobotContainer {
 							m_intake.setIntakeMotorState(0);
 						}, m_intake));
 		// TEST FEEDER AT 15% POWER
-		m_operatorController.povUp().and(m_operatorController.button(OIConstants.ENABLE_TESTING_BUTTON)).debounce(0.5)
+		m_operatorController.povUp().and(m_operatorController.button(OIConstants.ENABLE_TESTING_BUTTON))
 				.onTrue(
 						new RunCommand(() -> {
-							if (m_intake.isDown())
-								m_intake.setFeederMotorState(0.15);
+							m_intake.setFeederMotorState(0.15);
 						}, m_intake))
 				.onFalse(
 						new RunCommand(() -> {
@@ -257,7 +208,6 @@ public class RobotContainer {
 						}, m_intake));
 		// TEST FOOT AT 15% POWER
 		m_operatorController.povRight().and(m_operatorController.button(OIConstants.ENABLE_TESTING_BUTTON))
-				.debounce(0.5)
 				.onTrue(
 						new RunCommand(() -> {
 							m_leg.setFootMotorState(0.15);

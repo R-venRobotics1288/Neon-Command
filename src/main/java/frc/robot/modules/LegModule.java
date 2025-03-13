@@ -1,6 +1,5 @@
 package frc.robot.modules;
 
-import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkBase.PersistMode;
@@ -9,9 +8,12 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 
 import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.Configs;
+import frc.robot.Constants.FootConstants;
+import frc.robot.Constants.LegConstants;
 import frc.robot.utilities.LegState;
 
 import static frc.robot.Constants.FootConstants;
@@ -27,7 +29,7 @@ import static frc.robot.Constants.LegConstants;
 public class LegModule extends SubsystemBase {
 
     private SparkFlex legMotor;
-    private RelativeEncoder legEncoder;
+    private DutyCycleEncoder legEncoder;
     private SparkMax footMotor;
     private LegState legState;
 
@@ -36,7 +38,7 @@ public class LegModule extends SubsystemBase {
         legMotor = new SparkFlex(LegConstants.MOTOR_CAN_ID, MotorType.kBrushless);
         legMotor.configure(Configs.LegModuleConfig.legConfig, ResetMode.kResetSafeParameters,
                 PersistMode.kPersistParameters);
-        legEncoder = legMotor.getEncoder();
+        legEncoder = new DutyCycleEncoder(LegConstants.ENCODER_DIGITAL_INPUT_CHANNEL);
 
         footMotor = new SparkMax(FootConstants.MOTOR_CAN_ID, MotorType.kBrushless);
         footMotor.configure(Configs.FootModuleConfig.footConfig, ResetMode.kResetSafeParameters,
@@ -51,7 +53,7 @@ public class LegModule extends SubsystemBase {
      */
     @Logged
     public double getEncoderPosition() {
-        return legEncoder.getPosition();
+        return (legEncoder.get() / LegConstants.LEG_GEAR_FACTOR) * (2 * Math.PI);
     }
 
     /**

@@ -89,6 +89,16 @@ public class DriveModule extends SubsystemBase {
         );
     }
 
+    @Logged
+    public double[] getEncoderPositions() {
+        return new double[] {
+            m_frontLeft.getAbsoluteEncoderRad(),
+            m_frontRight.getAbsoluteEncoderRad(),
+            m_rearLeft.getAbsoluteEncoderRad(),
+            m_rearRight.getAbsoluteEncoderRad(),
+        };
+    }
+
     /**
      * Method to drive the robot.
      *
