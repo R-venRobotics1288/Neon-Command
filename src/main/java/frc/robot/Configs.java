@@ -94,7 +94,7 @@ public final class Configs {
 		    elevatorConfig
 			    .idleMode(IdleMode.kBrake)
 			    .smartCurrentLimit(50)
-				.absoluteEncoder.positionConversionFactor(1 / ElevatorConstants.ELEVATOR_GEAR_FACTOR); // Apply gearing to get rotations of the rod
+				.encoder.positionConversionFactor(1 / ElevatorConstants.ELEVATOR_GEAR_FACTOR); // Apply gearing to get rotations of the rod
 		}
     }
 

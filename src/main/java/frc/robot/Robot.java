@@ -52,10 +52,13 @@ public class Robot extends TimedRobot {
         CommandScheduler.getInstance().run();
 
         m_ShuffleManager.updateShuffleboard();
+        
         SmartDashboard.putNumber("Front Left Encoder position", m_robotContainer.m_drive.getEncoderPositions()[0]);
         SmartDashboard.putNumber("Front Right Encoder position", m_robotContainer.m_drive.getEncoderPositions()[1]);
         SmartDashboard.putNumber("Rear Left Encoder position", m_robotContainer.m_drive.getEncoderPositions()[2]);
         SmartDashboard.putNumber("Rear Right Encoder position", m_robotContainer.m_drive.getEncoderPositions()[3]);
+        SmartDashboard.putNumber("Elevator Encoder position", m_robotContainer.m_elevator.getEncoderPosition());
+        SmartDashboard.putNumber("Leg Encoder position", m_robotContainer.m_leg.getEncoderPosition());
     }
 
     /** This function is called once each time the robot enters Disabled mode. */

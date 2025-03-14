@@ -129,12 +129,7 @@ public class IntakeModule extends SubsystemBase {
      * @return true if stateToCheck is currently true
      */
     public boolean hasIntakeState(IntakeState stateToCheck) {
-        for (IntakeState i : state) {
-            if (i == stateToCheck) {
-                return true;
-            }
-        }
-        return false;
+        return state.contains(stateToCheck);
     }
 
     public boolean isDown() {

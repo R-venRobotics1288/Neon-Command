@@ -43,8 +43,7 @@ public class SetClimberPosition extends Command {
     public void execute() {
         double outputRight = ClimberPIDController.calculate(ClimberModule.getEncoderPositionR());
         double outputLeft = ClimberPIDController.calculate(ClimberModule.getEncoderPositionL());
-        ClimberModule.setMotorStateRight(outputRight);
-        ClimberModule.setMotorStateLeft(outputLeft);
+        ClimberModule.setMotorState(outputRight);
      
         SmartDashboard.putNumber("Climber Encoder Pos Right", ClimberModule.getEncoderPositionR());
         SmartDashboard.putNumber("Climber Encoder Pos Left", ClimberModule.getEncoderPositionL());
@@ -58,8 +57,7 @@ public class SetClimberPosition extends Command {
 
     @Override
     public void end(boolean interrupted) {
-        ClimberModule.setMotorStateRight(0.0);
-        ClimberModule.setMotorStateRight(0.0);
+        ClimberModule.setMotorState(0.0);
     }
 
     @Override

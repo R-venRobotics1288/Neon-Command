@@ -1,6 +1,7 @@
 package frc.robot.modules;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
@@ -11,6 +12,7 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.math.MathUtil;
 import frc.robot.Configs;
+import frc.robot.Constants.ClimberConstants;
 
 import static frc.robot.Constants.ClimberConstants.*;
 
@@ -41,8 +43,7 @@ public class ClimberModule extends SubsystemBase {
      * Resets the state of the climber subsystem.
      */
     public void reset() {
-        setMotorStateRight(0);
-        setMotorStateLeft(0);
+        setMotorState(0);
         climberEncoderR.setPosition(0);
         climberEncoderL.setPosition(0);
     }
@@ -76,11 +77,16 @@ public class ClimberModule extends SubsystemBase {
      * Sets the current state of the climber motor.
      * @param state desired speed of the motor
      */
-    public void setMotorStateRight(double state) {
+    public void setMotorState(double state) {
         climberMotorR.set(MathUtil.clamp(state, -MAX_MOTOR_SPEED, MAX_MOTOR_SPEED));
+        climberMotorL.set(MathUtil.clamp(-state, -MAX_MOTOR_SPEED, MAX_MOTOR_SPEED));
     }
-    public void setMotorStateLeft(double state) {
-        climberMotorL.set(MathUtil.clamp(state, -MAX_MOTOR_SPEED, MAX_MOTOR_SPEED));
+
+    public Command climbUpCommand() {
+        return new StartEndCommand(() -> this.setMotorState(ClimberConstants.MAX_MOTOR_SPEED), () -> this.setMotorState(0), this);
     }
-        
+
+    public Command climbDownCommand() {
+        return new StartEndCommand(() -> this.setMotorState(-ClimberConstants.MAX_MOTOR_SPEED), () -> this.setMotorState(0), this);
+    }   
 }

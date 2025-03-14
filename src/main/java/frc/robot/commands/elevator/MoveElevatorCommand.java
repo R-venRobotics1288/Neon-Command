@@ -60,6 +60,7 @@ public class MoveElevatorCommand extends Command {
         SmartDashboard.putNumber("Commanded Motor Output", output);
         if (elevatorPIDController.atSetpoint()) {
             finished = true;
+            System.out.println("ELEVATOR FINISHED");
         }
     }
 

@@ -24,7 +24,11 @@ public class PivotIntakeCommand extends Command {
     public PivotIntakeCommand(double desiredPosition, IntakeModule intakeModule) {
         this.intakeModule = intakeModule;
         this.desiredPosition = desiredPosition;
-        this.pivotPIDController = new PIDController(PIVOT_PID_P, PIVOT_PID_I, PIVOT_PID_D);
+        this.pivotPIDController = new PIDController(
+            desiredPosition == Math.toRadians(PIVOT_DEGREE_DOWN) ? (PIVOT_PID_P / 3) : PIVOT_PID_P,
+            PIVOT_PID_I,
+            PIVOT_PID_D
+        );
         this.pivotPIDController.setTolerance(POSITION_TOLERANCE);
         super.addRequirements(this.intakeModule);
     }
@@ -39,12 +43,12 @@ public class PivotIntakeCommand extends Command {
     public void execute() {
         double pivotEncoderPosition = intakeModule.getPivotEncoderPosition(); 
         double output = pivotPIDController.calculate(pivotEncoderPosition);
-        intakeModule.setPivotMotorState(desiredPosition < 0 ? -output : output);
+        intakeModule.setPivotMotorState(output);
         SmartDashboard.putNumber("Intake Pivot Encoder Pos", pivotEncoderPosition);
         SmartDashboard.putNumber("Intake Pivot Error", output);
         if (pivotPIDController.atSetpoint()) {
             finished = true;
-            intakeModule.setIntakeState(pivotEncoderPosition < 0 ? IntakeState.UP : IntakeState.DOWN); // up is negative
+            intakeModule.setIntakeState(desiredPosition == Math.toRadians(PIVOT_DEGREE_DOWN) ? IntakeState.DOWN : IntakeState.UP);
         }
     }
 

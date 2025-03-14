@@ -33,7 +33,7 @@ public class OpenIntakeCommand extends Command {
         rightOpenerMotorPIDController.reset();
         rightOpenerMotorPIDController.setSetpoint(desiredPosition);
         leftOpenerMotorPidController.reset();
-        leftOpenerMotorPidController.setSetpoint(desiredPosition);
+        leftOpenerMotorPidController.setSetpoint(-desiredPosition);
     }
 
     @Override
@@ -43,7 +43,6 @@ public class OpenIntakeCommand extends Command {
         intakeModule.setRightOpenerMotorState(rightOutput);
         SmartDashboard.putNumber("Right Intake Opener Encoder Pos", rightOpenerEncoderPosition);
         SmartDashboard.putNumber("Right Intake Opener Error", rightOutput);
-
         double leftOpenerEncoderPosition = intakeModule.getLeftOpenerEncoderPosition();
         double leftOutput = leftOpenerMotorPidController.calculate(leftOpenerEncoderPosition);
         intakeModule.setLeftOpenerMotorState(leftOutput);

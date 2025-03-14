@@ -14,29 +14,29 @@ import static frc.robot.Constants.ModuleConstants.*;
 
 /**
  * Implements the Pigeon IMU.
- * @author Joel Machens
+ * @author NULL
  * @version 0.1.0
  * @since 18-JAN-2025
  */
 public class GyroscopeModule extends SubsystemBase {
     private Pigeon2 pigeon;
-    private final Alert gyroStateAlert = new Alert("Pigeon IMU State NOT OK!", AlertType.kError);
+    //private final Alert gyroStateAlert = new Alert("Pigeon IMU State NOT OK!", AlertType.kError);
 
     public GyroscopeModule() {
-        pigeon = new Pigeon2(PIGEON_IMU_CAN_ID);
+        pigeon = new Pigeon2(PIGEON_IMU_CAN_ID, "rio");
         pigeon.setYaw(0); // zeros initial gyrometer yaw reading
         DataLogManager.log("GyroscopeModule: Initialization Complete");
     }
 
     @Override
     public void periodic() {
-        StatusSignal<Integer> status = pigeon.getFaultField();
-        if (status.getStatus() != StatusCode.OK) {
-            gyroStateAlert.set(true);
-            gyroStateAlert.setText("Pigeon IMU State NOT OK, instead reported " + status.getStatus().name());
-        } else {
-            gyroStateAlert.set(false);
-        }
+        //StatusSignal<Integer> status = pigeon.getFaultField();
+        //if (status.getStatus() != StatusCode.OK) {
+        //    gyroStateAlert.set(true);
+        //    gyroStateAlert.setText("Pigeon IMU State NOT OK, instead reported " + status.getStatus().name());
+        //} else {
+        //    gyroStateAlert.set(false);
+        //}
     } 
 
     /**

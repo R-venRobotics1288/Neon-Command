@@ -3,6 +3,7 @@ package frc.robot.modules;
 import java.util.Optional;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
@@ -53,7 +54,7 @@ public class AutonomousModule extends SubsystemBase {
             () -> {
                 Optional<Alliance> alliance = DriverStation.getAlliance();
                 if (alliance.isPresent()) {
-                    return alliance.get() == Alliance.Red;
+                    //return alliance.get() == Alliance.Red;
                 }
                 return false;
             },
@@ -70,6 +71,6 @@ public class AutonomousModule extends SubsystemBase {
      * @return Autonomous {@link Command}
      */
     public Command getAutonomousCommand() {
-        return autoChooser.getSelected();
+        return new PathPlannerAuto("Leave");//autoChooser.getSelected();
     }
 }

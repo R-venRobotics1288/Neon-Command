@@ -9,6 +9,8 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.Configs;
@@ -127,5 +129,9 @@ public class LegModule extends SubsystemBase {
 
     public boolean isNotAtRest() {
         return legState != LegState.REST;
+    }
+
+    public Command manualLegCommand(double speed) {
+        return new StartEndCommand(() -> setMotorState(speed), () -> setMotorState(0), this);
     }
 }

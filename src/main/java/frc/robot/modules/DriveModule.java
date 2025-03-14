@@ -124,7 +124,7 @@ public class DriveModule extends SubsystemBase {
               )
             : new ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered);
                         
-        setModuleStates(swerveChassisSpeed.unaryMinus());
+        setModuleStates(swerveChassisSpeed);
     }
 
     /**
@@ -132,7 +132,7 @@ public class DriveModule extends SubsystemBase {
      * @param desiredState Desired {@link ChassisSpeeds}
      */
     public void setModuleStates(ChassisSpeeds desiredState) {
-        SwerveModuleState[] desiredModuleStates = DRIVE_KINEMATICS.toSwerveModuleStates(desiredState.unaryMinus());
+        SwerveModuleState[] desiredModuleStates = DRIVE_KINEMATICS.toSwerveModuleStates(desiredState);
         SwerveDriveKinematics.desaturateWheelSpeeds(desiredModuleStates, MAX_ROBOT_SPEED);
         m_frontLeft.setDesiredState(desiredModuleStates[0]);
         m_frontRight.setDesiredState(desiredModuleStates[1]);
