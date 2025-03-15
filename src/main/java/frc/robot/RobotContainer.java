@@ -152,12 +152,7 @@ public class RobotContainer {
 		// m_driverController.b().onTrue(jawCommand);
 
 		// OPERATOR Right Trigger -> Intakes
-		Command intakeCommand = Commands.either(
-			/*new MoveLegCommand(LegConstants.LEG_POS_INTAKING, m_leg)
-				.onlyIf(m_leg::isNotIntakingPosition)
-				.andThen*/(new IntakeCommand(true, false, m_intake).alongWith(new RunFootCommand(true, m_leg))),
-			new IntakeCommand(false, false, m_intake),
-			m_intake::isClosed).onlyWhile(m_intake::isDown);
+		Command intakeCommand = new IntakeCommand(true, false, m_intake).alongWith(new RunFootCommand(true, m_leg));
 		m_operatorController.rightTrigger().whileTrue(intakeCommand);
 
 		// OPERATOR Left Bumper -> Clears stuck intake.
@@ -191,6 +186,9 @@ public class RobotContainer {
 		m_operatorController.povLeft().whileTrue(m_leg.manualLegCommand(0.3));
 		m_operatorController.povRight().whileTrue(m_leg.manualLegCommand(-0.3));
 		m_operatorController.leftBumper().whileTrue(new RunFootCommand(true, m_leg));
+
+		m_driverController.povUp().whileTrue(m_climber.climbUpCommand());
+		m_driverController.povDown().whileTrue(m_climber.climbDownCommand());
 		// #endregion Normal Bindings
 
 		// #region Test Bindings

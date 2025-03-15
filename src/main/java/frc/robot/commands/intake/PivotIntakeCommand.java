@@ -25,7 +25,7 @@ public class PivotIntakeCommand extends Command {
         this.intakeModule = intakeModule;
         this.desiredPosition = desiredPosition;
         this.pivotPIDController = new PIDController(
-            desiredPosition == Math.toRadians(PIVOT_DEGREE_DOWN) ? (PIVOT_PID_P / 3) : PIVOT_PID_P,
+            desiredPosition == Math.toRadians(PIVOT_DEGREE_DOWN) ? (PIVOT_PID_P * 0.75) : PIVOT_PID_P,
             PIVOT_PID_I,
             PIVOT_PID_D
         );

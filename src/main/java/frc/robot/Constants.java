@@ -68,10 +68,10 @@ public final class Constants {
         public static final double REAR_RIGHT_CHASSIS_ANGULAR_OFFSET = 0.003067961575771;
 
         // P, I, D coefficients
-        public static final double TRANSLATION_COEFFICIENT_P = 0.5;
+        public static final double TRANSLATION_COEFFICIENT_P = 0.4;
         public static final double TRANSLATION_COEFFICIENT_I = 0;
         public static final double TRANSLATION_COEFFICIENT_D = 0;
-        public static final double ROTATION_COEFFICIENT_P = 0.6;
+        public static final double ROTATION_COEFFICIENT_P = 0.55;
         public static final double ROTATION_COEFFICIENT_I = 0;
         public static final double ROTATION_COEFFICIENT_D = 0;
 
@@ -188,10 +188,10 @@ public final class Constants {
         public static final int RIGHT_FEEDER_MOTOR_CAN_ID = 20;
 
         public static final double PIVOT_GEAR_FACTOR = 16;
-        public static final double PIVOT_DEGREE_UP = 0;
-        public static final double PIVOT_DEGREE_DOWN = -96;
+        public static final double PIVOT_DEGREE_UP = -5;
+        public static final double PIVOT_DEGREE_DOWN = -75;
 
-        public static final double PIVOT_PID_P = 0.3;
+        public static final double PIVOT_PID_P = 0.15;
         public static final double PIVOT_PID_I = 0.0;
         public static final double PIVOT_PID_D = 0.0;
         
@@ -258,9 +258,9 @@ public final class Constants {
         public static final double FOOT_TOLERANCE = 0.02;
         public static final double FOOT_GEAR_FACTOR = 4.0;
 
-        public static final double MOTOR_PID_P = 0.04; // TODO: calibrate
-        public static final double MOTOR_PID_I = 0.0; // TODO: calibrate
-        public static final double MOTOR_PID_D = 0.00110; // TODO: calibrate
+        public static final double MOTOR_PID_P = 0.06; // TODO: calibrate
+        public static final double MOTOR_PID_I = 0.01; // TODO: calibrate
+        public static final double MOTOR_PID_D = 0.0; // TODO: calibrate
     }
 
     public static final class ClimberConstants {
