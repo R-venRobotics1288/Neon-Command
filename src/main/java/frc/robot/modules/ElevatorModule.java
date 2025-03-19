@@ -25,8 +25,9 @@ import static frc.robot.Constants.ElevatorConstants.*;
  */
 public class ElevatorModule extends SubsystemBase {
 
-    private RelativeEncoder elevatorEncoder;
-    private SparkMax elevatorMotor;
+    private RelativeEncoder rightElevatorEncoder;
+    private SparkMax rightElevatorMotor;
+    private SparkMax leftElevatorMotor;
 
     public ElevatorState elevatorState;
 
@@ -34,10 +35,13 @@ public class ElevatorModule extends SubsystemBase {
      * Initializes the Elevator of the robot.
      */
     public ElevatorModule() {
-        elevatorMotor = new SparkMax(MOTOR_CAN_ID, MotorType.kBrushless);
-        elevatorMotor.configure(Configs.ElevatorModuleConfig.elevatorConfig, ResetMode.kResetSafeParameters,
+        rightElevatorMotor = new SparkMax(RIGHT_MOTOR_CAN_ID, MotorType.kBrushless);
+        rightElevatorMotor.configure(Configs.ElevatorModuleConfig.elevatorConfig, ResetMode.kResetSafeParameters,
                 PersistMode.kPersistParameters);
-        elevatorEncoder = elevatorMotor.getEncoder();
+        rightElevatorEncoder = rightElevatorMotor.getEncoder();
+        leftElevatorMotor = new SparkMax(LEFT_MOTOR_CAN_ID, MotorType.kBrushless);
+        leftElevatorMotor.configure(Configs.ElevatorModuleConfig.elevatorConfig, ResetMode.kResetSafeParameters, 
+                PersistMode.kPersistParameters);
         elevatorState = ElevatorState.LEVEL_ZERO;
         reset();
     }
@@ -46,7 +50,8 @@ public class ElevatorModule extends SubsystemBase {
      * Resets the state of the elevator subsystem.
      */
     public void reset() {
-        setMotorState(0);
+        setRightMotorState(0);
+        setLeftMotorState(0);
         elevatorState = ElevatorState.LEVEL_ZERO;
     }
 
@@ -69,7 +74,7 @@ public class ElevatorModule extends SubsystemBase {
      */
     @Logged
     public double getEncoderPosition() {
-        return -elevatorEncoder.getPosition();
+        return -rightElevatorEncoder.getPosition();
     }
 
     /**
@@ -77,8 +82,12 @@ public class ElevatorModule extends SubsystemBase {
      * 
      * @param state desired speed of the motor
      */
-    public void setMotorState(double state) {
-        elevatorMotor.set(MathUtil.clamp(state, -MAX_MOTOR_SPEED, MAX_MOTOR_SPEED));
+    public void setRightMotorState(double state) {
+        rightElevatorMotor.set(MathUtil.clamp(state, -MAX_MOTOR_SPEED, MAX_MOTOR_SPEED));
+    }
+
+    public void setLeftMotorState(double state) {
+        leftElevatorMotor.set(MathUtil.clamp(-state, -MAX_MOTOR_SPEED, MAX_MOTOR_SPEED));
     }
 
     public void setElevatorState(ElevatorState elevatorState) {
@@ -91,6 +100,16 @@ public class ElevatorModule extends SubsystemBase {
     }
 
     public Command manualElevatorCommand(double power) {
-        return new StartEndCommand(() -> setMotorState(power), () -> setMotorState(0), this);
+        return new StartEndCommand(
+            () -> { 
+                setRightMotorState(power); 
+                setLeftMotorState(power);
+            },
+            () -> { 
+                setRightMotorState(0); 
+                setLeftMotorState(0);
+            }, 
+            this
+        );
     }
 }

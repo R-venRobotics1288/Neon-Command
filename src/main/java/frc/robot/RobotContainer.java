@@ -144,13 +144,6 @@ public class RobotContainer {
 			m_intake::isDown);
 		m_driverController.a().onTrue(pivotCommand);
 
-		// // DRIVER Button B -> Toggles Jaw
-		// Command jawCommand = Commands.either(
-		// 	new OpenIntakeCommand(Math.toRadians(IntakeConstants.OPENER_DEGREE_OPEN), m_intake),
-		// 	new OpenIntakeCommand(Math.toRadians(IntakeConstants.OPENER_DEGREE_CLOSE), m_intake),
-		// 	m_intake::isClosed).onlyWhile(m_intake::isDown);
-		// m_driverController.b().onTrue(jawCommand);
-
 		// OPERATOR Right Trigger -> Intakes
 		Command intakeCommand = new IntakeCommand(true, false, m_intake).alongWith(new RunFootCommand(true, m_leg));
 		m_operatorController.rightTrigger().whileTrue(intakeCommand);

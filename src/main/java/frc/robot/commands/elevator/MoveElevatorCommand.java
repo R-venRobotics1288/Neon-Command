@@ -54,7 +54,8 @@ public class MoveElevatorCommand extends Command {
     @Override
     public void execute() {
         double output = -elevatorPIDController.calculate(elevatorModule.getEncoderPosition());
-        elevatorModule.setMotorState(output);
+        elevatorModule.setRightMotorState(output);
+        elevatorModule.setLeftMotorState(output);
         SmartDashboard.putNumber("Elevator Encoder Pos", elevatorModule.getEncoderPosition());
         SmartDashboard.putNumber("Elevator Desired Pos", desiredPosition);
         SmartDashboard.putNumber("Commanded Motor Output", output);
@@ -66,7 +67,8 @@ public class MoveElevatorCommand extends Command {
 
     @Override
     public void end(boolean interrupted) {
-        elevatorModule.setMotorState(0.0);
+        elevatorModule.setRightMotorState(0);
+        elevatorModule.setLeftMotorState(0);
     }
 
     @Override
