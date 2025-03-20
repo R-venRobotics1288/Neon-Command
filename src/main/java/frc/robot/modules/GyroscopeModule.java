@@ -1,13 +1,13 @@
 package frc.robot.modules;
 
-import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.StatusSignal;
+import com.ctre.phoenix6.configs.Pigeon2Configuration;
 import com.ctre.phoenix6.hardware.Pigeon2;
 
 import edu.wpi.first.epilogue.Logged;
-import edu.wpi.first.wpilibj.Alert;
+import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj.DataLogManager;
-import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import static frc.robot.Constants.ModuleConstants.*;
@@ -19,12 +19,17 @@ import static frc.robot.Constants.ModuleConstants.*;
  * @since 18-JAN-2025
  */
 public class GyroscopeModule extends SubsystemBase {
-    private Pigeon2 pigeon;
+    private final Pigeon2 pigeon = new Pigeon2(PIGEON_IMU_CAN_ID, "rio");
+    private final StatusSignal<Angle> yaw = pigeon.getYaw();
+    private final StatusSignal<AngularVelocity> yawVelocity = pigeon.getAngularVelocityZWorld();
     //private final Alert gyroStateAlert = new Alert("Pigeon IMU State NOT OK!", AlertType.kError);
 
     public GyroscopeModule() {
-        pigeon = new Pigeon2(PIGEON_IMU_CAN_ID, "rio");
-        pigeon.setYaw(0); // zeros initial gyrometer yaw reading
+        pigeon.getConfigurator().apply(new Pigeon2Configuration());
+        pigeon.getConfigurator().setYaw(0);
+        yaw.setUpdateFrequency(80);
+        yawVelocity.setUpdateFrequency(40);
+        pigeon.optimizeBusUtilization();
         DataLogManager.log("GyroscopeModule: Initialization Complete");
     }
 
@@ -45,12 +50,12 @@ public class GyroscopeModule extends SubsystemBase {
      */
     @Logged
     public double getGyroscopeYawDegrees() {
-        return pigeon.getYaw().getValueAsDouble();
+        return yaw.getValueAsDouble();
     }
 
     @Logged
     public double getTurnRate() {
-        return pigeon.getAngularVelocityZWorld().getValueAsDouble();
+        return yawVelocity.getValueAsDouble();
     }
 
     /**
@@ -59,7 +64,7 @@ public class GyroscopeModule extends SubsystemBase {
      */
     @Logged
     public double getGyroscopeYawRadians() {
-        return Math.toRadians(pigeon.getYaw().getValueAsDouble());
+        return Math.toRadians(yaw.getValueAsDouble());
     }
 
     /**
@@ -83,7 +88,7 @@ public class GyroscopeModule extends SubsystemBase {
      * Resets the Gyroscope heading to 0 degrees
      */
     public void resetGyroscope() {
-        pigeon.setYaw(0);
+        pigeon.getConfigurator().setYaw(0);
     }
 
     /**
@@ -91,6 +96,6 @@ public class GyroscopeModule extends SubsystemBase {
      * @param angleDeg New reference heading, in degrees.
      */
     public void resetGyroscope(double angleDeg) {
-        pigeon.setYaw(angleDeg);
+        pigeon.getConfigurator().setYaw(angleDeg);
     }
 }

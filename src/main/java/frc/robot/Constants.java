@@ -179,9 +179,6 @@ public final class Constants {
 
         public static final int PIVOT_MOTOR_CAN_ID = 15;
 
-        public static final int RIGHT_OPENER_MOTOR_CAN_ID = 16;
-        public static final int LEFT_OPENER_MOTOR_CAN_ID = 17;
-
         public static final int INTAKE_MOTOR_CAN_ID = 18;
 
         public static final int LEFT_FEEDER_MOTOR_CAN_ID = 19;
@@ -198,16 +195,6 @@ public final class Constants {
         public static final double INTAKE_PID_P = 0.4;
         public static final double INTAKE_PID_I = 0.0;
         public static final double INTAKE_PID_D = 0.0;
-        
-        public static final double OPENER_DEGREE_OPEN = 61.0;
-        public static final double OPENER_DEGREE_CLOSE = 0.0;
-        public static final double OPENER_GEAR_FACTOR = 60.0;
-        public static final double RIGHT_OPENER_PID_P = 0.4;
-        public static final double RIGHT_OPENER_PID_I = 0.0;
-        public static final double RIGHT_OPENER_PID_D = 0.05;
-        public static final double LEFT_OPENER_PID_P = 0.5;
-        public static final double LEFT_OPENER_PID_I = 0.0;
-        public static final double LEFT_OPENER_PID_D = 0.05;
 
         public static final double FEEDER_PID_P = 0.5;
         public static final double FEEDER_PID_I = 0.0;
@@ -215,12 +202,13 @@ public final class Constants {
     }
 
     public static final class ElevatorConstants {
-        public static final int MOTOR_CAN_ID = 22;
+        public static final int LEFT_MOTOR_CAN_ID = 22;
+        public static final int RIGHT_MOTOR_CAN_ID = 23;
 
         public static final double ELEVATOR_MAX_POS = 18.0;
         public static final double ELEVATOR_SAFE_POS = 0.612430810928345;
         public static final double ELEVATOR_ZERO_POS = 0.0;
-        public static final double ELEVATOR_GEAR_FACTOR = 36.0;
+        public static final double ELEVATOR_GEAR_FACTOR = 16.0;
 
         public static final double MAX_MOTOR_SPEED = 0.5;
 
@@ -231,7 +219,7 @@ public final class Constants {
     }
     
     public static final class LegConstants {
-        public static final int MOTOR_CAN_ID = 23;
+        public static final int MOTOR_CAN_ID = 24;
         public static final int ENCODER_DIGITAL_INPUT_CHANNEL = 1;
 
         public static final double LEG_POS_INTAKING = 0.0394;
@@ -264,8 +252,8 @@ public final class Constants {
     }
 
     public static final class ClimberConstants {
-        public static final int LEFT_CLIMBER_MOTOR_CAN_ID = 24;
-        public static final int RIGHT_CLIMBER_MOTOR_CAN_ID = 25;
+        public static final int LEFT_CLIMBER_MOTOR_CAN_ID = 16;
+        public static final int RIGHT_CLIMBER_MOTOR_CAN_ID = 17;
 
         public static final double MAX_MOTOR_SPEED = 1.0;
 

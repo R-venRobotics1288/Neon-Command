@@ -2,7 +2,6 @@ package frc.robot.modules;
 
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkFlex;
-import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
@@ -15,23 +14,15 @@ import frc.robot.utilities.IntakeState;
 
 import static frc.robot.Constants.IntakeConstants.*;
 
-import java.util.EnumSet;
-import java.util.Set;
-
 public class IntakeModule extends SubsystemBase {
     private SparkFlex pivotMotor;
     private RelativeEncoder pivotEncoder;
-
-    private SparkMax leftOpenerMotor;
-    private SparkMax rightOpenerMotor;
-    private RelativeEncoder rightOpenerEncoder;
-    private RelativeEncoder leftOpenerEncoder;
 
     private SparkFlex intakeMotor;
     private SparkFlex leftFeederMotor;
     private SparkFlex rightFeederMotor;
     
-    private final Set<IntakeState> state = EnumSet.of(IntakeState.CLOSED, IntakeState.UP);
+    private IntakeState state = IntakeState.UP;
     // private final Set<IntakeState> state = EnumSet.of(IntakeState.CLOSED, IntakeState.DOWN);
 
     /**
@@ -41,13 +32,6 @@ public class IntakeModule extends SubsystemBase {
         pivotMotor = new SparkFlex(PIVOT_MOTOR_CAN_ID, MotorType.kBrushless);
         pivotMotor.configure(Configs.IntakeConfig.pivotConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
         pivotEncoder = pivotMotor.getEncoder();
-
-        leftOpenerMotor = new SparkMax(LEFT_OPENER_MOTOR_CAN_ID, MotorType.kBrushless);
-        leftOpenerMotor.configure(Configs.IntakeConfig.openerConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-        rightOpenerMotor = new SparkMax(RIGHT_OPENER_MOTOR_CAN_ID, MotorType.kBrushless);
-        rightOpenerMotor.configure(Configs.IntakeConfig.openerConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-        rightOpenerEncoder = rightOpenerMotor.getEncoder();
-        leftOpenerEncoder = leftOpenerMotor.getEncoder();
 
         intakeMotor = new SparkFlex(INTAKE_MOTOR_CAN_ID, MotorType.kBrushless);
         intakeMotor.configure(Configs.IntakeConfig.wheelsConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
@@ -65,19 +49,6 @@ public class IntakeModule extends SubsystemBase {
     @Logged
     public double getPivotEncoderPosition() {
         return pivotEncoder.getPosition();
-    }
-
-    /**
-     * Gets the current opener encoder position.
-     * @return current position of the opener encoder.
-     */
-    @Logged
-    public double getRightOpenerEncoderPosition() {
-        return rightOpenerEncoder.getPosition();
-    }
-
-    public double getLeftOpenerEncoderPosition() {
-        return leftOpenerEncoder.getPosition();
     }
 
     /**
@@ -103,24 +74,7 @@ public class IntakeModule extends SubsystemBase {
      * @param newState new current state
      */
     public void setIntakeState(IntakeState newState) {
-        switch (newState) {
-            case UP:
-                state.remove(IntakeState.DOWN);
-                state.add(IntakeState.UP);
-                break;
-            case DOWN:
-                state.remove(IntakeState.UP);
-                state.add(IntakeState.DOWN);
-                break;
-            case OPEN:
-                state.remove(IntakeState.CLOSED);
-                state.add(IntakeState.OPEN);
-                break;
-            case CLOSED:
-                state.remove(IntakeState.OPEN);
-                state.add(IntakeState.CLOSED);
-                break;
-        }
+        state = newState;
     }
 
     /**
@@ -129,15 +83,11 @@ public class IntakeModule extends SubsystemBase {
      * @return true if stateToCheck is currently true
      */
     public boolean hasIntakeState(IntakeState stateToCheck) {
-        return state.contains(stateToCheck);
+        return state == stateToCheck;
     }
 
     public boolean isDown() {
         return hasIntakeState(IntakeState.DOWN);
-    }
-
-    public boolean isClosed() {
-        return hasIntakeState(IntakeState.CLOSED);
     }
 
     /**
@@ -146,18 +96,6 @@ public class IntakeModule extends SubsystemBase {
      */
     public void setPivotMotorState(double power) {
         pivotMotor.set(MathUtil.clamp(power, -MAX_MOTOR_SPEED, MAX_MOTOR_SPEED));
-    }
-
-    /**
-     * Sets the power of the opener motors, responsible for opening or closing the jaw or the Intake.
-     * @param power the power to command
-     */
-    public void setRightOpenerMotorState(double power) {
-        rightOpenerMotor.set(MathUtil.clamp(power, -MAX_MOTOR_SPEED, MAX_MOTOR_SPEED));
-    }
-
-    public void setLeftOpenerMotorState(double power) {
-        leftOpenerMotor.set(MathUtil.clamp(-power, -MAX_MOTOR_SPEED, MAX_MOTOR_SPEED));
     }
 
     /**

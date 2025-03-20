@@ -14,8 +14,6 @@ import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.Configs;
-import frc.robot.Constants.FootConstants;
-import frc.robot.Constants.LegConstants;
 import frc.robot.utilities.LegState;
 
 import static frc.robot.Constants.FootConstants;
