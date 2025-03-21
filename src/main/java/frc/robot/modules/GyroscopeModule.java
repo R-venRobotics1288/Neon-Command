@@ -80,15 +80,15 @@ public class GyroscopeModule extends SubsystemBase {
      * WARNING: Do not use this unless you know what you're doing!
      * @return The {@link Pigeon2} device interface.
      */
-    public Pigeon2 getDirectIMU() {
-        return pigeon;
-    }
+    // public Pigeon2 getDirectIMU() {
+    //     return pigeon;
+    // }
 
     /**
      * Resets the Gyroscope heading to 0 degrees
      */
     public void resetGyroscope() {
-        pigeon.getConfigurator().setYaw(0);
+        //pigeon.getConfigurator().setYaw(0);
     }
 
     /**
@@ -96,6 +96,6 @@ public class GyroscopeModule extends SubsystemBase {
      * @param angleDeg New reference heading, in degrees.
      */
     public void resetGyroscope(double angleDeg) {
-        pigeon.getConfigurator().setYaw(angleDeg);
+        //pigeon.getConfigurator().setYaw(angleDeg);
     }
 }

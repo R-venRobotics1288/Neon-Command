@@ -68,10 +68,10 @@ public final class Constants {
         public static final double REAR_RIGHT_CHASSIS_ANGULAR_OFFSET = 0.003067961575771;
 
         // P, I, D coefficients
-        public static final double TRANSLATION_COEFFICIENT_P = 0.4;
+        public static final double TRANSLATION_COEFFICIENT_P = 0.35;
         public static final double TRANSLATION_COEFFICIENT_I = 0;
         public static final double TRANSLATION_COEFFICIENT_D = 0;
-        public static final double ROTATION_COEFFICIENT_P = 0.55;
+        public static final double ROTATION_COEFFICIENT_P = 0.5;
         public static final double ROTATION_COEFFICIENT_I = 0;
         public static final double ROTATION_COEFFICIENT_D = 0;
 
