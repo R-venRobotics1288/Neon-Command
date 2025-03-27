@@ -47,13 +47,13 @@ public class LegModule extends SubsystemBase {
     }
 
     /**
-     * Gets the position of the leg motor encoder.
+     * Gets the absolute position of the leg.
      * 
-     * @return encoder position, in rotations of the motor
+     * @return encoder position, in radians
      */
     @Logged
     public double getEncoderPosition() {
-        return (legEncoder.get() / LegConstants.LEG_GEAR_FACTOR) * (2 * Math.PI);
+        return legEncoder.get() * (2 * Math.PI);
     }
 
     /**

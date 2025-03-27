@@ -1,6 +1,8 @@
 package frc.robot.commands.intake;
 
+import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.modules.IntakeModule;
@@ -18,18 +20,16 @@ public class PivotIntakeCommand extends Command {
     private final IntakeModule intakeModule;
 
     private PIDController pivotPIDController;
+    private ArmFeedforward pivotArmFeedforward;
     private double desiredPosition = 0;
     private boolean finished = false;
 
     public PivotIntakeCommand(double desiredPosition, IntakeModule intakeModule) {
         this.intakeModule = intakeModule;
         this.desiredPosition = desiredPosition;
-        this.pivotPIDController = new PIDController(
-            desiredPosition == Math.toRadians(PIVOT_DEGREE_DOWN) ? (PIVOT_PID_P * 0.75) : PIVOT_PID_P,
-            PIVOT_PID_I,
-            PIVOT_PID_D
-        );
+        this.pivotPIDController = new PIDController(PIVOT_PID_P, PIVOT_PID_I, PIVOT_PID_D);
         this.pivotPIDController.setTolerance(POSITION_TOLERANCE);
+        this.pivotArmFeedforward = new ArmFeedforward(PIVOT_FF_KS, PIVOT_FF_KG, 0);
         super.addRequirements(this.intakeModule);
     }
 
@@ -42,13 +42,15 @@ public class PivotIntakeCommand extends Command {
     @Override
     public void execute() {
         double pivotEncoderPosition = intakeModule.getPivotEncoderPosition(); 
-        double output = pivotPIDController.calculate(pivotEncoderPosition);
+        double output = pivotArmFeedforward.calculate(pivotEncoderPosition, 0) + pivotPIDController.calculate(pivotEncoderPosition); // TODO: make sure feedforward passed position is correct with regards to encoder offset
         intakeModule.setPivotMotorState(output);
         SmartDashboard.putNumber("Intake Pivot Encoder Pos", pivotEncoderPosition);
-        SmartDashboard.putNumber("Intake Pivot Error", output);
+        SmartDashboard.putNumber("Intake Pivot Commanded Output", output);
         if (pivotPIDController.atSetpoint()) {
             finished = true;
-            intakeModule.setIntakeState(desiredPosition == Math.toRadians(PIVOT_DEGREE_DOWN) ? IntakeState.DOWN : IntakeState.UP);
+            IntakeState state = desiredPosition == Units.degreesToRadians(PIVOT_DEGREE_DOWN) ? IntakeState.DOWN : IntakeState.UP;
+            intakeModule.setIntakeState(state);
+            System.out.println("PIVOT COMPLETE: now at " + state);
         }
     }
 

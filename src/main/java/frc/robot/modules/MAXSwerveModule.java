@@ -29,7 +29,7 @@ public class MAXSwerveModule {
 
 	private final PIDController m_drivingPIDController;
 	private final PIDController m_turningPIDController;
-	private final PIDController m_feedForwardPIDController;
+	private final PIDController m_feedForwardPIDController; // TODO: make me a SimpleMotorFeedforward
 
 	private final CANcoder m_absoluteEncoder;
 
@@ -126,9 +126,8 @@ public class MAXSwerveModule {
         final double driveFeedForward = m_feedForwardPIDController.calculate(correctedDesiredState.speedMetersPerSecond);
 		m_feedForwardPIDController.reset();
 
-        m_drivingSpark.set(driveOutput + driveFeedForward / 3);
-		//m_drivingSpark.set(driveOutput);
-        m_turningSpark.set(turnOutput / 3);
+        m_drivingSpark.set(driveOutput + driveFeedForward);
+        m_turningSpark.set(turnOutput);
 
 		m_desiredState = desiredState;
 	}

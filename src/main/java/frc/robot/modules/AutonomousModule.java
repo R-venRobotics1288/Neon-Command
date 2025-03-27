@@ -71,6 +71,6 @@ public class AutonomousModule extends SubsystemBase {
      * @return Autonomous {@link Command}
      */
     public Command getAutonomousCommand() {
-        return new PathPlannerAuto("Leave");//autoChooser.getSelected();
+        return autoChooser.getSelected();
     }
 }

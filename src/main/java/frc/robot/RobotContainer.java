@@ -7,8 +7,7 @@ package frc.robot;
 import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.wpilibj.DataLogManager;
-import edu.wpi.first.wpilibj.DriverStation;
+//import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.XboxController;
 
 import edu.wpi.first.wpilibj2.command.Command;
@@ -77,14 +76,13 @@ public class RobotContainer {
 		m_climber = new ClimberModule();
 
 		// Register and Initialize Autonomous Module
-		NamedCommands.registerCommand("ElevatorMax", new MoveElevatorCommand(ElevatorConstants.ELEVATOR_MAX_POS, m_elevator));
-		NamedCommands.registerCommand("ElevatorSafe", new MoveElevatorCommand(ElevatorConstants.ELEVATOR_SAFE_POS, m_elevator));
-		NamedCommands.registerCommand("LegRest", new MoveLegCommand(LegConstants.LEG_POS_REST, m_leg));
-		NamedCommands.registerCommand("LegMax", new MoveLegCommand(LegConstants.LEG_POS_THREE, m_leg));
+		NamedCommands.registerCommand("Prepare",
+			Commands.sequence(
+				new MoveElevatorCommand(ElevatorConstants.ELEVATOR_SAFE_POS, m_elevator),
+				new MoveLegCommand(LegConstants.LEG_POS_THREE, m_leg)
+		 	)
+		);
 		NamedCommands.registerCommand("Score", new RunFootCommand(false, m_leg));
-		NamedCommands.registerCommand("IntakeDown", new PivotIntakeCommand(Math.toRadians(IntakeConstants.PIVOT_DEGREE_DOWN), m_intake));
-		NamedCommands.registerCommand("IntakeUp", new PivotIntakeCommand(Math.toRadians(IntakeConstants.PIVOT_DEGREE_UP), m_intake));
-		NamedCommands.registerCommand("Intake", new IntakeCommand(true, false, m_intake).alongWith(new RunFootCommand(true, m_leg)));
 		m_auto = new AutonomousModule(m_position, m_drive, m_gyroscope);
 		
 		// Configure the button bindings
@@ -111,9 +109,9 @@ public class RobotContainer {
 							DriveConstants.FIELD_RELATIVE_DRIVING);
 				}, m_drive));
 
-		DataLogManager.start();
+		//DataLogManager.start();
 		URCL.start();
-		DriverStation.startDataLog(DataLogManager.getLog());
+		//DriverStation.startDataLog(DataLogManager.getLog());
 	}
 
 	/**
@@ -130,17 +128,21 @@ public class RobotContainer {
 		m_driverController.leftBumper().onTrue(m_drive.cutSpeed(true)).onFalse(m_drive.cutSpeed(false));
 
 		// DRIVER Left Middle Button -> Swerve Alignment
-		m_driverController.button(OIConstants.SWERVE_ALIGNMENT_BUTTON).onTrue(new RunCommand(() -> {
-			m_gyroscope.resetGyroscope();
-		}, m_gyroscope));
+		m_driverController.button(OIConstants.SWERVE_ALIGNMENT_BUTTON).onTrue(Commands.runOnce(() -> { m_gyroscope.resetGyroscope(); }, m_gyroscope));
 
 		// #region Normal Bindings
 		// DRIVER Button A -> Toggles Pivot
 		Command pivotCommand = Commands.either(
-			/*new MoveLegCommand(LegConstants.LEG_POS_REST, m_leg)
-				.onlyIf(m_leg::isIntakingPosition
-				.andThen*/(new PivotIntakeCommand(Math.toRadians(IntakeConstants.PIVOT_DEGREE_UP), m_intake)),
-			new PivotIntakeCommand(Math.toRadians(IntakeConstants.PIVOT_DEGREE_DOWN), m_intake),
+			Commands.sequence(
+				new MoveElevatorCommand(ElevatorConstants.ELEVATOR_SAFE_POS, m_elevator),
+				new MoveLegCommand(LegConstants.LEG_POS_REST, m_leg),
+				new PivotIntakeCommand(IntakeConstants.PIVOT_DEGREE_UP, m_intake)
+			),
+			Commands.sequence(
+				new PivotIntakeCommand(IntakeConstants.PIVOT_DEGREE_DOWN, m_intake),
+				new MoveLegCommand(LegConstants.LEG_POS_INTAKING, m_leg),
+				new MoveElevatorCommand(ElevatorConstants.ELEVATOR_ZERO_POS, m_elevator)
+			),
 			m_intake::isDown);
 		m_driverController.a().onTrue(pivotCommand);
 
@@ -154,21 +156,17 @@ public class RobotContainer {
 		// OPERATOR Right Bumper -> Score with foot.
 		m_operatorController.rightBumper().whileTrue(new RunFootCommand(false, m_leg));
 
-		// OPERATOR Button X -> Leg Position One
-		m_operatorController.x()
-			.onTrue(/*new MoveElevatorCommand(ElevatorConstants.ELEVATOR_SAFE_POS, m_elevator).andThen(*/new MoveLegCommand(LegConstants.LEG_POS_ONE, m_leg));
-
-		// OPERATOR Button A -> Leg Position Two
+		// OPERATOR Button A -> Leg Position Rest
 		m_operatorController.a()
-			.onTrue(new MoveElevatorCommand(ElevatorConstants.ELEVATOR_SAFE_POS, m_elevator).andThen(new MoveLegCommand(LegConstants.LEG_POS_TWO, m_leg)).onlyIf(m_leg::isNotInPositionTwo));
+			.onTrue(new MoveElevatorCommand(ElevatorConstants.ELEVATOR_SAFE_POS, m_elevator).andThen(new MoveLegCommand(LegConstants.LEG_POS_REST, m_leg)));
 
 		// OPERATOR Button B -> Leg Position Three
 		m_operatorController.b()
-			.onTrue(/*new MoveElevatorCommand(ElevatorConstants.ELEVATOR_SAFE_POS, m_elevator).andThen(*/new MoveLegCommand(LegConstants.LEG_POS_THREE, m_leg));
+			.onTrue(new MoveElevatorCommand(ElevatorConstants.ELEVATOR_SAFE_POS, m_elevator).andThen(new MoveLegCommand(LegConstants.LEG_POS_THREE, m_leg)));
 
 		// OPERATOR Button Y -> Leg Position Four
 		m_operatorController.y()
-			.onTrue(new MoveElevatorCommand(ElevatorConstants.ELEVATOR_MAX_POS, m_elevator).andThen(new MoveLegCommand(LegConstants.LEG_POS_FOUR, m_leg)).onlyIf(m_leg::isNotInPositionFour));
+			.onTrue(new MoveElevatorCommand(ElevatorConstants.ELEVATOR_MAX_POS, m_elevator).andThen(new MoveLegCommand(LegConstants.LEG_POS_FOUR, m_leg)));
 
 		// OPERATOR Joystick Right BUTTON -> Leg to Rest Position and Reset Elevator
 		m_operatorController.rightStick()

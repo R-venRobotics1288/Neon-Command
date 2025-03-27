@@ -4,7 +4,7 @@ import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.DataLogManager;
+//import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -60,23 +60,22 @@ public class PositionModule extends SubsystemBase {
     public void resetPosition() {
         estimator.resetPose(Pose2d.kZero);
         robotPose = new Pose2d();
-        DataLogManager.log("PositionModule: Reset relative position, current position is now the origin!");
+        //DataLogManager.log("PositionModule: Reset relative position, current position is now the origin!");
     }
 
     public void resetPosition(Pose2d to) {
         estimator.resetPose(to);
         robotPose = to;
-        DataLogManager.log(
-            "INFO: PostitionModule: Reset relative position, current position is now ("
-            + to.getX() + ", " + to.getY() + ") yaw: " + to.getRotation().getDegrees()
-        );
+        //DataLogManager.log(
+        //    "INFO: PostitionModule: Reset relative position, current position is now ("
+        //    + to.getX() + ", " + to.getY() + ") yaw: " + to.getRotation().getDegrees()
+        //);
     }
     
     @Override
     public void periodic() {
         // Update odometry and gyro
-        estimator.updateWithTime(Timer.getFPGATimestamp(), new Rotation2d(gyroscopeModule.getGyroscopeYawRadians()), driveModule.getModulePositions())
-            .times(2); // For some reason estimator is returning half of actual travel, multiplied by 2 to adjust to correct position
+        estimator.updateWithTime(Timer.getFPGATimestamp(), new Rotation2d(gyroscopeModule.getGyroscopeYawRadians()), driveModule.getModulePositions()).times(2);
 
         // apply vision if, and only if, we're sure its constructive
         boolean rotationConfidence = Math.abs(driveModule.getTurnRate()) < 540;

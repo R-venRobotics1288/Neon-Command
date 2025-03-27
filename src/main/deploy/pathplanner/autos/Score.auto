@@ -13,13 +13,7 @@
         {
           "type": "named",
           "data": {
-            "name": "ElevatorMax"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "LegMax"
+            "name": "Prepare"
           }
         },
         {
@@ -45,81 +39,6 @@
                 }
               }
             ]
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "ExitL4G"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "LegRest"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "ElevatorSafe"
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "BottomIntake"
-                }
-              },
-              {
-                "type": "sequential",
-                "data": {
-                  "commands": [
-                    {
-                      "type": "wait",
-                      "data": {
-                        "waitTime": 1.0
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "IntakeDown"
-                      }
-                    }
-                  ]
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "deadline",
-          "data": {
-            "commands": [
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 4.0
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Intake"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "IntakeUp"
           }
         }
       ]

@@ -43,8 +43,8 @@ public class IntakeModule extends SubsystemBase {
     }
 
     /**
-     * Gets the current pivot encoder position.
-     * @return current position of the pivot encoder.
+     * Gets the current pivot encoder position in radians.
+     * @return current position of the pivot encoder in radians.
      */
     @Logged
     public double getPivotEncoderPosition() {
@@ -75,6 +75,9 @@ public class IntakeModule extends SubsystemBase {
      */
     public void setIntakeState(IntakeState newState) {
         state = newState;
+        if (state == IntakeState.UP) {
+            pivotEncoder.setPosition(0);
+        }
     }
 
     /**

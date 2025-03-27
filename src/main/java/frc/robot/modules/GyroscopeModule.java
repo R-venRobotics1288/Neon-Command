@@ -7,7 +7,7 @@ import com.ctre.phoenix6.hardware.Pigeon2;
 import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
-import edu.wpi.first.wpilibj.DataLogManager;
+//import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import static frc.robot.Constants.ModuleConstants.*;
@@ -30,19 +30,7 @@ public class GyroscopeModule extends SubsystemBase {
         yaw.setUpdateFrequency(80);
         yawVelocity.setUpdateFrequency(40);
         pigeon.optimizeBusUtilization();
-        DataLogManager.log("GyroscopeModule: Initialization Complete");
     }
-
-    @Override
-    public void periodic() {
-        //StatusSignal<Integer> status = pigeon.getFaultField();
-        //if (status.getStatus() != StatusCode.OK) {
-        //    gyroStateAlert.set(true);
-        //    gyroStateAlert.setText("Pigeon IMU State NOT OK, instead reported " + status.getStatus().name());
-        //} else {
-        //    gyroStateAlert.set(false);
-        //}
-    } 
 
     /**
      * Gets the current yaw reported by the Pigeon IMU.
@@ -76,19 +64,10 @@ public class GyroscopeModule extends SubsystemBase {
     }
 
     /**
-     * Gets the direct IMU interface.
-     * WARNING: Do not use this unless you know what you're doing!
-     * @return The {@link Pigeon2} device interface.
-     */
-    // public Pigeon2 getDirectIMU() {
-    //     return pigeon;
-    // }
-
-    /**
      * Resets the Gyroscope heading to 0 degrees
      */
     public void resetGyroscope() {
-        //pigeon.getConfigurator().setYaw(0);
+        pigeon.reset();
     }
 
     /**
@@ -96,6 +75,6 @@ public class GyroscopeModule extends SubsystemBase {
      * @param angleDeg New reference heading, in degrees.
      */
     public void resetGyroscope(double angleDeg) {
-        //pigeon.getConfigurator().setYaw(angleDeg);
+        pigeon.reset(); // temp, TODO: figure out a better solution IF this change fixes gyro for now
     }
 }
