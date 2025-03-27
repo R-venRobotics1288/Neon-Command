@@ -125,6 +125,7 @@ public class RobotContainer {
 	private void configureButtonBindings() {
 		// DRIVER Left Bumper -> Cut Speed
 		m_driverController.leftBumper().onTrue(m_drive.cutSpeed(true)).onFalse(m_drive.cutSpeed(false));
+		m_driverController.rightStick().onTrue(m_drive.toggleFieldRelative());
 
 		// DRIVER Left Middle Button -> Swerve Alignment
 		m_driverController.button(OIConstants.SWERVE_ALIGNMENT_BUTTON).onTrue(Commands.runOnce(() -> { m_gyroscope.resetGyroscope(); }, m_gyroscope));

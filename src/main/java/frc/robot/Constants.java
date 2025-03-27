@@ -55,10 +55,10 @@ public final class Constants {
         public static final double WHEEL_BASE = Units.inchesToMeters(22.5);
 
         public static final SwerveDriveKinematics DRIVE_KINEMATICS = new SwerveDriveKinematics(
-            new Translation2d(WHEEL_BASE / 2, TRACK_WIDTH / 2),
-            new Translation2d(WHEEL_BASE / 2, -TRACK_WIDTH / 2),
             new Translation2d(-WHEEL_BASE / 2, TRACK_WIDTH / 2),
-            new Translation2d(-WHEEL_BASE / 2, -TRACK_WIDTH / 2)
+            new Translation2d(WHEEL_BASE / 2, TRACK_WIDTH / 2),
+            new Translation2d(-WHEEL_BASE / 2, -TRACK_WIDTH / 2),
+            new Translation2d(WHEEL_BASE / 2, -TRACK_WIDTH / 2)
         );
 
         // Angular offsets of the modules relative to the chassis in radians
