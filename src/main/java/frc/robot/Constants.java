@@ -172,9 +172,9 @@ public final class Constants {
     }
     
     public static final class IntakeConstants {
-        public static final double POSITION_TOLERANCE = 0.08;
+        public static final double POSITION_TOLERANCE = 0.1;
         public static final double VELOCITY_TOLERANCE = 0.08;
-        public static final double MAX_MOTOR_SPEED = 0.1;
+        public static final double MAX_MOTOR_SPEED = 0.75;
         public static final double INTAKE_SPEED_RPS = Math.PI; // rotations per second target of wheel and feeders
 
         public static final int PIVOT_MOTOR_CAN_ID = 15;
@@ -185,14 +185,8 @@ public final class Constants {
         public static final int RIGHT_FEEDER_MOTOR_CAN_ID = 20;
 
         public static final double PIVOT_GEAR_FACTOR = 16;
-        public static final double PIVOT_DEGREE_UP = -5;
-        public static final double PIVOT_DEGREE_DOWN = -50;
-
-        public static final double PIVOT_PID_P = 0.02;
-        public static final double PIVOT_PID_I = 0.0;
-        public static final double PIVOT_PID_D = 0.0;
-        public static final double PIVOT_FF_KS = 1.0/565.0;
-        public static final double PIVOT_FF_KG = 1.0; // TODO: Tune
+        public static final double PIVOT_DEGREE_UP = -10;
+        public static final double PIVOT_DEGREE_DOWN = -85;
         
         public static final double INTAKE_PID_P = 0.4;
         public static final double INTAKE_PID_I = 0.0;

@@ -90,7 +90,7 @@ public class IntakeModule extends SubsystemBase {
     }
 
     public boolean isDown() {
-        return hasIntakeState(IntakeState.DOWN);
+        return state == IntakeState.DOWN;
     }
 
     /**
@@ -98,7 +98,7 @@ public class IntakeModule extends SubsystemBase {
      * @param power the power to command
      */
     public void setPivotMotorState(double power) {
-        pivotMotor.set(MathUtil.clamp(power, -MAX_MOTOR_SPEED, MAX_MOTOR_SPEED));
+        pivotMotor.set(power);
     }
 
     /**

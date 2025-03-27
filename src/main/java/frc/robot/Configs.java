@@ -64,13 +64,13 @@ public final class Configs {
 
 		static {
 			pivotConfig
-				.idleMode(IdleMode.kBrake)
+				.idleMode(IdleMode.kCoast)
 				.smartCurrentLimit(80);
 			pivotConfig.encoder.positionConversionFactor((2 * Math.PI)/IntakeConstants.PIVOT_GEAR_FACTOR); // Axle Radians
 
 			final double RPS_FACTOR = (double)1.0 / (double)60.0;
 			wheelsConfig
-				.idleMode(IdleMode.kBrake)
+				.idleMode(IdleMode.kCoast)
 				.smartCurrentLimit(80);
 			wheelsConfig.encoder.velocityConversionFactor(RPS_FACTOR); // Rotations Per Second
 
