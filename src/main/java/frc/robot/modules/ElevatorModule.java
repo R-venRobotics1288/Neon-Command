@@ -5,7 +5,6 @@ import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
-import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
@@ -24,10 +23,7 @@ import static frc.robot.Constants.ElevatorConstants.*;
  * @since 22-FEB-2025
  */
 public class ElevatorModule extends SubsystemBase {
-
-    private RelativeEncoder rightElevatorEncoder;
-    private SparkMax rightElevatorMotor;
-    private SparkMax leftElevatorMotor;
+    private final SparkMax elevatorMotor;
 
     public ElevatorState elevatorState;
 
@@ -35,12 +31,8 @@ public class ElevatorModule extends SubsystemBase {
      * Initializes the Elevator of the robot.
      */
     public ElevatorModule() {
-        rightElevatorMotor = new SparkMax(RIGHT_MOTOR_CAN_ID, MotorType.kBrushless);
-        rightElevatorMotor.configure(Configs.ElevatorModuleConfig.elevatorConfig, ResetMode.kResetSafeParameters,
-                PersistMode.kPersistParameters);
-        rightElevatorEncoder = rightElevatorMotor.getEncoder();
-        leftElevatorMotor = new SparkMax(LEFT_MOTOR_CAN_ID, MotorType.kBrushless);
-        leftElevatorMotor.configure(Configs.ElevatorModuleConfig.elevatorConfig, ResetMode.kResetSafeParameters, 
+        elevatorMotor = new SparkMax(RIGHT_MOTOR_CAN_ID, MotorType.kBrushless);
+        elevatorMotor.configure(Configs.ElevatorModuleConfig.elevatorConfig, ResetMode.kResetSafeParameters, 
                 PersistMode.kPersistParameters);
         elevatorState = ElevatorState.LEVEL_ZERO;
         reset();
@@ -50,8 +42,7 @@ public class ElevatorModule extends SubsystemBase {
      * Resets the state of the elevator subsystem.
      */
     public void reset() {
-        setRightMotorState(0);
-        setLeftMotorState(0);
+        setMotorState(0);
         elevatorState = ElevatorState.LEVEL_ZERO;
     }
 
@@ -74,7 +65,7 @@ public class ElevatorModule extends SubsystemBase {
      */
     @Logged
     public double getEncoderPosition() {
-        return -rightElevatorEncoder.getPosition();
+        return -elevatorMotor.getEncoder().getPosition();
     }
 
     /**
@@ -82,12 +73,8 @@ public class ElevatorModule extends SubsystemBase {
      * 
      * @param state desired speed of the motor
      */
-    public void setRightMotorState(double state) {
-        rightElevatorMotor.set(MathUtil.clamp(state, -MAX_MOTOR_SPEED, MAX_MOTOR_SPEED));
-    }
-
-    public void setLeftMotorState(double state) {
-        leftElevatorMotor.set(MathUtil.clamp(-state, -MAX_MOTOR_SPEED, MAX_MOTOR_SPEED));
+    public void setMotorState(double state) {
+        elevatorMotor.set(MathUtil.clamp(state, -MAX_MOTOR_SPEED, MAX_MOTOR_SPEED));
     }
 
     public void setElevatorState(ElevatorState elevatorState) {
@@ -102,12 +89,10 @@ public class ElevatorModule extends SubsystemBase {
     public Command manualElevatorCommand(double power) {
         return new StartEndCommand(
             () -> { 
-                setRightMotorState(power); 
-                setLeftMotorState(power);
+                setMotorState(power);
             },
             () -> { 
-                setRightMotorState(0); 
-                setLeftMotorState(0);
+                setMotorState(0);
             }, 
             this
         );

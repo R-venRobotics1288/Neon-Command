@@ -62,7 +62,7 @@ public final class Constants {
         );
 
         // Angular offsets of the modules relative to the chassis in radians
-        public static final double FRONT_LEFT_CHASSIS_ANGULAR_OFFSET = 0.0 + Math.PI;
+        public static final double FRONT_LEFT_CHASSIS_ANGULAR_OFFSET = 0.0; // TODO: take a look at all of these for potential bad offset
         public static final double FRONT_RIGHT_CHASSIS_ANGULAR_OFFSET = 0.0;
         public static final double REAR_LEFT_CHASSIS_ANGULAR_OFFSET = 0.0;
         public static final double REAR_RIGHT_CHASSIS_ANGULAR_OFFSET = 0.0;
@@ -204,7 +204,7 @@ public final class Constants {
         public static final double ELEVATOR_MAX_POS = 14.3;
         public static final double ELEVATOR_SAFE_POS = 4.2679;
         public static final double ELEVATOR_ZERO_POS = 0.038;
-        public static final double ELEVATOR_GEAR_FACTOR = 16.0;
+        public static final double ELEVATOR_GEAR_FACTOR = 36.0;
 
         public static final double MAX_MOTOR_SPEED = 1.0;
 
