@@ -18,6 +18,7 @@ import com.revrobotics.RelativeEncoder;
 
 import frc.robot.Configs;
 
+import static edu.wpi.first.units.Units.Radians;
 import static frc.robot.Constants.DriveConstants.*;
 
 public class MAXSwerveModule {
@@ -65,7 +66,7 @@ public class MAXSwerveModule {
 		m_turningSpark.configure(Configs.MAXSwerveModule.turningConfig, ResetMode.kResetSafeParameters,
 				PersistMode.kPersistParameters);
 
-		m_chassisAngularOffset = chassisAngularOffset;
+		this.m_chassisAngularOffset = chassisAngularOffset;
 		m_desiredState.angle = new Rotation2d(m_turningEncoder.getPosition());
 		m_drivingEncoder.setPosition(0);
 	}
@@ -102,7 +103,7 @@ public class MAXSwerveModule {
 	}
 
 	public double getAbsoluteEncoderRad() {
-		return (m_absoluteEncoder.getAbsolutePosition().getValueAsDouble()) * (2 * Math.PI);
+		return m_absoluteEncoder.getAbsolutePosition().getValue().in(Radians);
 	}
 
 	/**
@@ -112,18 +113,15 @@ public class MAXSwerveModule {
 	 */
 	public void setDesiredState(SwerveModuleState desiredState) {
 		// Apply chassis angular offset to the desired state.
-		SwerveModuleState correctedDesiredState = new SwerveModuleState();
-		correctedDesiredState.speedMetersPerSecond = desiredState.speedMetersPerSecond;
-		correctedDesiredState.angle = desiredState.angle.plus(Rotation2d.fromRadians(m_chassisAngularOffset));
-
+		desiredState.angle.plus(Rotation2d.fromRadians(m_chassisAngularOffset));
 		// Optimize the reference state to avoid spinning further than 90 degrees.
-		correctedDesiredState.optimize(new Rotation2d(getAbsoluteEncoderRad()));
+		desiredState.optimize(new Rotation2d(getAbsoluteEncoderRad()));
 
 		// Command driving and turning SPARKS towards their respective setpoints.
-        final double driveOutput = m_drivingPIDController.calculate(m_drivingEncoder.getVelocity(), correctedDesiredState.speedMetersPerSecond);		
-        final double turnOutput = m_turningPIDController.calculate(getAbsoluteEncoderRad(), correctedDesiredState.angle.getRadians());
+        final double driveOutput = m_drivingPIDController.calculate(m_drivingEncoder.getVelocity(), desiredState.speedMetersPerSecond);		
+        final double turnOutput = m_turningPIDController.calculate(getAbsoluteEncoderRad(), desiredState.angle.getRadians());
 
-        final double driveFeedForward = m_feedForwardPIDController.calculate(correctedDesiredState.speedMetersPerSecond);
+        final double driveFeedForward = m_feedForwardPIDController.calculate(desiredState.speedMetersPerSecond);
 		m_feedForwardPIDController.reset();
 
         m_drivingSpark.set(driveOutput + driveFeedForward);
@@ -131,7 +129,6 @@ public class MAXSwerveModule {
 
 		m_desiredState = desiredState;
 	}
-	
 
 	/** Zeroes all the SwerveModule encoders. */
 	public void resetEncoders() {

@@ -123,7 +123,7 @@ public class DriveModule extends SubsystemBase {
                 Rotation2d.fromDegrees(m_gyro.getGyroscopeYawDegrees())
               )
             : new ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered);
-                        
+
         setModuleStates(swerveChassisSpeed);
     }
 
@@ -164,8 +164,8 @@ public class DriveModule extends SubsystemBase {
     /** Resets the drive encoders to currently read a position of 0. */
     public void resetEncoders() {
         m_frontLeft.resetEncoders();
-        m_rearLeft.resetEncoders();
         m_frontRight.resetEncoders();
+        m_rearLeft.resetEncoders();
         m_rearRight.resetEncoders();
     }
     

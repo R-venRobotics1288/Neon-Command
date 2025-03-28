@@ -18,6 +18,7 @@ import frc.robot.utilities.LegState;
 
 import static frc.robot.Constants.FootConstants;
 import static frc.robot.Constants.LegConstants;
+import static frc.robot.Constants.LegConstants.LEG_GEAR_FACTOR;
 
 /**
  * Implements the Leg of the robot.
@@ -53,7 +54,7 @@ public class LegModule extends SubsystemBase {
      */
     @Logged
     public double getEncoderPosition() {
-        return legEncoder.get() * (2 * Math.PI);
+        return legEncoder.get() * (2 * Math.PI) / LEG_GEAR_FACTOR;
     }
 
     /**

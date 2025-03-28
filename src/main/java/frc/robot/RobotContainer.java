@@ -134,14 +134,14 @@ public class RobotContainer {
 		// DRIVER Button A -> Toggles Pivot
 		Command pivotCommand = Commands.either(
 			Commands.sequence(
-				new MoveElevatorCommand(ElevatorConstants.ELEVATOR_SAFE_POS, m_elevator),
-				new MoveLegCommand(LegConstants.LEG_POS_REST, m_leg),
+				//new MoveElevatorCommand(ElevatorConstants.ELEVATOR_SAFE_POS, m_elevator),
+				//new MoveLegCommand(LegConstants.LEG_POS_REST, m_leg),
 				new PivotIntakeCommand(IntakeConstants.PIVOT_DEGREE_UP, m_intake)
 			),
 			Commands.sequence(
-				new PivotIntakeCommand(IntakeConstants.PIVOT_DEGREE_DOWN, m_intake),
-				new MoveLegCommand(LegConstants.LEG_POS_INTAKING, m_leg),
-				new MoveElevatorCommand(ElevatorConstants.ELEVATOR_ZERO_POS, m_elevator)
+				new PivotIntakeCommand(IntakeConstants.PIVOT_DEGREE_DOWN, m_intake)//,
+				//new MoveLegCommand(LegConstants.LEG_POS_INTAKING, m_leg),
+				//new MoveElevatorCommand(ElevatorConstants.ELEVATOR_ZERO_POS, m_elevator)
 			),
 			m_intake::isDown);
 		m_driverController.a().onTrue(pivotCommand);
@@ -151,7 +151,7 @@ public class RobotContainer {
 		m_operatorController.rightTrigger().whileTrue(intakeCommand);
 
 		// OPERATOR Left Bumper -> Clears stuck intake.
-		m_operatorController.leftTrigger().whileTrue(new IntakeCommand(true, true, m_intake).onlyWhile(m_intake::isDown));
+		m_operatorController.leftTrigger().whileTrue(new IntakeCommand(true, true, m_intake));
 
 		// OPERATOR Right Bumper -> Score with foot.
 		m_operatorController.rightBumper().whileTrue(new RunFootCommand(false, m_leg));

@@ -39,11 +39,11 @@ public final class Constants {
         public static double MAX_ROBOT_ROTATIONS_PER_SECOND = 8;
         public static double MAX_ANGULAR_SPEED = (2 * Math.PI) * MAX_ROBOT_ROTATIONS_PER_SECOND; // radians per second
 
-        public static double BASE_SLEW_RATE = 6;
+        public static double BASE_SLEW_RATE = 15;
         public static SlewRateLimiter SLEW_FILTER_X = new SlewRateLimiter(BASE_SLEW_RATE);
         public static SlewRateLimiter SLEW_FILTER_Y = new SlewRateLimiter(BASE_SLEW_RATE);
 
-        public static double ROT_SLEW_RATE = 8;
+        public static double ROT_SLEW_RATE = 12;
         public static SlewRateLimiter ROTATION_FILTER = new SlewRateLimiter(ROT_SLEW_RATE);
 
         public static boolean FIELD_RELATIVE_DRIVING = true;
@@ -55,10 +55,10 @@ public final class Constants {
         public static final double WHEEL_BASE = Units.inchesToMeters(22.5);
 
         public static final SwerveDriveKinematics DRIVE_KINEMATICS = new SwerveDriveKinematics(
-            new Translation2d(-WHEEL_BASE / 2, TRACK_WIDTH / 2),
             new Translation2d(WHEEL_BASE / 2, TRACK_WIDTH / 2),
-            new Translation2d(-WHEEL_BASE / 2, -TRACK_WIDTH / 2),
-            new Translation2d(WHEEL_BASE / 2, -TRACK_WIDTH / 2)
+            new Translation2d(WHEEL_BASE / 2, -TRACK_WIDTH / 2),
+            new Translation2d(-WHEEL_BASE / 2, TRACK_WIDTH / 2),
+            new Translation2d(-WHEEL_BASE / 2, -TRACK_WIDTH / 2)
         );
 
         // Angular offsets of the modules relative to the chassis in radians
@@ -68,10 +68,10 @@ public final class Constants {
         public static final double REAR_RIGHT_CHASSIS_ANGULAR_OFFSET = 0.0;
 
         // P, I, D coefficients
-        public static final double TRANSLATION_COEFFICIENT_P = 0.35;
+        public static final double TRANSLATION_COEFFICIENT_P = 0.55;
         public static final double TRANSLATION_COEFFICIENT_I = 0;
         public static final double TRANSLATION_COEFFICIENT_D = 0;
-        public static final double ROTATION_COEFFICIENT_P = 0.5;
+        public static final double ROTATION_COEFFICIENT_P = 0.3;
         public static final double ROTATION_COEFFICIENT_I = 0;
         public static final double ROTATION_COEFFICIENT_D = 0;
 
@@ -174,8 +174,8 @@ public final class Constants {
     public static final class IntakeConstants {
         public static final double POSITION_TOLERANCE = 0.1;
         public static final double VELOCITY_TOLERANCE = 0.08;
-        public static final double MAX_MOTOR_SPEED = 0.75;
-        public static final double INTAKE_SPEED_RPS = Math.PI; // rotations per second target of wheel and feeders
+        public static final double MAX_MOTOR_SPEED = 0.9;
+        public static final double INTAKE_SPEED_RPS = 8; // rotations per second target of wheel and feeders
 
         public static final int PIVOT_MOTOR_CAN_ID = 15;
 
@@ -188,7 +188,7 @@ public final class Constants {
         public static final double PIVOT_DEGREE_UP = -10;
         public static final double PIVOT_DEGREE_DOWN = -85;
         
-        public static final double INTAKE_PID_P = 0.4;
+        public static final double INTAKE_PID_P = 0.5;
         public static final double INTAKE_PID_I = 0.0;
         public static final double INTAKE_PID_D = 0.0;
 
@@ -203,7 +203,7 @@ public final class Constants {
 
         public static final double ELEVATOR_MAX_POS = 14.3;
         public static final double ELEVATOR_SAFE_POS = 4.2679;
-        public static final double ELEVATOR_ZERO_POS = 0.038;
+        public static final double ELEVATOR_ZERO_POS = 0.1;
         public static final double ELEVATOR_GEAR_FACTOR = 36.0;
 
         public static final double MAX_MOTOR_SPEED = 1.0;
@@ -219,14 +219,14 @@ public final class Constants {
         public static final int ENCODER_DIGITAL_INPUT_CHANNEL = 1;
 
         public static final double LEG_POS_INTAKING = 0.04;
-        public static final double LEG_POS_REST = 0.0385;
+        public static final double LEG_POS_REST = 0.0388; // TODO: fixme
         public static final double LEG_POS_ONE = 0.0300;
         public static final double LEG_POS_TWO = 0.0275;
         public static final double LEG_POS_THREE = 0.0210;
         public static final double LEG_POS_FOUR = 0.0800;
 
         public static final double MAX_MOTOR_SPEED = 1.0;
-        public static final double LEG_TOLERANCE = 0.002; // how many rotations off is considered fine for the PID controller.
+        public static final double LEG_TOLERANCE = 0.005; // how many rotations off is considered fine for the PID controller.
 
         public static final double LEG_GEAR_FACTOR = 144.0;
 

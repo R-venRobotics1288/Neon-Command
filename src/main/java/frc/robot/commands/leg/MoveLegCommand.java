@@ -60,7 +60,7 @@ public class MoveLegCommand extends Command {
 
     @Override
     public void execute() {
-        double output = legFeedforward.calculate(desiredPosition - 1.71, 0) + legPidController.calculate(legModule.getEncoderPosition() / LEG_GEAR_FACTOR, desiredPosition);
+        double output = legFeedforward.calculate(desiredPosition, 0) + legPidController.calculate(legModule.getEncoderPosition(), desiredPosition);
         legModule.setMotorState(output);
         SmartDashboard.putNumber("Leg Encoder Pos", legModule.getEncoderPosition());
         SmartDashboard.putNumber("Leg Error", output);
