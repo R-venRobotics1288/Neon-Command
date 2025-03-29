@@ -232,7 +232,7 @@ public final class Constants {
 
         public static final double LEG_FF_KS = 1.0/565.0;
         public static final double LEG_FF_KG = 1.42;
-        public static final double LEG_PID_P = 6.0; // TODO: calibrate
+        public static final double LEG_PID_P = 4.0; // TODO: calibrate
         public static final double LEG_PID_I = 0.0; // TODO: calibrate
         public static final double LEG_PID_D = 0.0; // TODO: calibrate
     }
@@ -244,7 +244,7 @@ public final class Constants {
         public static final double FOOT_TOLERANCE = 0.02;
         public static final double FOOT_GEAR_FACTOR = 4.0;
 
-        public static final double MOTOR_PID_P = 0.06; // TODO: calibrate
+        public static final double MOTOR_PID_P = 0.07; // TODO: calibrate
         public static final double MOTOR_PID_I = 0.01; // TODO: calibrate
         public static final double MOTOR_PID_D = 0.0; // TODO: calibrate
     }
