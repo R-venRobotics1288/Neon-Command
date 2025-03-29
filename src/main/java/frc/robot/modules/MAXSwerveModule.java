@@ -80,7 +80,7 @@ public class MAXSwerveModule {
 		// Apply chassis angular offset to the encoder position to get the position
 		// relative to the chassis.
 		return new SwerveModuleState(m_drivingEncoder.getVelocity(),
-				new Rotation2d(getAbsoluteEncoderRad() + m_chassisAngularOffset));
+				new Rotation2d(getAbsoluteEncoderRad()));
 	}
 
 	public void periodic() {
@@ -99,11 +99,11 @@ public class MAXSwerveModule {
 		// relative to the chassis.
 		return new SwerveModulePosition(
 				m_drivingEncoder.getPosition(),
-				new Rotation2d(getAbsoluteEncoderRad() + m_chassisAngularOffset)); // TODO: Investagate if offset should be applied
+				new Rotation2d(getAbsoluteEncoderRad())); // TODO: Investagate if offset should be applied
 	}
 
 	public double getAbsoluteEncoderRad() {
-		return m_absoluteEncoder.getAbsolutePosition().getValue().in(Radians);
+		return m_absoluteEncoder.getAbsolutePosition().getValue().in(Radians) + m_chassisAngularOffset;
 	}
 
 	/**

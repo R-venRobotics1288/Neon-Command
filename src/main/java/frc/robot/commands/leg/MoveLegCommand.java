@@ -1,5 +1,6 @@
 package frc.robot.commands.leg;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -19,9 +20,9 @@ import static frc.robot.Constants.LegConstants.*;
 public class MoveLegCommand extends Command {
     private final LegModule legModule;
     private final ArmFeedforward legFeedforward = new ArmFeedforward(LEG_FF_KS, LEG_FF_KG, 0);
+    private final double desiredPosition;
 
     private PIDController legPidController;
-    private double desiredPosition = 0;
     private boolean finished = false;
 
     /**
@@ -64,7 +65,7 @@ public class MoveLegCommand extends Command {
         legModule.setMotorState(output);
         SmartDashboard.putNumber("Leg Encoder Pos", legModule.getEncoderPosition());
         SmartDashboard.putNumber("Leg Error", output);
-        if (legPidController.atSetpoint()) {
+        if (MathUtil.isNear(desiredPosition, legModule.getEncoderPosition(), LEG_TOLERANCE)) {
             finished = true;
             System.out.println("FINISHED MOVING LEG!");
         }

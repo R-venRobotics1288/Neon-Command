@@ -64,7 +64,7 @@ public final class Configs {
 
 		static {
 			pivotConfig
-				.idleMode(IdleMode.kCoast)
+				.idleMode(IdleMode.kBrake)
 				.smartCurrentLimit(80);
 			pivotConfig.encoder.positionConversionFactor((2 * Math.PI)/IntakeConstants.PIVOT_GEAR_FACTOR); // Axle Radians
 

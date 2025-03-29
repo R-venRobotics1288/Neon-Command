@@ -14,6 +14,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -27,7 +28,6 @@ import java.text.NumberFormat;
 
 public class DriveModule extends SubsystemBase {
     private GyroscopeModule m_gyro;
-    private double driveCoefficient = 1;
     private final Alert fieldRelativeAlert = new Alert("Field relative drive active.", AlertType.kInfo);
 
     // Create MAXSwerveModules
@@ -110,20 +110,21 @@ public class DriveModule extends SubsystemBase {
      */
     public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative) {
         // Convert the commanded speeds into the correct units for the drivetrain
-        double xSpeedDelivered = SLEW_FILTER_X.calculate(xSpeed * MAX_ROBOT_SPEED * driveCoefficient);
-        double ySpeedDelivered = SLEW_FILTER_Y.calculate(ySpeed * MAX_ROBOT_SPEED * driveCoefficient);
-        double rotDelivered = ROTATION_FILTER.calculate(rot * MAX_ANGULAR_SPEED * driveCoefficient);
+        double xSpeedDelivered = SLEW_FILTER_X.calculate(xSpeed) * MAX_ROBOT_SPEED;
+        double ySpeedDelivered = SLEW_FILTER_Y.calculate(ySpeed) * MAX_ROBOT_SPEED;
+        double rotDelivered = ROTATION_FILTER.calculate(rot) * MAX_ANGULAR_SPEED;
 
         ChassisSpeeds swerveChassisSpeed =
             fieldRelative
             ? ChassisSpeeds.fromFieldRelativeSpeeds(
                 xSpeedDelivered,
                 ySpeedDelivered,
-                rotDelivered, 
+                rotDelivered,
                 Rotation2d.fromDegrees(m_gyro.getGyroscopeYawDegrees())
               )
             : new ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered);
 
+        SmartDashboard.putNumber("xspeed", xSpeedDelivered);
         setModuleStates(swerveChassisSpeed);
     }
 
@@ -138,19 +139,6 @@ public class DriveModule extends SubsystemBase {
         m_frontRight.setDesiredState(desiredModuleStates[1]);
         m_rearLeft.setDesiredState(desiredModuleStates[2]);
         m_rearRight.setDesiredState(desiredModuleStates[3]);
-    }
-
-    /**
-     * Sets the wheels into an X formation to prevent movement.
-     */
-    public Command cutSpeed(boolean action) {
-        return this.runOnce(() -> {
-            if (action) {
-                driveCoefficient = 0.5;
-            } else {
-                driveCoefficient = 1;
-            }
-        });
     }
 
     public Command toggleFieldRelative() {

@@ -1,6 +1,5 @@
 package frc.robot.commands.intake;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.modules.IntakeModule;
@@ -43,6 +42,10 @@ public class PivotIntakeCommand extends Command {
 
     @Override
     public boolean isFinished() {
-        return MathUtil.isNear(Units.degreesToRadians(desiredPosition), intakeModule.getPivotEncoderPosition(), POSITION_TOLERANCE);
+        if (desiredPosition == PIVOT_DEGREE_DOWN) { 
+            return Units.degreesToRadians(desiredPosition) > intakeModule.getPivotEncoderPosition();
+        } else {
+            return Units.degreesToRadians(desiredPosition) < intakeModule.getPivotEncoderPosition();
+        }
     }
 }

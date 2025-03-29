@@ -34,7 +34,7 @@ public final class Constants {
         public static boolean SHUFFLE_MANAGER_ENABLED = true;
         // Driving Parameters - Note that these are not the maximum capable speeds of
         // the robot, rather the allowed maximum speeds, in metres per second.
-        public static double MAX_ROBOT_SPEED = 20; // 15
+        public static double MAX_ROBOT_SPEED = 5; // 15
 
         public static double MAX_ROBOT_ROTATIONS_PER_SECOND = 8;
         public static double MAX_ANGULAR_SPEED = (2 * Math.PI) * MAX_ROBOT_ROTATIONS_PER_SECOND; // radians per second
@@ -62,13 +62,13 @@ public final class Constants {
         );
 
         // Angular offsets of the modules relative to the chassis in radians
-        public static final double FRONT_LEFT_CHASSIS_ANGULAR_OFFSET = 0.0; // TODO: take a look at all of these for potential bad offset
+        public static final double FRONT_LEFT_CHASSIS_ANGULAR_OFFSET = Math.PI; // TODO: take a look at all of these for potential bad offset
         public static final double FRONT_RIGHT_CHASSIS_ANGULAR_OFFSET = 0.0;
         public static final double REAR_LEFT_CHASSIS_ANGULAR_OFFSET = 0.0;
         public static final double REAR_RIGHT_CHASSIS_ANGULAR_OFFSET = 0.0;
 
         // P, I, D coefficients
-        public static final double TRANSLATION_COEFFICIENT_P = 0.55;
+        public static final double TRANSLATION_COEFFICIENT_P = 0.27;
         public static final double TRANSLATION_COEFFICIENT_I = 0;
         public static final double TRANSLATION_COEFFICIENT_D = 0;
         public static final double ROTATION_COEFFICIENT_P = 0.3;
@@ -175,7 +175,7 @@ public final class Constants {
         public static final double POSITION_TOLERANCE = 0.1;
         public static final double VELOCITY_TOLERANCE = 0.08;
         public static final double MAX_MOTOR_SPEED = 0.9;
-        public static final double INTAKE_SPEED_RPS = 8; // rotations per second target of wheel and feeders
+        public static final double INTAKE_SPEED_RPS = 6; // rotations per second target of wheel and feeders
 
         public static final int PIVOT_MOTOR_CAN_ID = 15;
 
@@ -218,7 +218,7 @@ public final class Constants {
         public static final int MOTOR_CAN_ID = 24;
         public static final int ENCODER_DIGITAL_INPUT_CHANNEL = 1;
 
-        public static final double LEG_POS_INTAKING = 0.04;
+        public static final double LEG_POS_INTAKING = 5.77;
         public static final double LEG_POS_REST = 0.0388; // TODO: fixme
         public static final double LEG_POS_ONE = 0.0300;
         public static final double LEG_POS_TWO = 0.0275;
@@ -226,13 +226,13 @@ public final class Constants {
         public static final double LEG_POS_FOUR = 0.0800;
 
         public static final double MAX_MOTOR_SPEED = 1.0;
-        public static final double LEG_TOLERANCE = 0.005; // how many rotations off is considered fine for the PID controller.
+        public static final double LEG_TOLERANCE = 0.02; // how many rotations off is considered fine for the PID controller.
 
         public static final double LEG_GEAR_FACTOR = 144.0;
 
         public static final double LEG_FF_KS = 1.0/565.0;
         public static final double LEG_FF_KG = 1.42;
-        public static final double LEG_PID_P = 8.0; // TODO: calibrate
+        public static final double LEG_PID_P = 6.0; // TODO: calibrate
         public static final double LEG_PID_I = 0.0; // TODO: calibrate
         public static final double LEG_PID_D = 0.0; // TODO: calibrate
     }

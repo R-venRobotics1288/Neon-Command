@@ -123,28 +123,17 @@ public class RobotContainer {
 	 * {@link JoystickButton}.
 	 */
 	private void configureButtonBindings() {
-		// DRIVER Left Bumper -> Cut Speed
-		m_driverController.leftBumper().onTrue(m_drive.cutSpeed(true)).onFalse(m_drive.cutSpeed(false));
-		m_driverController.rightStick().onTrue(m_drive.toggleFieldRelative());
+		// DRIVER Left Bumper -> Toggle FR
+		m_driverController.leftBumper().onTrue(m_drive.toggleFieldRelative());
 
 		// DRIVER Left Middle Button -> Swerve Alignment
 		m_driverController.button(OIConstants.SWERVE_ALIGNMENT_BUTTON).onTrue(Commands.runOnce(() -> { m_gyroscope.resetGyroscope(); }, m_gyroscope));
 
 		// #region Normal Bindings
-		// DRIVER Button A -> Toggles Pivot
-		Command pivotCommand = Commands.either(
-			Commands.sequence(
-				//new MoveElevatorCommand(ElevatorConstants.ELEVATOR_SAFE_POS, m_elevator),
-				//new MoveLegCommand(LegConstants.LEG_POS_REST, m_leg),
-				new PivotIntakeCommand(IntakeConstants.PIVOT_DEGREE_UP, m_intake)
-			),
-			Commands.sequence(
-				new PivotIntakeCommand(IntakeConstants.PIVOT_DEGREE_DOWN, m_intake)//,
-				//new MoveLegCommand(LegConstants.LEG_POS_INTAKING, m_leg),
-				//new MoveElevatorCommand(ElevatorConstants.ELEVATOR_ZERO_POS, m_elevator)
-			),
-			m_intake::isDown);
-		m_driverController.a().onTrue(pivotCommand);
+		// DRIVER Button A -> Pivot Down
+		m_driverController.a().onTrue(new PivotIntakeCommand(IntakeConstants.PIVOT_DEGREE_DOWN, m_intake));
+		// DRIVER Button B -> Pivot Up
+		m_driverController.b().onTrue(new PivotIntakeCommand(IntakeConstants.PIVOT_DEGREE_UP, m_intake));
 
 		// OPERATOR Right Trigger -> Intakes
 		Command intakeCommand = new IntakeCommand(true, false, m_intake).alongWith(new RunFootCommand(true, m_leg));
@@ -156,23 +145,10 @@ public class RobotContainer {
 		// OPERATOR Right Bumper -> Score with foot.
 		m_operatorController.rightBumper().whileTrue(new RunFootCommand(false, m_leg));
 
-		// OPERATOR Button A -> Leg Position Rest
-		m_operatorController.a()
-			.onTrue(new MoveElevatorCommand(ElevatorConstants.ELEVATOR_SAFE_POS, m_elevator).andThen(new MoveLegCommand(LegConstants.LEG_POS_REST, m_leg)));
+		// OPERATOR Button A -> Leg Position Intaking
+		m_operatorController.a().onTrue(new MoveLegCommand(LegConstants.LEG_POS_INTAKING, m_leg));
 
-		// OPERATOR Button B -> Leg Position Three
-		m_operatorController.b()
-			.onTrue(new MoveElevatorCommand(ElevatorConstants.ELEVATOR_SAFE_POS, m_elevator).andThen(new MoveLegCommand(LegConstants.LEG_POS_THREE, m_leg)));
-
-		// OPERATOR Button Y -> Leg Position Four
-		m_operatorController.y()
-			.onTrue(new MoveElevatorCommand(ElevatorConstants.ELEVATOR_MAX_POS, m_elevator).andThen(new MoveLegCommand(LegConstants.LEG_POS_FOUR, m_leg)));
-
-		// OPERATOR Joystick Right BUTTON -> Leg to Rest Position and Reset Elevator
-		m_operatorController.rightStick()
-			.onTrue(new MoveLegCommand(LegConstants.LEG_POS_REST, m_leg).andThen(new MoveElevatorCommand(ElevatorConstants.ELEVATOR_ZERO_POS, m_elevator)).onlyIf(m_leg::isNotAtRest));
-
-		m_operatorController.povUp().whileTrue(m_elevator.manualElevatorCommand(-0.85));
+		m_operatorController.povUp().whileTrue(m_elevator.manualElevatorCommand(-1.0));
 		m_operatorController.povDown().whileTrue(m_elevator.manualElevatorCommand(0.8));
 		m_operatorController.povLeft().whileTrue(m_leg.manualLegCommand(0.3));
 		m_operatorController.povRight().whileTrue(m_leg.manualLegCommand(-0.3));
@@ -181,39 +157,6 @@ public class RobotContainer {
 		m_driverController.povUp().whileTrue(m_climber.climbUpCommand());
 		m_driverController.povDown().whileTrue(m_climber.climbDownCommand());
 		// #endregion Normal Bindings
-
-		// #region Test Bindings
-		// TEST INTAKE AT 15% POWER
-		m_operatorController.povLeft().and(m_operatorController.button(OIConstants.ENABLE_TESTING_BUTTON))
-				.onTrue(
-						new RunCommand(() -> {
-							m_intake.setIntakeMotorState(0.15);
-						}, m_intake))
-				.onFalse(
-						new RunCommand(() -> {
-							m_intake.setIntakeMotorState(0);
-						}, m_intake));
-		// TEST FEEDER AT 15% POWER
-		m_operatorController.povUp().and(m_operatorController.button(OIConstants.ENABLE_TESTING_BUTTON))
-				.onTrue(
-						new RunCommand(() -> {
-							m_intake.setFeederMotorState(0.15);
-						}, m_intake))
-				.onFalse(
-						new RunCommand(() -> {
-							m_intake.setFeederMotorState(0);
-						}, m_intake));
-		// TEST FOOT AT 15% POWER
-		m_operatorController.povRight().and(m_operatorController.button(OIConstants.ENABLE_TESTING_BUTTON))
-				.onTrue(
-						new RunCommand(() -> {
-							m_leg.setFootMotorState(0.15);
-						}, m_leg))
-				.onFalse(
-						new RunCommand(() -> {
-							m_leg.setFootMotorState(0);
-						}, m_leg));
-		// #endregion Test Bindings
 	}
 
 	/**
