@@ -1,120 +1,121 @@
-package frc.robot.modules;
-
-import com.revrobotics.RelativeEncoder;
-import com.revrobotics.spark.SparkFlex;
-import com.revrobotics.spark.SparkBase.PersistMode;
-import com.revrobotics.spark.SparkBase.ResetMode;
-import com.revrobotics.spark.SparkLowLevel.MotorType;
-
-import edu.wpi.first.epilogue.Logged;
-import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Configs;
-import frc.robot.utilities.IntakeState;
-
-import static frc.robot.Constants.IntakeConstants.*;
-
-public class IntakeModule extends SubsystemBase {
-    private SparkFlex pivotMotor;
-    private RelativeEncoder pivotEncoder;
-
-    private SparkFlex intakeMotor;
-    private SparkFlex leftFeederMotor;
-    private SparkFlex rightFeederMotor;
-    
-    private IntakeState state = IntakeState.UP;
-    // private final Set<IntakeState> state = EnumSet.of(IntakeState.CLOSED, IntakeState.DOWN);
-
-    /**
-     * Initializes the {@link IntakeModule}, containing six motors as well as internal state. Intake operates as a state machine with inputs changing outputs.
-     */
-    public IntakeModule() {
-        pivotMotor = new SparkFlex(PIVOT_MOTOR_CAN_ID, MotorType.kBrushless);
-        pivotMotor.configure(Configs.IntakeConfig.pivotConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-        pivotEncoder = pivotMotor.getEncoder();
-
-        intakeMotor = new SparkFlex(INTAKE_MOTOR_CAN_ID, MotorType.kBrushless);
-        intakeMotor.configure(Configs.IntakeConfig.wheelsConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-
-        leftFeederMotor = new SparkFlex(LEFT_FEEDER_MOTOR_CAN_ID, MotorType.kBrushless);
-        leftFeederMotor.configure(Configs.IntakeConfig.feederConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-        rightFeederMotor = new SparkFlex(RIGHT_FEEDER_MOTOR_CAN_ID, MotorType.kBrushless);
-        rightFeederMotor.configure(Configs.IntakeConfig.feederConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-    }
-
-    /**
-     * Gets the current pivot encoder position in radians.
-     * @return current position of the pivot encoder in radians.
-     */
-    @Logged
-    public double getPivotEncoderPosition() {
-        return pivotEncoder.getPosition();
-    }
-
-    /**
-     * Gets the current feeder encoder velocity.
-     * @return current velocity of the feeder encoder.
-     */
-    @Logged
-    public double getFeederEncoderVelocity() {
-        return rightFeederMotor.getEncoder().getVelocity();
-    }
-
-    /**
-     * Gets the current intake encoder velocity.
-     * @return current velocity of the intake encoder.
-     */
-    @Logged
-    public double getIntakeEncoderVelocity() {
-        return intakeMotor.getEncoder().getVelocity();
-    }
-
-    /**
-     * Changes the state of the Intake module.
-     * @param newState new current state
-     */
-    public void setIntakeState(IntakeState newState) {
-        state = newState;
-        if (state == IntakeState.UP) {
-            pivotEncoder.setPosition(0);
-        }
-    }
-
-    /**
-     * Checks the current state of the Intake against any potential state.
-     * @param stateToCheck the potential intake state to check
-     * @return true if stateToCheck is currently true
-     */
-    public boolean hasIntakeState(IntakeState stateToCheck) {
-        return state == stateToCheck;
-    }
-
-    public boolean isDown() {
-        return state == IntakeState.DOWN;
-    }
-
-    /**
-     * Sets the power of the pivot motor, responsible for moving the Intake up and down.
-     * @param power the power to command
-     */
-    public void setPivotMotorState(double power) {
-        pivotMotor.set(power);
-    }
-
-    /**
-     * Sets the power of the feeder motors, responsible for feeding coral from intake to foot.
-     * @param power the power to command
-     */
-    public void setFeederMotorState(double power) {
-        leftFeederMotor.set(MathUtil.clamp(power, -MAX_MOTOR_SPEED, MAX_MOTOR_SPEED));
-        rightFeederMotor.set(MathUtil.clamp(-power, -MAX_MOTOR_SPEED, MAX_MOTOR_SPEED));
-    }
-
-    /**
-     * Sets the power of the intake motor, responsible for initial pickup of game pieces from the ground.
-     * @param power the power to command
-     */
-    public void setIntakeMotorState(double power) {
-        intakeMotor.set(MathUtil.clamp(-power, -MAX_MOTOR_SPEED, MAX_MOTOR_SPEED));
-    }
-}
+//
+//package frc.robot.modules;
+//import com.revrobotics.RelativeEncoder;
+//import com.revrobotics.spark.SparkFlex;
+//import com.revrobotics.spark.SparkBase.PersistMode;
+//import com.revrobotics.spark.SparkBase.ResetMode;
+//import com.revrobotics.spark.SparkLowLevel.MotorType;
+//
+//import edu.wpi.first.epilogue.Logged;
+//import edu.wpi.first.math.MathUtil;
+//import edu.wpi.first.wpilibj2.command.SubsystemBase;
+//import frc.robot.Configs;
+//import frc.robot.utilities.IntakeState;
+//
+//import static frc.robot.Constants.IntakeConstants.*;
+//
+//public class IntakeModule extends SubsystemBase {
+//    private SparkFlex pivotMotor;
+//    private RelativeEncoder pivotEncoder;
+//
+//    private SparkFlex intakeMotor;
+//    private SparkFlex leftFeederMotor;
+//    private SparkFlex rightFeederMotor;
+//    
+//    private IntakeState state = IntakeState.UP;
+//    // private final Set<IntakeState> state = EnumSet.of(IntakeState.CLOSED, IntakeState.DOWN);
+//
+//    /**
+//     * Initializes the {@link IntakeModule}, containing six motors as well as internal state. Intake operates as a state machine with inputs changing outputs.
+//     */
+//    // public IntakeModule() {
+//    //     pivotMotor = new SparkFlex(PIVOT_MOTOR_CAN_ID, MotorType.kBrushless);
+//    //     pivotMotor.configure(Configs.IntakeConfig.pivotConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+//    //     pivotEncoder = pivotMotor.getEncoder();
+//
+//    //     intakeMotor = new SparkFlex(INTAKE_MOTOR_CAN_ID, MotorType.kBrushless);
+//    //     intakeMotor.configure(Configs.IntakeConfig.wheelsConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+//
+//    //     leftFeederMotor = new SparkFlex(LEFT_FEEDER_MOTOR_CAN_ID, MotorType.kBrushless);
+//    //     leftFeederMotor.configure(Configs.IntakeConfig.feederConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+//    //     rightFeederMotor = new SparkFlex(RIGHT_FEEDER_MOTOR_CAN_ID, MotorType.kBrushless);
+//    //     rightFeederMotor.configure(Configs.IntakeConfig.feederConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+//    // }
+//
+//    /**
+//     * Gets the current pivot encoder position in radians.
+//     * @return current position of the pivot encoder in radians.
+//     */
+//    @Logged
+//    public double getPivotEncoderPosition() {
+//        return pivotEncoder.getPosition();
+//    }
+//
+//    /**
+//     * Gets the current feeder encoder velocity.
+//     * @return current velocity of the feeder encoder.
+//     */
+//    @Logged
+//    public double getFeederEncoderVelocity() {
+//        return rightFeederMotor.getEncoder().getVelocity();
+//    }
+//
+//    /**
+//     * Gets the current intake encoder velocity.
+//     * @return current velocity of the intake encoder.
+//     */
+//    @Logged
+//    public double getIntakeEncoderVelocity() {
+//        return intakeMotor.getEncoder().getVelocity();
+//    }
+//
+//    /**
+//     * Changes the state of the Intake module.
+//     * @param newState new current state
+//     */
+//    public void setIntakeState(IntakeState newState) {
+//        state = newState;
+//        if (state == IntakeState.UP) {
+//            pivotEncoder.setPosition(0);
+//        }
+//    }
+//
+//    /**
+//     * Checks the current state of the Intake against any potential state.
+//     * @param stateToCheck the potential intake state to check
+//     * @return true if stateToCheck is currently true
+//     */
+//    public boolean hasIntakeState(IntakeState stateToCheck) {
+//        return state == stateToCheck;
+//    }
+//
+//    public boolean isDown() {
+//        return state == IntakeState.DOWN;
+//    }
+//
+//    /**
+//     * Sets the power of the pivot motor, responsible for moving the Intake up and down.
+//     * @param power the power to command
+//     */
+//    public void setPivotMotorState(double power) {
+//        pivotMotor.set(power);
+//    }
+//
+//    /**
+//     * Sets the power of the feeder motors, responsible for feeding coral from intake to foot.
+//     * @param power the power to command
+//     */
+//    public void setFeederMotorState(double power) {
+//        leftFeederMotor.set(MathUtil.clamp(power, -MAX_MOTOR_SPEED, MAX_MOTOR_SPEED));
+//        rightFeederMotor.set(MathUtil.clamp(-power, -MAX_MOTOR_SPEED, MAX_MOTOR_SPEED));
+//    }
+//
+//    /**
+//     * Sets the power of the intake motor, responsible for initial pickup of game pieces from the ground.
+//     * @param power the power to command
+//     */
+//    public void setIntakeMotorState(double power) {
+//        intakeMotor.set(MathUtil.clamp(-power, -MAX_MOTOR_SPEED, MAX_MOTOR_SPEED));
+//    }
+//}
+//

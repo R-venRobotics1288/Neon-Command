@@ -177,24 +177,24 @@ public final class Constants {
         public static final double MAX_MOTOR_SPEED = 0.9;
         public static final double INTAKE_SPEED_RPS = 6; // rotations per second target of wheel and feeders
 
-        public static final int PIVOT_MOTOR_CAN_ID = 15;
+        //public static final int PIVOT_MOTOR_CAN_ID = 15;
 
-        public static final int INTAKE_MOTOR_CAN_ID = 18;
+        //public static final int INTAKE_MOTOR_CAN_ID = 18;
 
-        public static final int LEFT_FEEDER_MOTOR_CAN_ID = 19;
-        public static final int RIGHT_FEEDER_MOTOR_CAN_ID = 20;
+        //public static final int LEFT_FEEDER_MOTOR_CAN_ID = 19;
+        //public static final int RIGHT_FEEDER_MOTOR_CAN_ID = 20;
 
-        public static final double PIVOT_GEAR_FACTOR = 16;
-        public static final double PIVOT_DEGREE_UP = -10;
-        public static final double PIVOT_DEGREE_DOWN = -85;
+        // public static final double PIVOT_GEAR_FACTOR = 16;
+        // public static final double PIVOT_DEGREE_UP = -10;
+        // public static final double PIVOT_DEGREE_DOWN = -85;
         
-        public static final double INTAKE_PID_P = 0.5;
-        public static final double INTAKE_PID_I = 0.0;
-        public static final double INTAKE_PID_D = 0.0;
+        // public static final double INTAKE_PID_P = 0.5;
+        // public static final double INTAKE_PID_I = 0.0;
+        // public static final double INTAKE_PID_D = 0.0;
 
-        public static final double FEEDER_PID_P = 0.5;
-        public static final double FEEDER_PID_I = 0.0;
-        public static final double FEEDER_PID_D = 0.0;
+        // public static final double FEEDER_PID_P = 0.5;
+        // public static final double FEEDER_PID_I = 0.0;
+        // public static final double FEEDER_PID_D = 0.0;
     }
 
     public static final class ElevatorConstants {

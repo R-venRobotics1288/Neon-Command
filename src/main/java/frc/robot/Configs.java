@@ -10,7 +10,7 @@ import frc.robot.Constants.ClimberConstants;
 
 import static frc.robot.Constants.ElevatorConstants;
 import static frc.robot.Constants.FootConstants;
-import static frc.robot.Constants.IntakeConstants;
+//import static frc.robot.Constants.IntakeConstants;
 import static frc.robot.Constants.ModuleConstants;
 
 public final class Configs {
@@ -57,29 +57,29 @@ public final class Configs {
 		}
     }
 
-	public static final class IntakeConfig {
-		public static final SparkFlexConfig pivotConfig = new SparkFlexConfig();
-		public static final SparkFlexConfig wheelsConfig = new SparkFlexConfig();
-		public static final SparkFlexConfig feederConfig = new SparkFlexConfig();
+	// public static final class IntakeConfig {
+	// 	public static final SparkFlexConfig pivotConfig = new SparkFlexConfig();
+	// 	public static final SparkFlexConfig wheelsConfig = new SparkFlexConfig();
+	// 	public static final SparkFlexConfig feederConfig = new SparkFlexConfig();
 
-		static {
-			pivotConfig
-				.idleMode(IdleMode.kBrake)
-				.smartCurrentLimit(80);
-			pivotConfig.encoder.positionConversionFactor((2 * Math.PI)/IntakeConstants.PIVOT_GEAR_FACTOR); // Axle Radians
+	// 	static {
+	// 		pivotConfig
+	// 			.idleMode(IdleMode.kBrake)
+	// 			.smartCurrentLimit(80);
+	// 		pivotConfig.encoder.positionConversionFactor((2 * Math.PI)/IntakeConstants.PIVOT_GEAR_FACTOR); // Axle Radians
 
-			final double RPS_FACTOR = (double)1.0 / (double)60.0;
-			wheelsConfig
-				.idleMode(IdleMode.kCoast)
-				.smartCurrentLimit(80);
-			wheelsConfig.encoder.velocityConversionFactor(RPS_FACTOR); // Rotations Per Second
+	// 		final double RPS_FACTOR = (double)1.0 / (double)60.0;
+	// 		wheelsConfig
+	// 			.idleMode(IdleMode.kCoast)
+	// 			.smartCurrentLimit(80);
+	// 		wheelsConfig.encoder.velocityConversionFactor(RPS_FACTOR); // Rotations Per Second
 
-			feederConfig
-				.idleMode(IdleMode.kCoast)
-				.smartCurrentLimit(80);
-			feederConfig.encoder.velocityConversionFactor(RPS_FACTOR); // Rotations Per Second
-		}
-    }
+	// 		feederConfig
+	// 			.idleMode(IdleMode.kCoast)
+	// 			.smartCurrentLimit(80);
+	// 		feederConfig.encoder.velocityConversionFactor(RPS_FACTOR); // Rotations Per Second
+	// 	}
+    // }
 
     public static final class ElevatorModuleConfig {
 		public static final SparkMaxConfig elevatorConfig = new SparkMaxConfig();

@@ -17,7 +17,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 import static frc.robot.Constants.DriveConstants;
 import static frc.robot.Constants.ElevatorConstants;
-import static frc.robot.Constants.IntakeConstants;
+//import static frc.robot.Constants.IntakeConstants;
 import static frc.robot.Constants.LegConstants;
 import static frc.robot.Constants.OIConstants;
 
@@ -28,14 +28,14 @@ import frc.robot.modules.ClimberModule;
 import frc.robot.modules.DriveModule;
 import frc.robot.modules.ElevatorModule;
 import frc.robot.modules.GyroscopeModule;
-import frc.robot.modules.IntakeModule;
+//import frc.robot.modules.IntakeModule;
 import frc.robot.modules.PositionModule;
 import frc.robot.modules.VisionModule;
 import frc.robot.modules.LegModule;
 
 import frc.robot.commands.elevator.MoveElevatorCommand;
-import frc.robot.commands.intake.IntakeCommand;
-import frc.robot.commands.intake.PivotIntakeCommand;
+//import frc.robot.commands.intake.IntakeCommand;
+//import frc.robot.commands.intake.PivotIntakeCommand;
 import frc.robot.commands.leg.RunFootCommand;
 import frc.robot.commands.leg.MoveLegCommand;
 
@@ -51,7 +51,7 @@ public class RobotContainer {
 	private final VisionModule m_vision;
 	public final DriveModule m_drive;
 	public final ElevatorModule m_elevator;
-	public final IntakeModule m_intake;
+	//public final IntakeModule m_intake;
 	public final LegModule m_leg;
 	private final ClimberModule m_climber;
 	private final PositionModule m_position;
@@ -71,7 +71,7 @@ public class RobotContainer {
 		m_position = new PositionModule(m_drive, m_vision, m_gyroscope);
 		m_elevator = new ElevatorModule();
 		m_leg = new LegModule();
-		m_intake = new IntakeModule();
+		//m_intake = new IntakeModule();
 		m_climber = new ClimberModule();
 
 		// Register and Initialize Autonomous Module
@@ -131,23 +131,22 @@ public class RobotContainer {
 
 		// #region Normal Bindings
 		// DRIVER Button A -> Pivot Down
-		m_driverController.a().onTrue(new PivotIntakeCommand(IntakeConstants.PIVOT_DEGREE_DOWN, m_intake));
-		// DRIVER Button B -> Pivot Up
-		m_driverController.b().onTrue(new PivotIntakeCommand(IntakeConstants.PIVOT_DEGREE_UP, m_intake));
+		// m_driverController.a().onTrue(new PivotIntakeCommand(IntakeConstants.PIVOT_DEGREE_DOWN, m_intake));
+		// // DRIVER Button B -> Pivot Up
+		// m_driverController.b().onTrue(new PivotIntakeCommand(IntakeConstants.PIVOT_DEGREE_UP, m_intake));
 
 		// OPERATOR Right Trigger -> Intakes
-		Command intakeCommand = new IntakeCommand(true, false, m_intake).alongWith(new RunFootCommand(true, m_leg));
-		m_operatorController.rightTrigger().whileTrue(intakeCommand);
+		// Command intakeCommand = new IntakeCommand(true, false, m_intake).alongWith(new RunFootCommand(true, m_leg));
+		// m_operatorController.rightTrigger().whileTrue(intakeCommand);
 
 		// OPERATOR Left Bumper -> Clears stuck intake.
-		m_operatorController.leftTrigger().whileTrue(new IntakeCommand(true, true, m_intake));
+		//m_operatorController.leftTrigger().whileTrue(new IntakeCommand(true, true, m_intake));
 
 		// OPERATOR Right Bumper -> Score with foot.
 		m_operatorController.rightBumper().whileTrue(new RunFootCommand(false, m_leg));
 
 		// OPERATOR Button A -> Leg Position Intaking
 		m_operatorController.a().onTrue(new MoveLegCommand(LegConstants.LEG_POS_INTAKING, m_leg));
-
 		m_operatorController.povUp().whileTrue(m_elevator.manualElevatorCommand(-1.0));
 		m_operatorController.povDown().whileTrue(m_elevator.manualElevatorCommand(0.8));
 		m_operatorController.povLeft().whileTrue(m_leg.manualLegCommand(0.3));
