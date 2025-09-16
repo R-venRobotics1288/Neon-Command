@@ -94,7 +94,7 @@ public class RobotContainer {
 				new RunCommand(() -> {
 					double xInput = m_driverController.getLeftX();
 					double yInput = m_driverController.getLeftY();
-					double thetaInput = m_driverController.getRightX();
+					double thetaInput = -1 * m_driverController.getRightX();
 					double distanceFromZero = Math.sqrt(Math.pow(xInput, 2) + Math.pow(yInput, 2));
 					if (distanceFromZero < OIConstants.DRIVE_DEADBAND) {
 						xInput = 0;
@@ -124,7 +124,7 @@ public class RobotContainer {
 	 */
 	private void configureButtonBindings() {
 		// DRIVER Left Bumper -> Toggle FR
-		m_driverController.leftBumper().onTrue(m_drive.toggleFieldRelative());
+		//m_driverController.leftBumper().onTrue(m_drive.toggleFieldRelative());
 
 		// DRIVER Left Middle Button -> Swerve Alignment
 		m_driverController.button(OIConstants.SWERVE_ALIGNMENT_BUTTON).onTrue(Commands.runOnce(() -> { m_gyroscope.resetGyroscope(); }, m_gyroscope));
@@ -146,7 +146,7 @@ public class RobotContainer {
 		m_operatorController.rightBumper().whileTrue(new RunFootCommand(false, m_leg));
 
 		// OPERATOR Button A -> Leg Position Intaking
-		m_operatorController.a().onTrue(new MoveLegCommand(LegConstants.LEG_POS_INTAKING, m_leg));
+		//m_operatorController.a().onTrue(new MoveLegCommand(LegConstants.LEG_POS_INTAKING, m_leg));
 		m_operatorController.povUp().whileTrue(m_elevator.manualElevatorCommand(-1.0));
 		m_operatorController.povDown().whileTrue(m_elevator.manualElevatorCommand(0.8));
 		m_operatorController.povLeft().whileTrue(m_leg.manualLegCommand(0.3));
